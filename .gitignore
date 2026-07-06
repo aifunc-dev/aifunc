@@ -1,0 +1,13 @@
+# GoReleaser build output
+cli/dist/
+
+# Local dev build artifacts
+cli/aifn
+cli/aifn.exe
+
+# aifn workspace cache (generated when using aifn itself in this repo)
+.aifunc/
+
+# OS
+.DS_Store
+Thumbs.db

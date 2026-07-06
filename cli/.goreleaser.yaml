@@ -1,0 +1,84 @@
+version: 2
+
+project_name: aifn
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - main: ./cmd/aifn
+    binary: aifn
+    ldflags:
+      - -s -w
+      - -X aifunc/cli/internal/cli.version={{.Version}}
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+
+archives:
+  - formats:
+      - tar.gz
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+
+checksum:
+  name_template: "checksums.txt"
+
+release:
+  extra_files:
+    - glob: ./scripts/install.sh
+    - glob: ./scripts/install.ps1
+
+# Homebrew tap — pushes Formula/aifn.rb to aifunc-dev/homebrew-aifn
+brews:
+  - name: aifn
+    repository:
+      owner: aifunc-dev
+      name: homebrew-aifn
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    directory: Formula
+    commit_author:
+      name: goreleaserbot
+      email: bot@goreleaser.com
+    commit_msg_template: "chore: brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    homepage: "https://github.com/aifunc-dev/aifunc"
+    description: "aifn - AI function CLI tool"
+    license: "Apache-2.0"
+    install: |
+      bin.install "aifn"
+    test: |
+      system "#{bin}/aifn", "--version"
+
+# Scoop bucket — pushes bucket/aifn.json to aifunc-dev/scoop-aifn
+scoops:
+  - name: aifn
+    repository:
+      owner: aifunc-dev
+      name: scoop-aifn
+      token: "{{ .Env.SCOOP_BUCKET_GITHUB_TOKEN }}"
+    commit_author:
+      name: goreleaserbot
+      email: bot@goreleaser.com
+    commit_msg_template: "chore: scoop manifest update for {{ .ProjectName }} version {{ .Tag }}"
+    homepage: "https://github.com/aifunc-dev/aifunc"
+    description: "aifn - AI function CLI tool"
+    license: "Apache-2.0"
+    directory: bucket
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
