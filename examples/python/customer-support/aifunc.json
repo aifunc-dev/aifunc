@@ -1,0 +1,10 @@
+{
+  "configVersion": 1,
+  "language": "python",
+  "outputDir": "aifunc",
+  "packages": {
+    "analyze-sentiment": "github:aifunc-dev/aifunc-packages/analyze-sentiment",
+    "extract-json": "github:aifunc-dev/aifunc-packages/extract-json",
+    "recognize-intent": "github:aifunc-dev/aifunc-packages/recognize-intent"
+  }
+}

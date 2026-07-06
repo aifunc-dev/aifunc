@@ -1,0 +1,8 @@
+{
+  "configVersion": 1,
+  "language": "python",
+  "outputDir": "aifunc",
+  "packages": {
+    "summarize": "github:aifunc-dev/aifunc-packages/summarize"
+  }
+}

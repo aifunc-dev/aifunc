@@ -1,0 +1,9 @@
+{
+  "configVersion": 1,
+  "language": "typescript",
+  "outputDir": "src/aifunc",
+  "alias": "@aifunc",
+  "packages": {
+    "summarize": "github:aifunc-dev/aifunc-packages/summarize"
+  }
+}

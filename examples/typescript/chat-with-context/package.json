@@ -1,0 +1,18 @@
+{
+  "name": "chat-with-context",
+  "version": "1.0.0",
+  "description": "Chat with context pipeline - TypeScript example",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "start": "node dist/index.js",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.10",
+    "ts-node": "10.9.2",
+    "tsc-alias": "1.8.17",
+    "tsconfig-paths": "4.2.0",
+    "typescript": "5.5.4"
+  }
+}

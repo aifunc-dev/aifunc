@@ -1,0 +1,12 @@
+{
+  "configVersion": 1,
+  "language": "typescript",
+  "outputDir": "src/aifunc",
+  "alias": "@aifunc",
+  "packages": {
+    "recognize-intent": "github:aifunc-dev/aifunc-packages/recognize-intent",
+    "extract-keywords": "github:aifunc-dev/aifunc-packages/extract-keywords",
+    "summarize": "github:aifunc-dev/aifunc-packages/summarize",
+    "generate-reply": "github:aifunc-dev/aifunc-packages/generate-reply"
+  }
+}

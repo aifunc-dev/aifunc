@@ -1,0 +1,135 @@
+{
+  "lockVersion": 1,
+  "packages": {
+    "analyze-sentiment": {
+      "source": "github:aifunc-dev/aifunc-packages/analyze-sentiment",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:25Z"
+    },
+    "answer-question": {
+      "source": "github:aifunc-dev/aifunc-packages/answer-question",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:27Z"
+    },
+    "classify": {
+      "source": "github:aifunc-dev/aifunc-packages/classify",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:01Z"
+    },
+    "detect-language": {
+      "source": "github:aifunc-dev/aifunc-packages/detect-language",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:29Z"
+    },
+    "extract-entities": {
+      "source": "github:aifunc-dev/aifunc-packages/extract-entities",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:03Z"
+    },
+    "extract-json": {
+      "source": "github:aifunc-dev/aifunc-packages/extract-json",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:05Z"
+    },
+    "extract-keywords": {
+      "source": "github:aifunc-dev/aifunc-packages/extract-keywords",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:32Z"
+    },
+    "generate-email": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-email",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:09Z"
+    },
+    "generate-post": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-post",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:11Z"
+    },
+    "generate-reply": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-reply",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:35Z"
+    },
+    "generate-slug": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-slug",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:15Z"
+    },
+    "generate-title": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-title",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:38Z"
+    },
+    "recognize-intent": {
+      "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:13Z"
+    },
+    "rewrite": {
+      "source": "github:aifunc-dev/aifunc-packages/rewrite",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:40Z"
+    },
+    "score-quality": {
+      "source": "github:aifunc-dev/aifunc-packages/score-quality",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:20Z"
+    },
+    "summarize": {
+      "source": "github:aifunc-dev/aifunc-packages/summarize",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:23Z"
+    },
+    "translate": {
+      "source": "github:aifunc-dev/aifunc-packages/translate",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:19:17Z"
+    }
+  },
+  "engines": {
+    "v0.1.0": {
+      "source": "github:aifunc-dev/aifunc-packages",
+      "language": "python",
+      "path": "python/v0_1_0",
+      "resolvedFrom": "^0.1.0",
+      "resolvedAt": "2026-07-05T03:19:40Z",
+      "usedBy": [
+        "classify",
+        "extract-entities",
+        "extract-json",
+        "generate-email",
+        "generate-post",
+        "recognize-intent",
+        "generate-slug",
+        "translate",
+        "score-quality",
+        "summarize",
+        "analyze-sentiment",
+        "answer-question",
+        "detect-language",
+        "extract-keywords",
+        "generate-reply",
+        "generate-title",
+        "rewrite"
+      ]
+    }
+  }
+}

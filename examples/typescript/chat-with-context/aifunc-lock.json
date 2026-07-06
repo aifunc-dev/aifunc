@@ -1,0 +1,44 @@
+{
+  "lockVersion": 1,
+  "packages": {
+    "extract-keywords": {
+      "source": "github:aifunc-dev/aifunc-packages/extract-keywords",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:57:59Z"
+    },
+    "generate-reply": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-reply",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:57:53Z"
+    },
+    "recognize-intent": {
+      "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:57:56Z"
+    },
+    "summarize": {
+      "source": "github:aifunc-dev/aifunc-packages/summarize",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-05T03:57:50Z"
+    }
+  },
+  "engines": {
+    "v0.1.0": {
+      "source": "github:aifunc-dev/aifunc-packages",
+      "language": "typescript",
+      "path": "typescript/v0.1.0",
+      "resolvedFrom": "^0.1.0",
+      "resolvedAt": "2026-07-05T03:57:59Z",
+      "usedBy": [
+        "summarize",
+        "generate-reply",
+        "recognize-intent",
+        "extract-keywords"
+      ]
+    }
+  }
+}

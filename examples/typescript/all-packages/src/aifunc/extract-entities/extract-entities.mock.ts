@@ -1,0 +1,47 @@
+const mockData = {
+  "cases": [
+    {
+      "description": "Entity extraction from a news sentence.",
+      "id": "news-sentence",
+      "output": {
+        "entities": [
+          {
+            "end": 5,
+            "start": 0,
+            "text": "Apple",
+            "type": "organization"
+          },
+          {
+            "end": 18,
+            "start": 10,
+            "text": "Tim Cook",
+            "type": "person"
+          },
+          {
+            "end": 42,
+            "start": 33,
+            "text": "Cupertino",
+            "type": "location"
+          },
+          {
+            "end": 56,
+            "start": 46,
+            "text": "March 2024",
+            "type": "date"
+          }
+        ]
+      }
+    }
+  ],
+  "delay": {
+    "maxMs": 120,
+    "minMs": 30
+  },
+  "random": {
+    "enabled": false,
+    "seed": "extract-entity"
+  },
+  "version": "1.0.0"
+};
+
+export default mockData;

@@ -1,0 +1,90 @@
+const artifact = {
+  "schemaVersion": "0.1.0",
+  "artifactVersion": "0.1.0",
+  "package": {
+    "type": "standalone",
+    "name": "generate-slug",
+    "version": "1.0.0",
+    "description": "Generate SEO-friendly URL slugs, meta descriptions, and tag suggestions from titles.",
+    "author": {
+      "name": "GildenEye"
+    },
+    "engine": "^0.1.0"
+  },
+  "api": {
+    "name": "generate-slug",
+    "description": "Generate an SEO-friendly URL slug, meta description, and tag suggestions from a title.",
+    "input": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "description": "Optional longer description to inform slug and meta generation.",
+          "type": "string"
+        },
+        "language": {
+          "description": "Content language hint (e.g. 'en', 'zh-CN'). Slug will always be ASCII.",
+          "type": "string"
+        },
+        "title": {
+          "description": "The article or page title.",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "type": "object"
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "metaDescription": {
+          "description": "SEO meta description (120-160 characters recommended).",
+          "type": "string"
+        },
+        "slug": {
+          "description": "URL-safe slug using lowercase ASCII letters, numbers, and hyphens.",
+          "type": "string"
+        },
+        "tags": {
+          "description": "Suggested tags or keywords for the content.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "slug",
+        "metaDescription",
+        "tags"
+      ],
+      "type": "object"
+    }
+  },
+  "modelParams": {
+    "schemaVersion": "0.1.0",
+    "rules": [
+      {
+        "match": {
+          "pattern": ".*"
+        },
+        "params": {
+          "temperature": 0.3,
+          "maxTokens": 400
+        }
+      }
+    ]
+  },
+  "prompts": {
+    "general": "# System\n\nYou are an SEO slug generation function. You must only return a JSON object in the following format:\n{\"slug\": \"\u003curl-slug\u003e\", \"metaDescription\": \"\u003cdescription\u003e\", \"tags\": [\"\u003ctag\u003e\", ...]}\n\nDo not output Markdown, do not include any extra explanation, and do not add undeclared fields.\n\nRequirements:\n- Generate a URL-safe `slug` from the title: lowercase ASCII, words separated by hyphens, no special characters. Keep it concise (3-8 words).\n- If the title is in a non-Latin language (e.g. Chinese, Japanese), translate the core meaning into English for the slug.\n- Generate a `metaDescription` that is compelling and SEO-friendly, between 120 and 160 characters. It should summarize the content and encourage clicks.\n- Suggest 3-6 relevant `tags` for categorization and discoverability.\n- Tags should be lowercase and in the content's language unless the language hint suggests otherwise.\n- The meta description should be in the same language as the title unless the content language is ambiguous.\n\n# User\n\nTitle: {{title}}\n\nDescription: {{description}}\n\nLanguage: {{language}}\n"
+  },
+  "metadata": {
+    "sourcePackageVersion": "1.0.0",
+    "generatedAt": "2026-07-05T04:22:14Z",
+    "contentHash": "sha256:0e508a60148b537c7c3e7f427f3d787db1bf8857add3c48eaae483496bdb9228"
+  }
+};
+
+export default artifact;

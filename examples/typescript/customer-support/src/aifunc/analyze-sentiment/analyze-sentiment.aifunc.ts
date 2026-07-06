@@ -1,0 +1,120 @@
+const artifact = {
+  "schemaVersion": "0.1.0",
+  "artifactVersion": "0.1.0",
+  "package": {
+    "type": "standalone",
+    "name": "analyze-sentiment",
+    "version": "1.0.0",
+    "description": "Analyze the sentiment of input text with customizable labels (zero-shot classification).",
+    "author": {
+      "name": "GildenEye"
+    },
+    "engine": "^0.1.0"
+  },
+  "api": {
+    "name": "analyze-sentiment",
+    "description": "Analyze the sentiment of input text with customizable labels (zero-shot classification).",
+    "input": {
+      "additionalProperties": false,
+      "properties": {
+        "labels": {
+          "default": [
+            "positive",
+            "negative",
+            "neutral"
+          ],
+          "description": "Candidate sentiment labels. Defaults to [\"positive\", \"negative\", \"neutral\"].",
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 2,
+          "type": "array"
+        },
+        "text": {
+          "description": "The text to analyze sentiment for.",
+          "minLength": 1,
+          "type": "string"
+        },
+        "topK": {
+          "description": "Return only the top K labels by score. If omitted, return all.",
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "type": "object"
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "confidence": {
+          "description": "Confidence score of the top label, between 0 and 1.",
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "label": {
+          "description": "The highest-scoring sentiment label.",
+          "type": "string"
+        },
+        "rankings": {
+          "description": "All labels ranked by score (highest first), limited by topK.",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "label": {
+                "description": "Sentiment label.",
+                "type": "string"
+              },
+              "score": {
+                "description": "Score between 0 and 1.",
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              }
+            },
+            "required": [
+              "label",
+              "score"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "label",
+        "confidence",
+        "rankings"
+      ],
+      "type": "object"
+    }
+  },
+  "modelParams": {
+    "schemaVersion": "0.1.0",
+    "rules": [
+      {
+        "match": {
+          "pattern": ".*"
+        },
+        "params": {
+          "temperature": 0.1,
+          "maxTokens": 400
+        }
+      }
+    ]
+  },
+  "prompts": {
+    "general": "# System\n\nYou are a zero-shot sentiment analysis function. You must only return a JSON object that conforms to the output schema. Do not output Markdown, do not include any extra explanation, and do not add undeclared fields.\n\nOutput format (return exactly this structure, no wrapping):\n{\"label\": \"\u003ctop_label\u003e\", \"confidence\": \u003c0-1\u003e, \"rankings\": [{\"label\": \"\u003clabel\u003e\", \"score\": \u003c0-1\u003e}, ...]}\n\nRequirements:\n- Classify the sentiment of the input text using ONLY the provided candidate labels.\n- Assign a score between 0 and 1 to each label. All scores must sum to approximately 1.\n- `label`: the highest-scoring label.\n- `confidence`: the score of that top label.\n- `rankings`: all labels sorted by score descending, each with `\"label\"` (string) and `\"score\"` (number).\n- If `topK` is specified, include only the top K entries in `rankings`; otherwise include all labels.\n- Base the analysis on the sentiment the text expresses, not on the facts it describes.\n- If the sentiment is ambiguous or mixed, assign scores that are relatively close to each other.\n- Never invent labels outside the provided candidate list.\n\nExamples:\n\nInput text: \"I absolutely love this product! It works perfectly and exceeded all my expectations.\"\nCandidate labels: [\"positive\", \"negative\", \"neutral\"]\ntopK: (not set)\nOutput: {\"label\":\"positive\",\"confidence\":0.95,\"rankings\":[{\"label\":\"positive\",\"score\":0.95},{\"label\":\"neutral\",\"score\":0.04},{\"label\":\"negative\",\"score\":0.01}]}\n\nInput text: \"The package arrived on time. Nothing special to note.\"\nCandidate labels: [\"positive\", \"negative\", \"neutral\"]\ntopK: (not set)\nOutput: {\"label\":\"neutral\",\"confidence\":0.80,\"rankings\":[{\"label\":\"neutral\",\"score\":0.80},{\"label\":\"positive\",\"score\":0.13},{\"label\":\"negative\",\"score\":0.07}]}\n\nInput text: \"Terrible experience. The staff was rude and the product broke after one day.\"\nCandidate labels: [\"positive\", \"negative\", \"neutral\"]\ntopK: 2\nOutput: {\"label\":\"negative\",\"confidence\":0.93,\"rankings\":[{\"label\":\"negative\",\"score\":0.93},{\"label\":\"neutral\",\"score\":0.05}]}\n\nInput text: \"The movie had stunning visuals but the plot was quite boring.\"\nCandidate labels: [\"positive\", \"negative\", \"neutral\", \"mixed\"]\ntopK: (not set)\nOutput: {\"label\":\"mixed\",\"confidence\":0.72,\"rankings\":[{\"label\":\"mixed\",\"score\":0.72},{\"label\":\"positive\",\"score\":0.14},{\"label\":\"negative\",\"score\":0.11},{\"label\":\"neutral\",\"score\":0.03}]}\n\nInput text: \"我非常满意这次购物体验，物流很快，包装完好。\"\nCandidate labels: [\"满意\", \"不满意\", \"一般\"]\ntopK: (not set)\nOutput: {\"label\":\"满意\",\"confidence\":0.91,\"rankings\":[{\"label\":\"满意\",\"score\":0.91},{\"label\":\"一般\",\"score\":0.07},{\"label\":\"不满意\",\"score\":0.02}]}\n\n# User\n\nText:\n{{text}}\n\nCandidate labels:\n{{labels}}\n\nTop K:\n{{topK}}\n"
+  },
+  "metadata": {
+    "sourcePackageVersion": "1.0.0",
+    "generatedAt": "2026-07-05T03:58:10Z",
+    "contentHash": "sha256:364e94e985dff03311bed0e8e0a72976a51d2f642b8b73d41e51f803e587ca78"
+  }
+};
+
+export default artifact;

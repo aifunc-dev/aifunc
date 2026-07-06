@@ -1,0 +1,28 @@
+const mockData = {
+  "cases": [
+    {
+      "description": "Generate a professional LinkedIn post.",
+      "id": "linkedin-post",
+      "output": {
+        "charCount": 221,
+        "hashtags": [
+          "ProductLaunch",
+          "TeamWork",
+          "Growth"
+        ],
+        "post": "Excited to share that our team just shipped a major product update — three months of work packed into one release. Proud of everyone involved. Growth is never a straight line, but this milestone proves consistency pays off."
+      }
+    }
+  ],
+  "delay": {
+    "maxMs": 120,
+    "minMs": 30
+  },
+  "random": {
+    "enabled": false,
+    "seed": "generate-post"
+  },
+  "version": "1.0.0"
+};
+
+export default mockData;
