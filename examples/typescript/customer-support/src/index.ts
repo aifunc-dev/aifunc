@@ -1,3 +1,15 @@
+// =============================================================================
+// Test instructions:
+//   1. npm install
+//   2. npm run build
+//   3. npm run start
+//
+// This example demonstrates a customer support pipeline that chains multiple
+// aifunc calls: sentiment analysis → intent recognition → structured extraction.
+// It requires a real LLM to produce meaningful results. Update the config object
+// with your API endpoint, model name, and API key to run the full pipeline.
+// =============================================================================
+
 import { analyzeSentiment, AIFuncConfig, AnalyzeSentimentInput } from './aifunc/analyze-sentiment';
 import { recognizeIntent, RecognizeIntentInput } from './aifunc/recognize-intent';
 import { extractJson, ExtractJsonInput } from './aifunc/extract-json';

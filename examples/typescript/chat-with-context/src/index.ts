@@ -1,3 +1,16 @@
+// =============================================================================
+// Test instructions:
+//   1. npm install
+//   2. npm run build
+//   3. npm run start
+//
+// This example demonstrates a multi-turn chat with accumulated context. It uses
+// intent recognition, keyword extraction, summarization, and reply generation
+// across multiple conversation turns, with automatic memory compression.
+// It requires a real LLM to produce meaningful results. Update the config object
+// with your API endpoint, model name, and API key to run the full conversation.
+// =============================================================================
+
 import { recognizeIntent, AIFuncConfig, RecognizeIntentOutput } from './aifunc/recognize-intent';
 import { extractKeywords } from './aifunc/extract-keywords';
 import { summarize } from './aifunc/summarize';

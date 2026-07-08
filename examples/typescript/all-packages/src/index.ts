@@ -1,3 +1,16 @@
+// =============================================================================
+// Test instructions:
+//   1. npm install
+//   2. npm run build
+//   3. npm run start
+//
+// This example showcases all available aifunc packages in a single runner. It
+// exercises 17 different AI functions including summarization, translation,
+// sentiment analysis, entity extraction, classification, and content generation.
+// It runs in mock mode by default. Update the config with your API credentials
+// to use a real LLM.
+// =============================================================================
+
 import { summarize, AIFuncConfig, SummarizeInput } from './aifunc/summarize';
 import { translate, TranslateInput } from './aifunc/translate';
 import { analyzeSentiment, AnalyzeSentimentInput } from './aifunc/analyze-sentiment';

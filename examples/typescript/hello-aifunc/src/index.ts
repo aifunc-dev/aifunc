@@ -1,3 +1,14 @@
+// =============================================================================
+// Test instructions:
+//   1. npm install
+//   2. npm run build
+//   3. npm run start
+//
+// This example demonstrates the basic usage of aifunc with a text summarization
+// task. It runs in mock mode by default for offline testing. To use a real LLM,
+// update the config object with your API endpoint, model name, and API key.
+// =============================================================================
+
 import { summarize, AIFuncConfig, SummarizeInput } from './aifunc/summarize';
 
 // const config: AIFuncConfig = {
