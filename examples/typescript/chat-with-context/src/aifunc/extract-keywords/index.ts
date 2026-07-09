@@ -11,6 +11,8 @@ export type { AIFuncConfig, ExtractKeywordsInput, ExtractKeywordsOutput };
 
 /** Extract keywords and key phrases from text, ranked by relevance. */
 export async function extractKeywords(config: AIFuncConfig = { mock: true }, input: ExtractKeywordsInput): Promise<ExtractKeywordsOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function extractKeywords(config: AIFuncConfig = { mock: true }, inp
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

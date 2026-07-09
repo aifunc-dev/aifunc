@@ -1,16 +1,3 @@
-// =============================================================================
-// Test instructions:
-//   1. npm install
-//   2. npm run build
-//   3. npm run start
-//
-// This example demonstrates a multi-turn chat with accumulated context. It uses
-// intent recognition, keyword extraction, summarization, and reply generation
-// across multiple conversation turns, with automatic memory compression.
-// It requires a real LLM to produce meaningful results. Update the config object
-// with your API endpoint, model name, and API key to run the full conversation.
-// =============================================================================
-
 import { recognizeIntent, AIFuncConfig, RecognizeIntentOutput } from './aifunc/recognize-intent';
 import { extractKeywords } from './aifunc/extract-keywords';
 import { summarize } from './aifunc/summarize';
@@ -20,6 +7,7 @@ import { generateReply } from './aifunc/generate-reply';
 //   baseURL: 'https://your-api-endpoint/v1',
 //   model: 'your-model-name',
 //   apiKey: 'your-api-key',
+//   maxRetries: 3,
 // };
 
 // To use a real model, replace the line below with the commented config above.
@@ -119,36 +107,17 @@ async function maybeCompress(): Promise<void> {
   console.log(`  [memory compressed → "${memorySummary}"]\n`);
 }
 
-async function retry<T>(fn: () => Promise<T>, label: string, retries = 3): Promise<T> {
-  for (let attempt = 0; attempt < retries; attempt++) {
-    try {
-      return await fn();
-    } catch (e) {
-      if (attempt === retries - 1) throw e;
-      console.log(`  [retry ${label} (${attempt + 1}/${retries}): ${e}]`);
-      await new Promise(r => setTimeout(r, 1000));
-    }
-  }
-  throw new Error('unreachable');
-}
-
 async function main(): Promise<void> {
   for (let i = 0; i < messages.length; i++) {
     const userMsg = messages[i];
     console.log(`[Turn ${i + 1}] User: ${userMsg}`);
 
     // 1. Classify the user's intent
-    const intentResult = await retry(
-      () => recognizeIntent(config, { text: userMsg, intents: INTENTS }),
-      "recognizeIntent",
-    );
+    const intentResult = await recognizeIntent(config, { text: userMsg, intents: INTENTS });
     intents.push(intentResult.intent);
 
     // 2. Extract keywords and accumulate into the topics array
-    const kwResult = await retry(
-      () => extractKeywords(config, { text: userMsg, maxKeywords: 3 }),
-      "extractKeywords",
-    );
+    const kwResult = await extractKeywords(config, { text: userMsg, maxKeywords: 3 });
     for (const kw of kwResult.keywords) {
       if (!topics.includes(kw.word)) topics.push(kw.word);
     }
@@ -157,14 +126,11 @@ async function main(): Promise<void> {
     history.push({ role: 'user', text: userMsg });
 
     // 4. Compress old history before replying if it has grown too long
-    await retry(() => maybeCompress(), "maybeCompress");
+    await maybeCompress();
 
     // 5. Build context from memory arrays and generate a reply
     const ctx = await buildContext();
-    const replyResult = await retry(
-      () => generateReply(config, { message: userMsg, tone: 'friendly', context: ctx }),
-      "generateReply",
-    );
+    const replyResult = await generateReply(config, { message: userMsg, tone: 'friendly', context: ctx });
 
     // 6. Append assistant reply to history array
     history.push({ role: 'assistant', text: replyResult.reply });

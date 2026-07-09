@@ -11,6 +11,8 @@ export type { AIFuncConfig, GenerateTitleInput, GenerateTitleOutput };
 
 /** Generate title or headline candidates for a piece of content. */
 export async function generateTitle(config: AIFuncConfig = { mock: true }, input: GenerateTitleInput): Promise<GenerateTitleOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function generateTitle(config: AIFuncConfig = { mock: true }, input
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

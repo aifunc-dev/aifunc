@@ -11,6 +11,8 @@ export type { AIFuncConfig, ExtractEntitiesInput, ExtractEntitiesOutput };
 
 /** Extract named entities from text, identifying their type and position. */
 export async function extractEntities(config: AIFuncConfig = { mock: true }, input: ExtractEntitiesInput): Promise<ExtractEntitiesOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function extractEntities(config: AIFuncConfig = { mock: true }, inp
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

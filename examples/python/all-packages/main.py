@@ -25,9 +25,10 @@ from aifunc.score_quality import score_quality, ScoreQualityInput
 #     base_url="https://your-api-endpoint/v1",
 #     model="your-model-name",
 #     api_key="your-api-key",
+#     max_retries=3,
 # )
 
-# To use a real model, replace the line below with the commented config above.
+# To run this example, replace the mock config below with real credentials:
 config = AIFuncConfig(mock=True)
 
 if config.mock:
@@ -60,78 +61,57 @@ async def main():
         "El veloz zorro marrón salta sobre el perro perezoso.",
     ]
     for text in samples:
-        try:
-            result = await detect_language(config, DetectLanguageInput(text=text))
-            print(f"  [{result.language}] {result.language_name} (conf: {result.confidence:.0%})  \"{text[:40]}\"")
-        except Exception as e:
-            print(f"  Error: {e}")
+        result = await detect_language(config, DetectLanguageInput(text=text))
+        print(f"  [{result.language}] {result.language_name} (conf: {result.confidence:.0%})  \"{text[:40]}\"")
 
     section("2. GENERATE SLUG")
-    try:
-        result = await generate_slug(config, GenerateSlugInput(
-            title="10 Practical Tips for Writing Faster Python Code",
-            language="en",
-        ))
-        print(f"Title : 10 Practical Tips for Writing Faster Python Code")
-        print(f"Slug  : {result.slug}")
-        print(f"Meta  : {result.meta_description}")
-        print(f"Tags  : {result.tags}")
-    except Exception as e:
-        print(f"Error: {e}")
+    result = await generate_slug(config, GenerateSlugInput(
+        title="10 Practical Tips for Writing Faster Python Code",
+        language="en",
+    ))
+    print(f"Title : 10 Practical Tips for Writing Faster Python Code")
+    print(f"Slug  : {result.slug}")
+    print(f"Meta  : {result.meta_description}")
+    print(f"Tags  : {result.tags}")
 
     section("3. SUMMARIZE")
-    try:
-        result = await summarize(config, SummarizeInput(text=ARTICLE, max_length=30))
-        print(f"Summary   : {result.summary}")
-        print(f"Word count: {result.word_count}")
-    except Exception as e:
-        print(f"Error: {e}")
+    result = await summarize(config, SummarizeInput(text=ARTICLE, max_length=30))
+    print(f"Summary   : {result.summary}")
+    print(f"Word count: {result.word_count}")
 
     section("4. TRANSLATE")
-    try:
-        result = await translate(config, TranslateInput(
-            text="The meeting has been moved to Friday at 3 PM.",
-            target_lang="es",
-        ))
-        print(f"Original : The meeting has been moved to Friday at 3 PM.")
-        print(f"Spanish  : {result.translation}")
-        print(f"Detected : {result.source_lang}")
-    except Exception as e:
-        print(f"Error: {e}")
+    result = await translate(config, TranslateInput(
+        text="The meeting has been moved to Friday at 3 PM.",
+        target_lang="es",
+    ))
+    print(f"Original : The meeting has been moved to Friday at 3 PM.")
+    print(f"Spanish  : {result.translation}")
+    print(f"Detected : {result.source_lang}")
 
     section("5. REWRITE")
-    try:
-        original = "hey, just wanna let u know the deploy went fine, no issues at all"
-        formal = await rewrite(config, RewriteInput(text=original, style="formal"))
-        print(f"Casual : {original}")
-        print(f"Formal : {formal.rewritten}")
-    except Exception as e:
-        print(f"Error: {e}")
+    original = "hey, just wanna let u know the deploy went fine, no issues at all"
+    formal = await rewrite(config, RewriteInput(text=original, style="formal"))
+    print(f"Casual : {original}")
+    print(f"Formal : {formal.rewritten}")
 
     # ─── Medium: structured output or multiple parameters ─────────────
 
     section("6. GENERATE TITLE")
-    try:
-        content = (
-            "This guide covers how to use Docker and GitHub Actions to automate "
-            "testing and deployment of a Node.js application to a cloud server."
-        )
-        result = await generate_title(config, GenerateTitleInput(content=content, style="seo", count=4))
-        print(f"Content: {content}")
-        print("Titles:")
-        for i, title in enumerate(result.titles, 1):
-            print(f"  {i}. {title}")
-    except Exception as e:
-        print(f"Error: {e}")
+    content = (
+        "This guide covers how to use Docker and GitHub Actions to automate "
+        "testing and deployment of a Node.js application to a cloud server."
+    )
+    result = await generate_title(config, GenerateTitleInput(content=content, style="seo", count=4))
+    print(f"Content: {content}")
+    print("Titles:")
+    for i, title in enumerate(result.titles, 1):
+        print(f"  {i}. {title}")
 
     section("7. EXTRACT KEYWORDS")
-    try:
-        result = await extract_keywords(config, ExtractKeywordsInput(text=ARTICLE, max_keywords=5))
-        print("Keywords from article:")
-        for kw in result.keywords:
-            print(f"  {kw['word']:30s} relevance: {kw['relevance']}")
-    except Exception as e:
-        print(f"Error: {e}")
+    result = await extract_keywords(config, ExtractKeywordsInput(text=ARTICLE, max_keywords=5))
+    print("Keywords from article:")
+    for kw in result.keywords:
+        print(f"  {kw['word']:30s} relevance: {kw['relevance']}")
 
     section("8. ANALYZE SENTIMENT")
     samples = [
@@ -140,14 +120,11 @@ async def main():
         "Item received. Does what it says.",
     ]
     for text in samples:
-        try:
-            result = await analyze_sentiment(config, AnalyzeSentimentInput(
-                text=text,
-                labels=["positive", "negative", "neutral"],
-            ))
-            print(f"  [{result.label:8s} {result.confidence:.0%}] {text[:55]}")
-        except Exception as e:
-            print(f"  Error: {e}")
+        result = await analyze_sentiment(config, AnalyzeSentimentInput(
+            text=text,
+            labels=["positive", "negative", "neutral"],
+        ))
+        print(f"  [{result.label:8s} {result.confidence:.0%}] {text[:55]}")
 
     section("9. CLASSIFY")
     tickets = [
@@ -158,12 +135,9 @@ async def main():
     ]
     categories = ["shipping", "technical", "feature request", "billing", "other"]
     for ticket in tickets:
-        try:
-            result = await classify(config, ClassifyInput(text=ticket, categories=categories))
-            top = result.classifications[0]
-            print(f"  [{top['category']:16s} {top['confidence']:.0%}]  {ticket[:55]}")
-        except Exception as e:
-            print(f"  Error: {e}")
+        result = await classify(config, ClassifyInput(text=ticket, categories=categories))
+        top = result.classifications[0]
+        print(f"  [{top['category']:16s} {top['confidence']:.0%}]  {ticket[:55]}")
 
     section("10. RECOGNIZE INTENT")
     messages = [
@@ -174,54 +148,45 @@ async def main():
     ]
     intents = ["query_order", "request_refund", "general_inquiry", "manage_subscription"]
     for msg in messages:
-        try:
-            result = await recognize_intent(config, RecognizeIntentInput(
-                text=msg,
-                intents=intents,
-                context="You are a customer support routing system for an e-commerce platform.",
-            ))
-            print(f"  [{result.intent:20s} {result.confidence:.0%}]  \"{msg[:50]}\"")
-        except Exception as e:
-            print(f"  Error: {e}")
+        result = await recognize_intent(config, RecognizeIntentInput(
+            text=msg,
+            intents=intents,
+            context="You are a customer support routing system for an e-commerce platform.",
+        ))
+        print(f"  [{result.intent:20s} {result.confidence:.0%}]  \"{msg[:50]}\"")
 
     # ─── Advanced: complex extraction and generation ──────────────────
 
     section("11. EXTRACT ENTITIES")
-    try:
-        text = "On March 10, 2024, NASA astronaut Sarah Mitchell landed at Kennedy Space Center in Florida after a six-month mission."
-        result = await extract_entities(config, ExtractEntitiesInput(
-            text=text,
-            entity_types=["person", "organization", "location", "date"],
-        ))
-        print(f"Text: {text}")
-        print("Entities:")
-        for e in result.entities:
-            print(f"  [{e['type']:12s}] \"{e['text']}\"")
-    except Exception as e:
-        print(f"Error: {e}")
+    text = "On March 10, 2024, NASA astronaut Sarah Mitchell landed at Kennedy Space Center in Florida after a six-month mission."
+    result = await extract_entities(config, ExtractEntitiesInput(
+        text=text,
+        entity_types=["person", "organization", "location", "date"],
+    ))
+    print(f"Text: {text}")
+    print("Entities:")
+    for e in result.entities:
+        print(f"  [{e['type']:12s}] \"{e['text']}\"")
 
     section("12. EXTRACT JSON")
-    try:
-        job_post = (
-            "We are looking for a Senior Backend Engineer in Berlin. "
-            "Requirements: 5+ years of experience, proficiency in Go or Rust, "
-            "experience with Kubernetes. Salary range: €80,000–€110,000."
-        )
-        result = await extract_json(config, ExtractJsonInput(
-            text=job_post,
-            fields=[
-                {"name": "title", "description": "Job title", "type": "string"},
-                {"name": "location", "description": "City or country", "type": "string"},
-                {"name": "skills", "description": "Required technical skills", "type": "array"},
-                {"name": "experience_years", "description": "Minimum years of experience", "type": "number"},
-                {"name": "salary_range", "description": "Salary range", "type": "string"},
-            ],
-        ))
-        print(f"Text     : {job_post}")
-        print(f"Extracted: {result.extracted}")
-        print(f"Missing  : {result.missing}")
-    except Exception as e:
-        print(f"Error: {e}")
+    job_post = (
+        "We are looking for a Senior Backend Engineer in Berlin. "
+        "Requirements: 5+ years of experience, proficiency in Go or Rust, "
+        "experience with Kubernetes. Salary range: €80,000–€110,000."
+    )
+    result = await extract_json(config, ExtractJsonInput(
+        text=job_post,
+        fields=[
+            {"name": "title", "description": "Job title", "type": "string"},
+            {"name": "location", "description": "City or country", "type": "string"},
+            {"name": "skills", "description": "Required technical skills", "type": "array"},
+            {"name": "experience_years", "description": "Minimum years of experience", "type": "number"},
+            {"name": "salary_range", "description": "Salary range", "type": "string"},
+        ],
+    ))
+    print(f"Text     : {job_post}")
+    print(f"Extracted: {result.extracted}")
+    print(f"Missing  : {result.missing}")
 
     section("13. ANSWER QUESTION")
     context = (
@@ -235,60 +200,47 @@ async def main():
         ("What is a monad in functional programming?", None),
     ]
     for q, ctx in questions:
-        try:
-            result = await answer_question(config, AnswerQuestionInput(question=q, context=ctx, max_length=60))
-            source = "from context" if result.grounded else "general knowledge"
-            print(f"  Q: {q}")
-            print(f"  A: {result.answer}  [{source}, conf: {result.confidence:.0%}]")
-            print()
-        except Exception as e:
-            print(f"  Error: {e}")
-            print()
+        result = await answer_question(config, AnswerQuestionInput(question=q, context=ctx, max_length=60))
+        source = "from context" if result.grounded else "general knowledge"
+        print(f"  Q: {q}")
+        print(f"  A: {result.answer}  [{source}, conf: {result.confidence:.0%}]")
+        print()
 
     section("14. GENERATE REPLY")
-    try:
-        message = "I placed an order three days ago but haven't received a shipping confirmation yet."
-        result = await generate_reply(config, GenerateReplyInput(
-            message=message,
-            tone="empathetic",
-            context="You are a customer support agent for an online store.",
-        ))
-        print(f"Customer : {message}")
-        print(f"Reply    : {result.reply}")
-    except Exception as e:
-        print(f"Error: {e}")
+    message = "I placed an order three days ago but haven't received a shipping confirmation yet."
+    result = await generate_reply(config, GenerateReplyInput(
+        message=message,
+        tone="empathetic",
+        context="You are a customer support agent for an online store.",
+    ))
+    print(f"Customer : {message}")
+    print(f"Reply    : {result.reply}")
 
     section("15. GENERATE POST")
-    try:
-        result = await generate_post(config, GeneratePostInput(
-            topic="How switching to async Python cut our API response time by 60%",
-            platform="linkedin",
-            tone="professional",
-            include_hashtags=True,
-        ))
-        print(f"Post     : {result.post}")
-        print(f"Hashtags : {['#' + t for t in result.hashtags]}")
-    except Exception as e:
-        print(f"Error: {e}")
+    result = await generate_post(config, GeneratePostInput(
+        topic="How switching to async Python cut our API response time by 60%",
+        platform="linkedin",
+        tone="professional",
+        include_hashtags=True,
+    ))
+    print(f"Post     : {result.post}")
+    print(f"Hashtags : {['#' + t for t in result.hashtags]}")
 
     section("16. GENERATE EMAIL")
-    try:
-        result = await generate_email(config, GenerateEmailInput(
-            intent="Apologize to a customer for a billing error and explain the resolution",
-            tone="formal",
-            sender_name="Billing Support Team",
-            recipient_name="Alex",
-            key_points=[
-                "An incorrect charge of $29.99 was applied on June 1st",
-                "The charge has been fully refunded and will appear within 3–5 business days",
-                "We have applied a 20% discount to the next invoice as compensation",
-            ],
-            language="English",
-        ))
-        print(f"Subject: {result.subject}")
-        print(f"Body:\n{result.body}")
-    except Exception as e:
-        print(f"Error: {e}")
+    result = await generate_email(config, GenerateEmailInput(
+        intent="Apologize to a customer for a billing error and explain the resolution",
+        tone="formal",
+        sender_name="Billing Support Team",
+        recipient_name="Alex",
+        key_points=[
+            "An incorrect charge of $29.99 was applied on June 1st",
+            "The charge has been fully refunded and will appear within 3–5 business days",
+            "We have applied a 20% discount to the next invoice as compensation",
+        ],
+        language="English",
+    ))
+    print(f"Subject: {result.subject}")
+    print(f"Body:\n{result.body}")
 
     section("17. SCORE QUALITY")
     samples = [
@@ -305,24 +257,21 @@ async def main():
         ),
     ]
     for text, audience, purpose in samples:
-        try:
-            result = await score_quality(config, ScoreQualityInput(
-                text=text,
-                target_audience=audience,
-                purpose=purpose,
-                max_suggestions=3,
-                strictness=3,
-            ))
-            print(f"Text       : {text[:55]}...")
-            print(f"Score      : {result.overall_score}/100  [{result.level}]")
-            print(f"Summary    : {result.summary}")
-            print(f"Suggestions:")
-            for s in result.suggestions:
-                print(f"  - {s}")
-            print()
-        except Exception as e:
-            print(f"Error: {e}")
-            print()
+        result = await score_quality(config, ScoreQualityInput(
+            text=text,
+            target_audience=audience,
+            purpose=purpose,
+            max_suggestions=3,
+            strictness=3,
+        ))
+        print(f"Text       : {text[:55]}...")
+        print(f"Score      : {result.overall_score}/100  [{result.level}]")
+        print(f"Summary    : {result.summary}")
+        print(f"Suggestions:")
+        for s in result.suggestions:
+            print(f"  - {s}")
+        print()
+
     if config.mock:
         print(
             "Notice: You are using mock mode for offline testing. "

@@ -11,6 +11,8 @@ export type { AIFuncConfig, ScoreQualityInput, ScoreQualityOutput };
 
 /** Evaluate text quality across multiple dimensions and return structured scores with improvement advice. */
 export async function scoreQuality(config: AIFuncConfig = { mock: true }, input: ScoreQualityInput): Promise<ScoreQualityOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function scoreQuality(config: AIFuncConfig = { mock: true }, input:
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

@@ -114,7 +114,7 @@ artifact = {
     "artifactVersion": "0.1.0",
     "metadata": {
         "contentHash": "sha256:762f256bb8916716b45cb2a91f6c3692630d1124fcb890e1dac2542ec25a0fdc",
-        "generatedAt": "2026-07-05T03:19:40Z",
+        "generatedAt": "2026-07-09T14:24:23Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -126,6 +126,7 @@ artifact = {
                 "params": {
                     "maxTokens": 700,
                     "temperature": 0.1,
+                    "topP": 0.9,
                 },
             },
             {

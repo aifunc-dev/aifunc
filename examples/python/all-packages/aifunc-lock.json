@@ -5,103 +5,103 @@
       "source": "github:aifunc-dev/aifunc-packages/analyze-sentiment",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:25Z"
+      "resolvedAt": "2026-07-09T14:23:45Z"
     },
     "answer-question": {
       "source": "github:aifunc-dev/aifunc-packages/answer-question",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:27Z"
+      "resolvedAt": "2026-07-09T14:23:27Z"
     },
     "classify": {
       "source": "github:aifunc-dev/aifunc-packages/classify",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:01Z"
+      "resolvedAt": "2026-07-09T14:24:23Z"
     },
     "detect-language": {
       "source": "github:aifunc-dev/aifunc-packages/detect-language",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:29Z"
+      "resolvedAt": "2026-07-09T14:22:44Z"
     },
     "extract-entities": {
       "source": "github:aifunc-dev/aifunc-packages/extract-entities",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:03Z"
+      "resolvedAt": "2026-07-09T14:22:47Z"
     },
     "extract-json": {
       "source": "github:aifunc-dev/aifunc-packages/extract-json",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:05Z"
+      "resolvedAt": "2026-07-09T14:23:51Z"
     },
     "extract-keywords": {
       "source": "github:aifunc-dev/aifunc-packages/extract-keywords",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:32Z"
+      "resolvedAt": "2026-07-09T14:23:57Z"
     },
     "generate-email": {
       "source": "github:aifunc-dev/aifunc-packages/generate-email",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:09Z"
+      "resolvedAt": "2026-07-09T14:22:54Z"
     },
     "generate-post": {
       "source": "github:aifunc-dev/aifunc-packages/generate-post",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:11Z"
+      "resolvedAt": "2026-07-09T14:23:38Z"
     },
     "generate-reply": {
       "source": "github:aifunc-dev/aifunc-packages/generate-reply",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:35Z"
+      "resolvedAt": "2026-07-09T14:23:00Z"
     },
     "generate-slug": {
       "source": "github:aifunc-dev/aifunc-packages/generate-slug",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:15Z"
+      "resolvedAt": "2026-07-09T14:24:04Z"
     },
     "generate-title": {
       "source": "github:aifunc-dev/aifunc-packages/generate-title",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:38Z"
+      "resolvedAt": "2026-07-09T14:22:30Z"
     },
     "recognize-intent": {
       "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:13Z"
+      "resolvedAt": "2026-07-09T14:23:07Z"
     },
     "rewrite": {
       "source": "github:aifunc-dev/aifunc-packages/rewrite",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:40Z"
+      "resolvedAt": "2026-07-09T14:23:16Z"
     },
     "score-quality": {
       "source": "github:aifunc-dev/aifunc-packages/score-quality",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:20Z"
+      "resolvedAt": "2026-07-09T14:24:09Z"
     },
     "summarize": {
       "source": "github:aifunc-dev/aifunc-packages/summarize",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:23Z"
+      "resolvedAt": "2026-07-09T14:24:16Z"
     },
     "translate": {
       "source": "github:aifunc-dev/aifunc-packages/translate",
       "version": "1.0.0",
       "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-05T03:19:17Z"
+      "resolvedAt": "2026-07-09T14:22:36Z"
     }
   },
   "engines": {
@@ -110,7 +110,7 @@
       "language": "python",
       "path": "python/v0_1_0",
       "resolvedFrom": "^0.1.0",
-      "resolvedAt": "2026-07-05T03:19:40Z",
+      "resolvedAt": "2026-07-09T14:24:23Z",
       "usedBy": [
         "classify",
         "extract-entities",

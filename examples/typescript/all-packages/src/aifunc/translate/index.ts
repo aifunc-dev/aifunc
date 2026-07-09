@@ -11,6 +11,8 @@ export type { AIFuncConfig, TranslateInput, TranslateOutput };
 
 /** Translate text into a specified target language with automatic source language detection. */
 export async function translate(config: AIFuncConfig = { mock: true }, input: TranslateInput): Promise<TranslateOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function translate(config: AIFuncConfig = { mock: true }, input: Tr
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

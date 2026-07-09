@@ -12,6 +12,7 @@ from aifunc.generate_reply import generate_reply, GenerateReplyInput
 #     base_url="https://your-api-endpoint/v1",
 #     model="your-model-name",
 #     api_key="your-api-key",
+#     max_retries=3,
 # )
 
 # To run this example, replace the mock config below with real credentials:
@@ -110,18 +111,6 @@ async def maybe_compress():
     print(f"  [memory compressed → \"{memory_summary}\"]\n")
 
 
-async def retry(fn, label, retries=3):
-    """Call an async function with retries. Gives up after `retries` failures."""
-    for attempt in range(retries):
-        try:
-            return await fn()
-        except Exception as e:
-            if attempt == retries - 1:
-                raise
-            print(f"  [retry {label} ({attempt+1}/{retries}): {e}]")
-            await asyncio.sleep(1)
-
-
 async def main():
     global history, topics, intents
 
@@ -129,17 +118,11 @@ async def main():
         print(f"[Turn {i}] User: {user_msg}")
 
         # 1. Classify the user's intent
-        intent_result = await retry(
-            lambda: recognize_intent(config, RecognizeIntentInput(text=user_msg, intents=INTENTS)),
-            "recognize_intent",
-        )
+        intent_result = await recognize_intent(config, RecognizeIntentInput(text=user_msg, intents=INTENTS))
         intents.append(intent_result.intent)
 
         # 2. Extract keywords and accumulate into the topics array
-        kw_result = await retry(
-            lambda: extract_keywords(config, ExtractKeywordsInput(text=user_msg, max_keywords=3)),
-            "extract_keywords",
-        )
+        kw_result = await extract_keywords(config, ExtractKeywordsInput(text=user_msg, max_keywords=3))
         for kw in kw_result.keywords:
             word = kw["word"]
             if word not in topics:
@@ -149,14 +132,11 @@ async def main():
         history.append({"role": "user", "text": user_msg})
 
         # 4. Compress old history before replying if it has grown too long
-        await retry(lambda: maybe_compress(), "maybe_compress")
+        await maybe_compress()
 
         # 5. Build context from memory arrays and generate a reply
         ctx = await build_context()
-        reply_result = await retry(
-            lambda: generate_reply(config, GenerateReplyInput(message=user_msg, tone="friendly", context=ctx)),
-            "generate_reply",
-        )
+        reply_result = await generate_reply(config, GenerateReplyInput(message=user_msg, tone="friendly", context=ctx))
 
         # 6. Append assistant reply to history array
         history.append({"role": "assistant", "text": reply_result.reply})

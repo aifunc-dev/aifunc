@@ -4,7 +4,7 @@
 from typing import Any, Optional, Union
 from dataclasses import asdict, replace
 
-from .._engine.python.v0_1_0 import execute, AIFuncConfig, AIFuncArtifact
+from .._engine.python.v0_1_0 import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults
 from .detect_language_aifunc import artifact
 from .detect_language_mock import mock_data
 from .detect_language_types import DetectLanguageInput, DetectLanguageOutput
@@ -24,7 +24,8 @@ async def detect_language(config: Optional[AIFuncConfig], input_data: Union[Dete
         _input = input_data
     else:
         _input = _to_camel_dict(asdict(input_data))
-    result = await execute(_artifact, _input, config)
+    _project_defaults = ProjectDefaults()
+    result = await execute(_artifact, _input, config, _project_defaults)
     return DetectLanguageOutput(**_to_snake_dict(result))
 
 

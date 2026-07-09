@@ -11,6 +11,8 @@ export type { AIFuncConfig, RewriteInput, RewriteOutput };
 
 /** Rewrite text according to a specified style or instruction while preserving the original meaning. */
 export async function rewrite(config: AIFuncConfig = { mock: true }, input: RewriteInput): Promise<RewriteOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function rewrite(config: AIFuncConfig = { mock: true }, input: Rewr
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

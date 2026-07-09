@@ -4,7 +4,7 @@
 from typing import Any, Optional, Union
 from dataclasses import asdict, replace
 
-from .._engine.python.v0_1_0 import execute, AIFuncConfig, AIFuncArtifact
+from .._engine.python.v0_1_0 import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults
 from .recognize_intent_aifunc import artifact
 from .recognize_intent_mock import mock_data
 from .recognize_intent_types import RecognizeIntentInput, RecognizeIntentOutput
@@ -24,7 +24,8 @@ async def recognize_intent(config: Optional[AIFuncConfig], input_data: Union[Rec
         _input = input_data
     else:
         _input = _to_camel_dict(asdict(input_data))
-    result = await execute(_artifact, _input, config)
+    _project_defaults = ProjectDefaults()
+    result = await execute(_artifact, _input, config, _project_defaults)
     return RecognizeIntentOutput(**_to_snake_dict(result))
 
 

@@ -11,6 +11,8 @@ export type { AIFuncConfig, GenerateEmailInput, GenerateEmailOutput };
 
 /** Generate a complete email from a brief description of intent and context. */
 export async function generateEmail(config: AIFuncConfig = { mock: true }, input: GenerateEmailInput): Promise<GenerateEmailOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function generateEmail(config: AIFuncConfig = { mock: true }, input
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

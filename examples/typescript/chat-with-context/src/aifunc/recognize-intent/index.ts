@@ -11,6 +11,8 @@ export type { AIFuncConfig, RecognizeIntentInput, RecognizeIntentOutput };
 
 /** Recognize user intent from conversational text with confidence scores. */
 export async function recognizeIntent(config: AIFuncConfig = { mock: true }, input: RecognizeIntentInput): Promise<RecognizeIntentOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function recognizeIntent(config: AIFuncConfig = { mock: true }, inp
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

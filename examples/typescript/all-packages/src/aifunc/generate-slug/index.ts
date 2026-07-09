@@ -11,6 +11,8 @@ export type { AIFuncConfig, GenerateSlugInput, GenerateSlugOutput };
 
 /** Generate an SEO-friendly URL slug, meta description, and tag suggestions from a title. */
 export async function generateSlug(config: AIFuncConfig = { mock: true }, input: GenerateSlugInput): Promise<GenerateSlugOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function generateSlug(config: AIFuncConfig = { mock: true }, input:
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

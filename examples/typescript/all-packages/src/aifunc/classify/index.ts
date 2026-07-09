@@ -11,6 +11,8 @@ export type { AIFuncConfig, ClassifyInput, ClassifyOutput };
 
 /** Classify text into user-defined categories with confidence scores. */
 export async function classify(config: AIFuncConfig = { mock: true }, input: ClassifyInput): Promise<ClassifyOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function classify(config: AIFuncConfig = { mock: true }, input: Cla
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

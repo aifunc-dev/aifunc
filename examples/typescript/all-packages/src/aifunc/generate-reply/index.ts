@@ -11,6 +11,8 @@ export type { AIFuncConfig, GenerateReplyInput, GenerateReplyOutput };
 
 /** Generate a contextually appropriate reply to a message or comment. */
 export async function generateReply(config: AIFuncConfig = { mock: true }, input: GenerateReplyInput): Promise<GenerateReplyOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function generateReply(config: AIFuncConfig = { mock: true }, input
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

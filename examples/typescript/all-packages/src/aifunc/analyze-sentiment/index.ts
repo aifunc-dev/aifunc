@@ -11,6 +11,8 @@ export type { AIFuncConfig, AnalyzeSentimentInput, AnalyzeSentimentOutput };
 
 /** Analyze the sentiment of input text with customizable labels (zero-shot classification). */
 export async function analyzeSentiment(config: AIFuncConfig = { mock: true }, input: AnalyzeSentimentInput): Promise<AnalyzeSentimentOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function analyzeSentiment(config: AIFuncConfig = { mock: true }, in
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

@@ -4,7 +4,7 @@
 from typing import Any, Optional, Union
 from dataclasses import asdict, replace
 
-from .._engine.python.v0_1_0 import execute, AIFuncConfig, AIFuncArtifact
+from .._engine.python.v0_1_0 import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults
 from .generate_title_aifunc import artifact
 from .generate_title_mock import mock_data
 from .generate_title_types import GenerateTitleInput, GenerateTitleOutput
@@ -24,7 +24,8 @@ async def generate_title(config: Optional[AIFuncConfig], input_data: Union[Gener
         _input = input_data
     else:
         _input = _to_camel_dict(asdict(input_data))
-    result = await execute(_artifact, _input, config)
+    _project_defaults = ProjectDefaults()
+    result = await execute(_artifact, _input, config, _project_defaults)
     return GenerateTitleOutput(**_to_snake_dict(result))
 
 

@@ -11,6 +11,8 @@ export type { AIFuncConfig, ExtractJsonInput, ExtractJsonOutput };
 
 /** Extract structured JSON from natural language text according to a user-defined field schema. */
 export async function extractJson(config: AIFuncConfig = { mock: true }, input: ExtractJsonInput): Promise<ExtractJsonOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function extractJson(config: AIFuncConfig = { mock: true }, input: 
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

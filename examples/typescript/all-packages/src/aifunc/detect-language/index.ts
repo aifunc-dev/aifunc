@@ -11,6 +11,8 @@ export type { AIFuncConfig, DetectLanguageInput, DetectLanguageOutput };
 
 /** Detect the language of input text, returning a language code, language name, and confidence score. */
 export async function detectLanguage(config: AIFuncConfig = { mock: true }, input: DetectLanguageInput): Promise<DetectLanguageOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function detectLanguage(config: AIFuncConfig = { mock: true }, inpu
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

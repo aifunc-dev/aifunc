@@ -11,6 +11,8 @@ export type { AIFuncConfig, AnswerQuestionInput, AnswerQuestionOutput };
 
 /** Answer a question based on provided context or general knowledge. */
 export async function answerQuestion(config: AIFuncConfig = { mock: true }, input: AnswerQuestionInput): Promise<AnswerQuestionOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function answerQuestion(config: AIFuncConfig = { mock: true }, inpu
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

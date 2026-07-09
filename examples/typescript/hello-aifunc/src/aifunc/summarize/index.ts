@@ -11,6 +11,8 @@ export type { AIFuncConfig, SummarizeInput, SummarizeOutput };
 
 /** Generate a concise summary of the input text. */
 export async function summarize(config: AIFuncConfig = { mock: true }, input: SummarizeInput): Promise<SummarizeOutput> {
+const _projectDefaults = {};
+
   const runtimeConfig: AIFuncConfig = config.mock && !config.mockData
     ? { ...config, mockData }
     : config;
@@ -19,5 +21,6 @@ export async function summarize(config: AIFuncConfig = { mock: true }, input: Su
     artifact as AIFuncArtifact,
     input as unknown as Record<string, unknown>,
     runtimeConfig,
+    _projectDefaults,
   );
 }

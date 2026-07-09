@@ -130,6 +130,7 @@ const artifact = {
         },
         "params": {
           "temperature": 0.1,
+          "topP": 0.9,
           "maxTokens": 700
         }
       },
@@ -157,7 +158,7 @@ const artifact = {
   },
   "metadata": {
     "sourcePackageVersion": "1.0.0",
-    "generatedAt": "2026-07-05T04:22:14Z",
+    "generatedAt": "2026-07-09T15:12:49Z",
     "contentHash": "sha256:762f256bb8916716b45cb2a91f6c3692630d1124fcb890e1dac2542ec25a0fdc"
   }
 };
