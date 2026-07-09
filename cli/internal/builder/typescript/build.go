@@ -16,7 +16,7 @@ import (
 
 // Generate writes index.ts, <name>.types.ts, and <name>.aifunc.ts for the given compiled artifact into outputDir.
 // engineVersion is the resolved engine version string, e.g. "0.1.0".
-func Generate(artifact *types.CompiledArtifact, outputDir string, hasMock bool, engineVersion string) error {
+func Generate(artifact *types.CompiledArtifact, outputDir string, hasMock bool, engineVersion string, cfg types.AifuncConfig) error {
 	if err := os.MkdirAll(outputDir, 0755); err != nil {
 		return fmt.Errorf("create output dir: %w", err)
 	}
@@ -39,7 +39,7 @@ func Generate(artifact *types.CompiledArtifact, outputDir string, hasMock bool, 
 		return fmt.Errorf("write %s.aifunc.ts: %w", fileBase, err)
 	}
 
-	indexContent, err := generateIndex(artifact, hasMock, engineVersion)
+	indexContent, err := generateIndex(artifact, hasMock, engineVersion, cfg)
 	if err != nil {
 		return fmt.Errorf("generate index.ts: %w", err)
 	}
@@ -81,7 +81,7 @@ func generateTypes(artifact *types.CompiledArtifact) (string, error) {
 }
 
 // generateIndex produces the index.ts file with the callable function.
-func generateIndex(artifact *types.CompiledArtifact, hasMock bool, engineVersion string) (string, error) {
+func generateIndex(artifact *types.CompiledArtifact, hasMock bool, engineVersion string, cfg types.AifuncConfig) (string, error) {
 	var b strings.Builder
 
 	fileBase := sanitizeFileName(artifact.Package.Name)
@@ -115,6 +115,10 @@ func generateIndex(artifact *types.CompiledArtifact, hasMock bool, engineVersion
 		))
 	}
 
+	// Inject projectDefaults from aifunc.json (build-time injection)
+	projectDefaultsLiteral := buildProjectDefaultsLiteral(cfg)
+	b.WriteString(fmt.Sprintf("const _projectDefaults = %s;\n\n", projectDefaultsLiteral))
+
 	if hasMock {
 		b.WriteString("  const runtimeConfig: AIFuncConfig = config.mock && !config.mockData\n")
 		b.WriteString("    ? { ...config, mockData }\n")
@@ -135,6 +139,7 @@ func generateIndex(artifact *types.CompiledArtifact, hasMock bool, engineVersion
 	b.WriteString("    artifact as AIFuncArtifact,\n")
 	b.WriteString("    input as unknown as Record<string, unknown>,\n")
 	b.WriteString("    runtimeConfig,\n")
+	b.WriteString("    _projectDefaults,\n")
 	b.WriteString("  );\n")
 	if isStream {
 		b.WriteString("  yield result;\n")
@@ -349,4 +354,18 @@ func sanitizeFileName(name string) string {
 func splitIdentifier(s string) []string {
 	s = strings.ReplaceAll(s, "-", "_")
 	return strings.Split(s, "_")
+}
+
+func buildProjectDefaultsLiteral(cfg types.AifuncConfig) string {
+	var parts []string
+	if cfg.Timeout != nil {
+		parts = append(parts, fmt.Sprintf("timeout: %d", *cfg.Timeout))
+	}
+	if cfg.MaxRetries != nil {
+		parts = append(parts, fmt.Sprintf("maxRetries: %d", *cfg.MaxRetries))
+	}
+	if len(parts) == 0 {
+		return "{}"
+	}
+	return "{ " + strings.Join(parts, ", ") + " }"
 }

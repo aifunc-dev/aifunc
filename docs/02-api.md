@@ -39,8 +39,10 @@ interface AIFuncConfig {
   apiKey?: string;
   model?: string;
   temperature?: number;
+  topP?: number;
   maxTokens?: number;
-  timeout?: number;
+  timeout?: number;      // milliseconds, default 7000
+  maxRetries?: number;   // default 1, retries on 429/5xx/network errors only
   mock?: boolean;
 }
 ```
@@ -54,32 +56,31 @@ class AIFuncConfig:
     api_key: str | None = None
     model: str | None = None
     temperature: float | None = None
+    top_p: float | None = None
     max_tokens: int | None = None
-    timeout: int = 30000
+    timeout: float | None = None    # seconds, None = use aifunc.json or engine default (7.0)
+    max_retries: int | None = None  # None = use aifunc.json or engine default (1)
     mock: bool = False
     mock_data: Any = None
 ```
 
 ### Field Descriptions
 
+
 | Field | Type | Default | Description |
 |:---|:---|:---|:---|
 | `baseURL` / `base_url` | string | — | Model API endpoint (OpenAI-compatible format). Required when mock mode is disabled |
 | `apiKey` / `api_key` | string | — | API Key. Required when mock mode is disabled |
 | `model` | string | — | Model name. Required when mock mode is disabled |
-| `temperature` | number | Defined by package | Overrides the value suggested by the package author in `model-params.json` |
-| `maxTokens` / `max_tokens` | integer | Defined by package | Maximum output token count, overrides the package's suggested value |
-| `timeout` | integer | 30000 | Request timeout in milliseconds |
+| `temperature` | number | Defined by package | Priority: config → model-params.json → engine default |
+| `topP` / `top_p` | number | Defined by package | Use instead of temperature for nucleus sampling; same priority |
+| `maxTokens` / `max_tokens` | integer | Defined by package | Maximum output token count; same priority |
+| `timeout` | number | 7000ms / 7.0s | Request timeout (TS in ms, Python in seconds); priority: config → aifunc.json → engine default |
+| `maxRetries` / `max_retries` | integer | 1 | Retry attempts on any failure, throws last error when exhausted; same priority |
 | `mock` | boolean | false | Enable mock mode, skips real model calls |
 
 
-### Parameter Priority
 
-Priority order for temperature and maxTokens (highest to lowest):
-
-1. **Values explicitly passed in config** (your code)
-2. **Rules matching the current model in the package's model-params.json**
-3. **Engine defaults**
 
 ---
 
@@ -149,6 +150,7 @@ const config: AIFuncConfig = {
   temperature: 0.0,
   maxTokens: 200,
   timeout: 60000,
+  maxRetries: 0,
 };
 ```
 
@@ -168,15 +170,17 @@ Mock data source: Package built-in `mock.json`
 
 The function throws exceptions in the following scenarios:
 
-| Error Scenario | Example Error Message |
-|:---|:---|
-| Input doesn't match schema | `Input validation failed: ...` |
-| Missing required config | `AIFuncConfig.baseURL is required when mock mode is disabled` |
-| Model not specified | `AIFuncConfig.model is required when mock mode is disabled` |
-| Request timeout | `Request timeout after 30000ms` |
-| API returns non-200 | `Model API returned 429: ...` |
-| Model returns non-JSON | `Failed to parse model output as JSON: ...` |
-| Output doesn't match schema | `Output validation failed: ...` |
+
+| Error Scenario              | Example Error Message                                         |
+| --------------------------- | ------------------------------------------------------------- |
+| Input doesn't match schema  | `Input validation failed: ...`                                |
+| Missing required config     | `AIFuncConfig.baseURL is required when mock mode is disabled` |
+| Model not specified         | `AIFuncConfig.model is required when mock mode is disabled`   |
+| Request timeout             | `Request timeout after 30000ms`                               |
+| API returns non-200         | `Model API returned 429: ...`                                 |
+| Model returns non-JSON      | `Failed to parse model output as JSON: ...`                   |
+| Output doesn't match schema | `Output validation failed: ...`                               |
+
 
 ### TypeScript Error Handling
 
@@ -221,14 +225,16 @@ Input validation → Render Prompt → Build request → Call Model API → Pars
 
 ### Key Behaviors
 
-| Behavior | Description |
-|:---|:---|
-| Input validation | Validates input fields and types against the `api.json` input schema |
-| Prompt rendering | Replaces `{{input.fieldName}}` with actual input values |
-| Output format | Always requires model to return JSON (`response_format: { type: "json_object" }`) |
-| Output validation | Validates model response against the `api.json` output schema |
-| Retry | Current version has no built-in retry mechanism; failures throw immediately |
-| Timeout | Default 30 seconds, configurable via `timeout` |
+
+| Behavior          | Description                                                                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Input validation  | Validates input fields and types against the `api.json` input schema                                                         |
+| Prompt rendering  | Replaces `{{input.fieldName}}` with actual input values                                                                      |
+| Output format     | Always requires model to return JSON (`response_format: { type: "json_object" }`)                                            |
+| Output validation | Validates model response against the `api.json` output schema                                                                |
+| Retry             | Retries on any error. Retry count controlled by `maxRetries` (default 1). After exhausting retries, the last error is thrown |
+| Timeout           | Default 7000ms (Python: 7.0s), configurable via `timeout`                                                                    |
+
 
 ---
 
@@ -238,3 +244,4 @@ Input validation → Render Prompt → Build request → Call Model API → Pars
 - **View CLI commands?** → [CLI Command Reference](./03-cli)
 - **Want to create your own package?** → [Create an AIFunc Package](./05-create-package)
 - **Understand the internals?** → [How It Works](./04-how-it-works)
+

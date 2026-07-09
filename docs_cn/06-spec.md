@@ -180,10 +180,11 @@
 
 | 字段 | 类型 | 说明 |
 |:---|:---|:---|
-| `presets` | array | 参数规则列表 |
-| `presets[].match` | object | 匹配条件 |
-| `presets[].params.temperature` | number | 温度 |
-| `presets[].params.maxTokens` | integer | 最大输出 Token 数 |
+| `rules` | array | 参数规则列表 |
+| `rules[].match` | object | 匹配条件 |
+| `rules[].params.temperature` | number | 温度 |
+| `rules[].params.topP` | number | 采样 top-p 值 |
+| `rules[].params.maxTokens` | integer | 最大输出 Token 数 |
 
 **match 条件**（三选一）：
 
@@ -197,7 +198,7 @@
 
 ```json
 {
-  "presets": [
+  "rules": [
     {
       "match": { "pattern": ".*" },
       "params": { "temperature": 0.1, "maxTokens": 500 }

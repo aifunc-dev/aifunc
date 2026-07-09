@@ -180,10 +180,11 @@ Suggested model call parameters for the Engine. If this file is not provided, th
 
 | Field | Type | Description |
 |:---|:---|:---|
-| `presets` | array | Parameter rule list |
-| `presets[].match` | object | Match condition |
-| `presets[].params.temperature` | number | Temperature |
-| `presets[].params.maxTokens` | integer | Maximum output token count |
+| `rules` | array | Parameter rule list |
+| `rules[].match` | object | Match condition |
+| `rules[].params.temperature` | number | Temperature |
+| `rules[].params.topP` | number | Sampling top-p value |
+| `rules[].params.maxTokens` | integer | Maximum output token count |
 
 **match conditions** (choose one of three):
 
@@ -197,7 +198,7 @@ Suggested model call parameters for the Engine. If this file is not provided, th
 
 ```json
 {
-  "presets": [
+  "rules": [
     {
       "match": { "pattern": ".*" },
       "params": { "temperature": 0.1, "maxTokens": 500 }

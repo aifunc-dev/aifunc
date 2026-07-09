@@ -23,7 +23,7 @@ const (
 )
 
 // Generate writes __init__.py, <name>_types.py, and <name>_aifunc.py for the given compiled artifact into outputDir.
-func Generate(artifact *types.CompiledArtifact, outputDir string, hasMock bool, engineVersion string) error {
+func Generate(artifact *types.CompiledArtifact, outputDir string, hasMock bool, engineVersion string, cfg types.AifuncConfig) error {
 	if err := os.MkdirAll(outputDir, dirPerm); err != nil {
 		return fmt.Errorf("create output dir: %w", err)
 	}
@@ -36,7 +36,7 @@ func Generate(artifact *types.CompiledArtifact, outputDir string, hasMock bool, 
 	}{
 		{fileBase + "_types.py", func() (string, error) { return generateTypes(artifact) }},
 		{fileBase + "_aifunc.py", func() (string, error) { return generateArtifactModule(artifact) }},
-		{"__init__.py", func() (string, error) { return generateInit(artifact, hasMock, engineVersion) }},
+		{"__init__.py", func() (string, error) { return generateInit(artifact, hasMock, engineVersion, cfg) }},
 	}
 
 	for _, f := range files {
@@ -91,7 +91,7 @@ func writeDataclass(b *strings.Builder, name, fields string) {
 	}
 }
 
-func generateInit(artifact *types.CompiledArtifact, hasMock bool, engineVersion string) (string, error) {
+func generateInit(artifact *types.CompiledArtifact, hasMock bool, engineVersion string, cfg types.AifuncConfig) (string, error) {
 	var b strings.Builder
 
 	fileBase := sanitizeFileName(artifact.Package.Name)
@@ -104,7 +104,7 @@ func generateInit(artifact *types.CompiledArtifact, hasMock bool, engineVersion 
 	b.WriteString("from typing import Any, Optional, Union\nfrom dataclasses import asdict, replace\n\n")
 
 	engineVer := strings.ReplaceAll(engineVersion, ".", "_")
-	b.WriteString(fmt.Sprintf("from .._engine.python.v%s import execute, AIFuncConfig, AIFuncArtifact\n", engineVer))
+	b.WriteString(fmt.Sprintf("from .._engine.python.v%s import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults\n", engineVer))
 	b.WriteString(fmt.Sprintf("from .%s_aifunc import artifact\n", fileBase))
 	if hasMock {
 		b.WriteString(fmt.Sprintf("from .%s_mock import mock_data\n", fileBase))
@@ -130,7 +130,10 @@ func generateInit(artifact *types.CompiledArtifact, hasMock bool, engineVersion 
 	b.WriteString("        _input = input_data\n")
 	b.WriteString("    else:\n")
 	b.WriteString("        _input = _to_camel_dict(asdict(input_data))\n")
-	b.WriteString(fmt.Sprintf("    result = await execute(_artifact, _input, config)\n"))
+	// Inject project_defaults from aifunc.json (build-time injection)
+	projectDefaultsLiteral := buildProjectDefaultsLiteral(cfg)
+	b.WriteString(fmt.Sprintf("    _project_defaults = %s\n", projectDefaultsLiteral))
+	b.WriteString(fmt.Sprintf("    result = await execute(_artifact, _input, config, _project_defaults)\n"))
 	b.WriteString(fmt.Sprintf("    return %s(**_to_snake_dict(result))\n\n\n", outputName))
 
 	b.WriteString("def _to_camel(name: str) -> str:\n")
@@ -397,4 +400,19 @@ func sanitizeFileName(name string) string {
 func splitIdentifier(s string) []string {
 	s = strings.ReplaceAll(s, "-", "_")
 	return strings.Split(s, "_")
+}
+
+func buildProjectDefaultsLiteral(cfg types.AifuncConfig) string {
+	var parts []string
+	if cfg.Timeout != nil {
+		timeoutSec := float64(*cfg.Timeout) / 1000.0
+		parts = append(parts, fmt.Sprintf("timeout=%g", timeoutSec))
+	}
+	if cfg.MaxRetries != nil {
+		parts = append(parts, fmt.Sprintf("max_retries=%d", *cfg.MaxRetries))
+	}
+	if len(parts) == 0 {
+		return "ProjectDefaults()"
+	}
+	return "ProjectDefaults(" + strings.Join(parts, ", ") + ")"
 }

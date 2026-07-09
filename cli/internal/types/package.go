@@ -86,6 +86,7 @@ type MatchRule struct {
 
 type StandardParams struct {
 	Temperature      *float64 `json:"temperature,omitempty"`
+	TopP             *float64 `json:"topP,omitempty"`
 	MaxTokens        *int     `json:"maxTokens,omitempty"`
 	StructuredOutput *bool    `json:"structuredOutput,omitempty"`
 }

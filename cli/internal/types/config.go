@@ -9,6 +9,8 @@ type AifuncConfig struct {
 	InputDir      string            `json:"inputDir,omitempty"`
 	OutputDir     string            `json:"outputDir,omitempty"`
 	Alias         interface{}       `json:"alias,omitempty"`
+	Timeout       *int              `json:"timeout,omitempty"`
+	MaxRetries    *int              `json:"maxRetries,omitempty"`
 	Packages      map[string]string `json:"packages"`
 }
 

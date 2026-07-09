@@ -168,7 +168,7 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 	switch cfg.Language {
 	case "typescript":
 		hasMock := packageHasMock(pkgPath)
-		if err := typescript.Generate(artifact, pkgOutputDir, hasMock, engineVersion); err != nil {
+		if err := typescript.Generate(artifact, pkgOutputDir, hasMock, engineVersion, cfg); err != nil {
 			fmt.Println("failed")
 			return fmt.Errorf("generating TypeScript code: %w", err)
 		}
@@ -182,7 +182,7 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 		}
 	case "python":
 		hasMock := packageHasMock(pkgPath)
-		if err := python.Generate(artifact, pkgOutputDir, hasMock, engineVersion); err != nil {
+		if err := python.Generate(artifact, pkgOutputDir, hasMock, engineVersion, cfg); err != nil {
 			fmt.Println("failed")
 			return fmt.Errorf("generating Python code: %w", err)
 		}
