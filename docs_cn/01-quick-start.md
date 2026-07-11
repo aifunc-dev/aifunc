@@ -3,7 +3,7 @@
 
 > **目标读者**：所有想使用 AIFunc 的开发者
 > **本文内容**：5 分钟完成从安装 CLI 到调用 AI 函数拿到结果的完整流程
-> **前置条件**：Node.js 18+ 或 Python 3.10+
+> **前置条件**：Node.js 18+、Python 3.10+ 或 Go 1.23+
 
 ---
 
@@ -26,17 +26,9 @@ aifn install github:aifunc-dev/aifunc-packages/summarize
 ```
 
 CLI 会自动：
-- 识别项目类型（TypeScript/Python）
+- 识别项目类型（TypeScript / Python / Go）
 - 生成可直接 import 的代码（含类型定义和内置 mock 数据）
 - 创建配置文件（如果不存在）
-
-### 安装项目依赖
-
-TypeScript 项目需要安装编译工具链：
-
-```bash
-npm install
-```
 
 ---
 
@@ -81,6 +73,37 @@ async def main():
     print(f"Word count: {result.word_count}")
 
 asyncio.run(main())
+```
+
+### Go
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"your-module/aifunc/summarize"
+)
+
+func main() {
+	config := &summarize.AIFuncConfig{Mock: true}
+
+	text := "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+		"revealing thousands of galaxies in a single image."
+
+	result, err := summarize.Summarize(context.Background(), config, summarize.SummarizeInput{
+		Text:      text,
+		MaxLength: 30,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Summary   : %s\n", result.Summary)
+	fmt.Printf("Word count: %d\n", result.WordCount)
+}
 ```
 
 IDE 提供完整的类型提示和自动补全。
@@ -142,12 +165,49 @@ async def main():
 asyncio.run(main())
 ```
 
+### Go
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"your-module/aifunc/summarize"
+)
+
+func main() {
+	config := &summarize.AIFuncConfig{
+		BaseURL: "https://your-api-endpoint/v1",
+		Model:   "your-model-name",
+		APIKey:  "your-api-key",
+	}
+
+	text := "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+		"revealing thousands of galaxies in a single image."
+
+	maxLen := 30
+	result, err := summarize.Summarize(context.Background(), config, summarize.SummarizeInput{
+		Text:      text,
+		MaxLength: &maxLen,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Summary   :", result.Summary)
+	fmt.Println("Word count:", result.WordCount)
+}
+```
+
 支持任何兼容 OpenAI 协议的服务端点。
 
 运行代码：
 
 ```bash
-# TypeScript：编译后运行
+# TypeScript：安装依赖后编译运行
+npm install
 npm run build
 npm run start
 
@@ -156,6 +216,9 @@ npm run dev
 
 # Python
 python main.py
+
+# Go
+go run main.go
 ```
 
 ---
@@ -226,7 +289,8 @@ const config: AIFuncConfig = {
 
 不会。CLI 只在执行 `aifn` 命令时使用。
 
-运行时由生成的 TypeScript/Python 代码负责，零外部依赖。
+运行时由生成的 TypeScript/Python/Go 代码负责，零外部依赖。
+
 </details>
 
 <details>

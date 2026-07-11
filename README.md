@@ -12,6 +12,7 @@
   <a href="https://github.com/aifunc/cli"><img src="https://img.shields.io/badge/CLI-Go-00ADD8?logo=go&logoColor=white" alt="Go CLI"></a>
   <img alt="Node.js ≥ 18" src="https://img.shields.io/badge/Node.js-≥18-339933?logo=nodedotjs&logoColor=white">
   <img alt="Python ≥ 3.10" src="https://img.shields.io/badge/Python-≥3.10-3776AB?logo=python&logoColor=white">
+  <img alt="Go ≥1.23" src="https://img.shields.io/badge/Go-≥1.23-00ADD8?logo=go&logoColor=white">
   <img alt="TypeScript types" src="https://img.shields.io/badge/TypeScript-types-3178C6?logo=typescript&logoColor=white">
 </p>
 <!---->
@@ -86,15 +87,46 @@ async def main():
 asyncio.run(main())
 ```
 
-To connect a real model, replace `mock: true` with actual config:
+### Go
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"your-module/aifunc/summarize"
+)
+
+func main() {
+	config := &summarize.AIFuncConfig{Mock: true}
+
+	text := "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+		"revealing thousands of galaxies in a single image."
+
+	maxLen := 30
+	result, err := summarize.Summarize(context.Background(), config, summarize.SummarizeInput{
+		Text:      text,
+		MaxLength: &maxLen,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Summary   :", result.Summary)
+	fmt.Println("Word count:", result.WordCount)
+}
+```
+
+To connect a real model, replace `mock: true` with your actual `baseURL`, `model`, and `apiKey`. Any OpenAI-compatible endpoint works.
 
 ```typescript
-const config: AIFuncConfig = {
-  baseURL: 'https://your-api-endpoint/v1',
-  model: 'your-model-name',
-  apiKey: 'your-api-key',
-};
+// TypeScript / Python / Go — same config fields
+config = { baseURL: "https://your-api-endpoint/v1", model: "your-model-name", apiKey: "your-api-key" }
 ```
+
+> See fully runnable examples: [examples/go/hello-aifunc](./examples/go/hello-aifunc), [examples/typescript/hello-aifunc](./examples/typescript/hello-aifunc), [examples/python/hello-aifunc](./examples/python/hello-aifunc)
 
 ---
 
@@ -138,7 +170,10 @@ async function handleTicket(message: string) {
 
 `if`, `switch`, `Promise.all` — control flow you already know. Nothing new to learn.
 
-> Full examples: [examples/typescript/customer-support](./examples/typescript/customer-support) and [examples/python/customer-support](./examples/python/customer-support)
+> Full examples: [examples/typescript/customer-support](./examples/typescript/customer-support), [examples/python/customer-support](./examples/python/customer-support) and [examples/go/customer-support](./examples/go/customer-support)
+
+> **Want multi-turn conversations with memory and sliding window?** No heavy Agent framework needed — just use native arrays to manage context.
+> See [examples/typescript/chat-with-context](./examples/typescript/chat-with-context), [examples/python/chat-with-context](./examples/python/chat-with-context), [examples/go/chat-with-context](./examples/go/chat-with-context)
 
 ---
 
@@ -148,9 +183,9 @@ async function handleTicket(message: string) {
 
 **Testable** — Every package ships with mock data. `mock: true` runs offline. CI without API keys, zero cost.
 
-**Cross-language** — One package definition (`api.json` + `package.json` + `prompts/`) compiles to TypeScript and Python with identical behavior.
+**Cross-language** — One package definition (`api.json` + `package.json` + `prompts/`) compiles to TypeScript, Python, and Go with identical behavior.
 
-**Zero-dependency** — The runtime engine is pure source code generated into your project. No third-party npm/pip packages.
+**Zero-dependency** — The runtime engine is pure source code generated into your project. Every language runtime uses only its native standard library — no third-party dependencies of any kind.
 
 **Model-agnostic** — Works with any OpenAI-compatible endpoint. Switch models by changing config, zero code changes.
 

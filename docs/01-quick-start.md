@@ -2,7 +2,7 @@
 
 > **Target audience**: All developers who want to use AIFunc
 > **Content**: Complete workflow from installing the CLI to calling an AI function and getting results in 5 minutes
-> **Prerequisites**: Node.js 18+ or Python 3.10+
+> **Prerequisites**: Node.js 18+, Python 3.10+, or Go 1.23+
 
 ---
 
@@ -25,17 +25,9 @@ aifn install github:aifunc-dev/aifunc-packages/summarize
 ```
 
 The CLI will automatically:
-- Detect your project type (TypeScript/Python)
+- Detect your project type (TypeScript / Python / Go)
 - Generate importable code (with type definitions and built-in mock data)
 - Create a configuration file (if one doesn't exist)
-
-### Install Project Dependencies
-
-TypeScript projects need to install the build toolchain:
-
-```bash
-npm install
-```
 
 ---
 
@@ -80,6 +72,38 @@ async def main():
     print(f"Word count: {result.word_count}")
 
 asyncio.run(main())
+```
+
+### Go
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"your-module/aifunc/summarize"
+)
+
+func main() {
+	config := &summarize.AIFuncConfig{Mock: true}
+
+	text := "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+		"revealing thousands of galaxies in a single image."
+
+	maxLen := 30
+	result, err := summarize.Summarize(context.Background(), config, summarize.SummarizeInput{
+		Text:      text,
+		MaxLength: &maxLen,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Summary   : %s\n", result.Summary)
+	fmt.Printf("Word count: %d\n", result.WordCount)
+}
 ```
 
 Your IDE provides full type hints and autocompletion.
@@ -141,12 +165,49 @@ async def main():
 asyncio.run(main())
 ```
 
+### Go
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"your-module/aifunc/summarize"
+)
+
+func main() {
+	config := &summarize.AIFuncConfig{
+		BaseURL: "https://your-api-endpoint/v1",
+		Model:   "your-model-name",
+		APIKey:  "your-api-key",
+	}
+
+	text := "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+		"revealing thousands of galaxies in a single image."
+
+	maxLen := 30
+	result, err := summarize.Summarize(context.Background(), config, summarize.SummarizeInput{
+		Text:      text,
+		MaxLength: &maxLen,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Summary   :", result.Summary)
+	fmt.Println("Word count:", result.WordCount)
+}
+```
+
 Works with any OpenAI-compatible API endpoint.
 
 Run the code:
 
 ```bash
-# TypeScript: compile and run
+# TypeScript: install deps, compile and run
+npm install
 npm run build
 npm run start
 
@@ -155,6 +216,9 @@ npm run dev
 
 # Python
 python main.py
+
+# Go
+go run main.go
 ```
 
 ---
@@ -225,7 +289,7 @@ The `.aifunc/` cache directory is automatically added to `.gitignore`.
 
 No. The CLI is only used when running `aifn` commands.
 
-The runtime is handled by generated TypeScript/Python code with zero external dependencies.
+The runtime is handled by generated TypeScript/Python/Go code with zero external dependencies.
 </details>
 
 <details>

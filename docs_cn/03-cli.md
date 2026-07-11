@@ -1,4 +1,4 @@
-﻿# aifn CLI 命令参考
+# aifn CLI 命令参考
 
 > **目标读者**：所有 AIFunc 用户
 > **本文内容**：汇总 aifn CLI v0.1.0 当前已实现的全部命令与用法
@@ -94,7 +94,7 @@ aifn install <source...> -l python -o aifunc
 
 | 选项 | 别名 | 说明 |
 |:---|:---|:---|
-| `--lang <language>` | `-l` | 覆盖 `aifunc.json` 中的 `language`。可选值：`typescript`、`python` |
+| `--lang <language>` | `-l` | 覆盖 `aifunc.json` 中的 `language`。可选值：`typescript`、`python`、`go` |
 | `--output <dir>` | `-o` | 覆盖 `aifunc.json` 中的 `outputDir` |
 
 ### 支持的包来源格式
@@ -154,7 +154,7 @@ aifn build <package-name...> -l typescript -o src/aifunc
 
 | 选项 | 别名 | 说明 |
 |:---|:---|:---|
-| `--lang <language>` | `-l` | 覆盖 `aifunc.json` 中的 `language`。可选值：`typescript`、`python` |
+| `--lang <language>` | `-l` | 覆盖 `aifunc.json` 中的 `language`。可选值：`typescript`、`python`、`go` |
 | `--output <dir>` | `-o` | 覆盖 `aifunc.json` 中的 `outputDir` |
 
 > [!NOTE]
@@ -165,6 +165,7 @@ aifn build <package-name...> -l typescript -o src/aifunc
 ```bash
 aifn build -l typescript -o dist/ts
 aifn build -l python -o dist/py
+aifn build -l go -o dist/go
 ```
 
 ---

@@ -12,6 +12,7 @@
   <a href="https://github.com/aifunc/cli"><img src="https://img.shields.io/badge/CLI-Go-00ADD8?logo=go&logoColor=white" alt="Go CLI"></a>
   <img alt="Node.js ≥ 18" src="https://img.shields.io/badge/Node.js-≥18-339933?logo=nodedotjs&logoColor=white">
   <img alt="Python ≥ 3.10" src="https://img.shields.io/badge/Python-≥3.10-3776AB?logo=python&logoColor=white">
+  <img alt="Go ≥ 1.23" src="https://img.shields.io/badge/Go-≥1.23-00ADD8?logo=go&logoColor=white">
   <img alt="TypeScript types" src="https://img.shields.io/badge/TypeScript-types-3178C6?logo=typescript&logoColor=white">
 </p>
 
@@ -86,15 +87,50 @@ async def main():
 asyncio.run(main())
 ```
 
-连接真实模型时，把 `mock: true` 换成实际配置：
+### Go
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"your-module/aifunc/summarize"
+)
+
+func main() {
+	config := &summarize.AIFuncConfig{Mock: true}
+
+	text := "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+		"revealing thousands of galaxies in a single image."
+
+	maxLen := 30
+	result, err := summarize.Summarize(context.Background(), config, summarize.SummarizeInput{
+		Text:      text,
+		MaxLength: &maxLen,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Summary   :", result.Summary)
+	fmt.Println("Word count:", result.WordCount)
+}
+```
+
+连接真实模型时，把 `mock: true` 替换为实际的 `baseURL`、`model` 和 `apiKey` 即可，支持任何兼容 OpenAI 协议的服务端点。
 
 ```typescript
+// TypeScript / Python / Go 配置字段相同
 const config: AIFuncConfig = {
-   baseURL: 'https://your-api-endpoint/v1',
-   model: 'your-model-name',
-   apiKey: 'your-api-key',
+  baseURL: 'https://your-api-endpoint/v1',
+  model: 'your-model-name',
+  apiKey: 'your-api-key',
 };
 ```
+
+> 完整可运行代码见 [examples/go/hello-aifunc](./examples/go/hello-aifunc)、[examples/typescript/hello-aifunc](./examples/typescript/hello-aifunc)、[examples/python/hello-aifunc](./examples/python/hello-aifunc)
 
 ---
 
@@ -138,7 +174,10 @@ async function handleTicket(message: string) {
 
 `if`、`switch`、`Promise.all` —— 你本来就掌握的控制流，不需要学任何新东西。
 
-> 完整示例见 [examples/typescript/customer-support](./examples/typescript/customer-support) 和 [examples/python/customer-support](./examples/python/customer-support)
+> 完整示例见 [examples/typescript/customer-support](./examples/typescript/customer-support)、[examples/python/customer-support](./examples/python/customer-support) 和 [examples/go/customer-support](./examples/go/customer-support)
+
+> **想实现带记忆和滑动窗口的多轮对话？** 无需引入重型 Agent 框架，用原生数组管理上下文即可。
+> 示例见 [examples/typescript/chat-with-context](./examples/typescript/chat-with-context)、[examples/python/chat-with-context](./examples/python/chat-with-context)、[examples/go/chat-with-context](./examples/go/chat-with-context)
 
 ---
 
@@ -148,9 +187,9 @@ async function handleTicket(message: string) {
 
 **可测试** — 每个包自带 Mock 数据，`mock: true` 即可离线运行。CI 无需 API Key，零成本测试。
 
-**跨语言** — 一份包定义（`api.json` + `package.json` + `prompts/`），编译到 TypeScript、Python，行为一致。
+**跨语言** — 一份包定义（`api.json` + `package.json` + `prompts/`），编译到 TypeScript、Python、Go，行为一致。
 
-**零依赖** — 运行时 Engine 是生成在项目中的纯源码，不依赖任何第三方 npm/pip 包。
+**零依赖** — 运行时 Engine 是生成在项目中的纯源码，各语言均只使用原生库，不引入任何第三方依赖。
 
 **模型无关** — 支持任何兼容 OpenAI 协议的端点。切换模型只改 config，零代码改动。
 
@@ -224,7 +263,7 @@ aifn create my-analyzer
 安装任意包：
 
 ```bash
-aifn install github:aifunc-dev/aifunc-packages/summarize# 简写模式
+aifn install github:aifunc-dev/aifunc-packages/summarize  # 简写模式
 aifn install https://github.com/aifunc-dev/aifunc-packages/tree/main/summarize # 完整URL模式
 ```
 

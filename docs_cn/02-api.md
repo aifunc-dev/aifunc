@@ -8,7 +8,7 @@
 
 ## 函数签名
 
-每个 AI 函数包安装后生成一个同名的异步函数，签名统一为：
+每个 AI 函数包安装后生成一个同名的可调用函数，签名统一为：
 
 ### TypeScript
 
@@ -22,8 +22,15 @@ async function <functionName>(config: AIFuncConfig, input: <Input>): Promise<<Ou
 async def <function_name>(config: AIFuncConfig, input: <Input>) -> <Output>
 ```
 
+### Go
+
+```go
+func <FunctionName>(ctx context.Context, config *AIFuncConfig, input <Input>) (<Output>, error)
+```
+
 - `config` 控制运行模式（Mock 或真实调用）及模型连接参数
 - `input` / `output` 的类型由包的 `api.json` 定义，IDE 提供完整的类型提示
+- Go 函数为同步调用，通过 `context.Context` 支持超时与取消
 
 ---
 
@@ -64,20 +71,35 @@ class AIFuncConfig:
     mock_data: Any = None
 ```
 
-### 字段说明
+### Go
 
+```go
+type AIFuncConfig struct {
+    BaseURL     string
+    APIKey      string
+    Model       string
+    Temperature *float64
+    MaxTokens   *int
+    Timeout     int    // 毫秒，默认 7000
+    MaxRetries  int    // 默认 1
+    Mock        bool
+    MockData    any
+}
+```
+
+### 字段说明
 
 | 字段 | 类型 | 默认值 | 说明 |
 |:---|:---|:---|:---|
-| `baseURL` / `base_url` | string | — | 模型 API 端点（OpenAI 兼容格式）。非 Mock 模式下必填 |
-| `apiKey` / `api_key` | string | — | API Key。非 Mock 模式下必填 |
-| `model` | string | — | 模型名称。非 Mock 模式下必填 |
-| `temperature` | number | 由包定义 | 生效优先级：config → model-params.json → Engine 默认 |
-| `topP` / `top_p` | number | 由包定义 | 与 temperature 二选一；生效优先级同上 |
-| `maxTokens` / `max_tokens` | integer | 由包定义 | 最大输出 Token 数；生效优先级同上 |
-| `timeout` | number | 7000ms / 7.0s | 请求超时（TS 毫秒，Python 秒）；生效优先级：config → aifunc.json → Engine 默认 |
-| `maxRetries` / `max_retries` | integer | 1 | 失败重试次数，耗尽后抛出最后一次错误；生效优先级同上 |
-| `mock` | boolean | false | 启用 Mock 模式，不调用真实模型 |
+| `baseURL` / `base_url` / `BaseURL` | string | — | 模型 API 端点（OpenAI 兼容格式）。非 Mock 模式下必填 |
+| `apiKey` / `api_key` / `APIKey` | string | — | API Key。非 Mock 模式下必填 |
+| `model` / `Model` | string | — | 模型名称。非 Mock 模式下必填 |
+| `temperature` / `Temperature` | number | 由包定义 | 生效优先级：config → model-params.json → Engine 默认 |
+| `topP` / `top_p` | number | 由包定义 | 与 temperature 二选一；生效优先级同上（仅 TS/Python） |
+| `maxTokens` / `max_tokens` / `MaxTokens` | integer | 由包定义 | 最大输出 Token 数；生效优先级同上 |
+| `timeout` / `Timeout` | number | 7000ms / 7.0s | 请求超时（TS/Go 毫秒，Python 秒）；生效优先级：config → aifunc.json → Engine 默认 |
+| `maxRetries` / `max_retries` / `MaxRetries` | integer | 1 | 失败重试次数，耗尽后抛出最后一次错误；生效优先级同上 |
+| `mock` / `Mock` | boolean | false | 启用 Mock 模式，不调用真实模型 |
 
 ---
 
@@ -136,6 +158,28 @@ async def main():
     print(result.summary)
 
 asyncio.run(main())
+```
+
+```go
+import (
+    "context"
+    "your-module/aifunc/summarize"
+)
+
+config := &summarize.AIFuncConfig{
+    BaseURL: "https://your-api-endpoint/v1",
+    Model:   "your-model-name",
+    APIKey:  "your-api-key",
+}
+
+result, err := summarize.Summarize(context.Background(), config, summarize.SummarizeInput{
+    Text:      "...",
+    MaxLength: 50,
+})
+if err != nil {
+    // 处理错误
+}
+fmt.Println(result.Summary)
 ```
 
 ### 覆盖模型参数
@@ -200,7 +244,16 @@ except Exception as e:
     print(f"AI function error: {e}")
 ```
 
-所有错误均以标准 Error / Exception 抛出，无自定义异常类型。
+### Go 错误处理
+
+```go
+result, err := summarize.Summarize(ctx, config, input)
+if err != nil {
+    fmt.Fprintf(os.Stderr, "AI function error: %v\n", err)
+}
+```
+
+所有错误均以标准 Error / Exception / `error` 返回，无自定义异常类型。
 
 ---
 

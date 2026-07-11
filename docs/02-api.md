@@ -8,7 +8,7 @@
 
 ## Function Signature
 
-Each installed AI function package generates an async function with the same name, with a unified signature:
+Each installed AI function package generates a callable function with the same name, with a unified signature:
 
 ### TypeScript
 
@@ -22,8 +22,15 @@ async function <functionName>(config: AIFuncConfig, input: <Input>): Promise<<Ou
 async def <function_name>(config: AIFuncConfig, input: <Input>) -> <Output>
 ```
 
+### Go
+
+```go
+func <FunctionName>(ctx context.Context, config *AIFuncConfig, input <Input>) (<Output>, error)
+```
+
 - `config` controls the runtime mode (mock or real call) and model connection parameters
 - `input` / `output` types are defined by the package's `api.json`, with full IDE type hints
+- Go functions are synchronous and accept a `context.Context` for timeout and cancellation
 
 ---
 
@@ -64,20 +71,35 @@ class AIFuncConfig:
     mock_data: Any = None
 ```
 
-### Field Descriptions
+### Go
 
+```go
+type AIFuncConfig struct {
+    BaseURL     string
+    APIKey      string
+    Model       string
+    Temperature *float64
+    MaxTokens   *int
+    Timeout     int    // milliseconds, 0 = use aifunc.json or engine default (7000)
+    MaxRetries  int    // 0 = use aifunc.json or engine default (1)
+    Mock        bool
+    MockData    any
+}
+```
+
+### Field Descriptions
 
 | Field | Type | Default | Description |
 |:---|:---|:---|:---|
-| `baseURL` / `base_url` | string | — | Model API endpoint (OpenAI-compatible format). Required when mock mode is disabled |
-| `apiKey` / `api_key` | string | — | API Key. Required when mock mode is disabled |
-| `model` | string | — | Model name. Required when mock mode is disabled |
-| `temperature` | number | Defined by package | Priority: config → model-params.json → engine default |
-| `topP` / `top_p` | number | Defined by package | Use instead of temperature for nucleus sampling; same priority |
-| `maxTokens` / `max_tokens` | integer | Defined by package | Maximum output token count; same priority |
-| `timeout` | number | 7000ms / 7.0s | Request timeout (TS in ms, Python in seconds); priority: config → aifunc.json → engine default |
-| `maxRetries` / `max_retries` | integer | 1 | Retry attempts on any failure, throws last error when exhausted; same priority |
-| `mock` | boolean | false | Enable mock mode, skips real model calls |
+| `baseURL` / `base_url` / `BaseURL` | string | — | Model API endpoint (OpenAI-compatible format). Required when mock mode is disabled |
+| `apiKey` / `api_key` / `APIKey` | string | — | API Key. Required when mock mode is disabled |
+| `model` / `Model` | string | — | Model name. Required when mock mode is disabled |
+| `temperature` / `Temperature` | number | Defined by package | Priority: config → model-params.json → engine default |
+| `topP` / `top_p` | number | Defined by package | Use instead of temperature for nucleus sampling; same priority (TS/Python only) |
+| `maxTokens` / `max_tokens` / `MaxTokens` | integer | Defined by package | Maximum output token count; same priority |
+| `timeout` / `Timeout` | number | 7000ms / 7.0s | Request timeout (TS/Go in ms, Python in seconds); priority: config → aifunc.json → engine default |
+| `maxRetries` / `max_retries` / `MaxRetries` | integer | 1 | Retry attempts on any failure, throws last error when exhausted; same priority |
+| `mock` / `Mock` | boolean | false | Enable mock mode, skips real model calls |
 
 
 
@@ -139,6 +161,28 @@ async def main():
     print(result.summary)
 
 asyncio.run(main())
+```
+
+```go
+import (
+    "context"
+    "your-module/aifunc/summarize"
+)
+
+config := &summarize.AIFuncConfig{
+    BaseURL: "https://your-api-endpoint/v1",
+    Model:   "your-model-name",
+    APIKey:  "your-api-key",
+}
+
+result, err := summarize.Summarize(context.Background(), config, summarize.SummarizeInput{
+    Text:      "...",
+    MaxLength: 50,
+})
+if err != nil {
+    // handle error
+}
+fmt.Println(result.Summary)
 ```
 
 ### Overriding Model Parameters
@@ -203,7 +247,16 @@ except Exception as e:
     print(f"AI function error: {e}")
 ```
 
-All errors are thrown as standard Error / Exception — no custom exception types.
+### Go Error Handling
+
+```go
+result, err := summarize.Summarize(ctx, config, input)
+if err != nil {
+    fmt.Fprintf(os.Stderr, "AI function error: %v\n", err)
+}
+```
+
+All errors are thrown as standard Error / Exception / `error` — no custom exception types.
 
 ---
 

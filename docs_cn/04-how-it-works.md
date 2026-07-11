@@ -1,4 +1,4 @@
-﻿# AIFunc 工作原理
+# AIFunc 工作原理
 
 > **目标读者**：想了解内部机制的开发者
 > **本文内容**：说明 AIFunc 包从安装到运行的完整流程，包括 CLI 编译、项目结构与运行时调用链
@@ -13,7 +13,7 @@
 | 组件 | 语言 | 作用 | 你是否直接接触 |
 |:---|:---|:---|:---|
 | **aifn CLI** | Go | 包管理、依赖解析、代码生成 | ✅ 你在终端执行命令 |
-| **Engine SDK** | 与目标语言一致（如 TypeScript 或 Python） | 运行时加载编译产物、调用模型、校验输出 | ❌ 作为源码生成在你的项目中 |
+| **Engine SDK** | 与目标语言一致（如 TypeScript、Python 或 Go） | 运行时加载编译产物、调用模型、校验输出 | ❌ 作为源码生成在你的项目中 |
 | **生成的函数** | 目标语言 | 你 import 的强类型入口 | ✅ 你在代码中调用 |
 
 CLI 是一个独立的 Go 二进制文件，与你的项目语言无关。Engine SDK 则是按需拉取的纯源码文件，仅使用语言标准库实现、零外部依赖，与生成的函数代码一起存放在你的项目目录中，无需通过 npm 或 pip 额外安装依赖。
@@ -40,7 +40,7 @@ CLI 是一个独立的 Go 二进制文件，与你的项目语言无关。Engine
 
 ## 3. 安装后的项目结构
 
-项目分为缓存区（不提交 Git）和编译产物区（提交 Git）。以下以 TypeScript 和 Python 为例：
+项目分为缓存区（不提交 Git）和编译产物区（提交 Git）。以下以 TypeScript、Python 和 Go 为例：
 
 ### TypeScript 项目示例
 
@@ -97,8 +97,35 @@ your-project/
                   └── ...
 ```
 
+### Go 项目示例
+
+```text
+your-project/
+├── aifunc.json
+├── aifunc-lock.json
+├── go.mod
+│
+├── .aifunc/                             ← 缓存目录（加入 .gitignore）
+│   ├── packages/summarize/
+│   └── _engine/go/v0.1.0/
+│
+└── aifunc/                              ← 编译产物输出目录（提交 Git）
+    ├── summarize/                       ← AI 函数包（package summarize）
+    │   ├── summarize.go                 ← 函数入口
+    │   ├── summarize_types.go           ← I/O 结构体定义
+    │   └── summarize_aifunc.go          ← 编译产物（提示词与 API 规范的 Go 包裹）
+    │
+    └── _engine/
+        └── go/
+            └── v0.1.0/
+                  ├── aifunc.go          ← 公开 API
+                  ├── runtime.go
+                  ├── types.go
+                  └── ...
+```
+
 > [!NOTE]
-> 包内的各个文件会根据目标语言的规范采用不同的命名风格（如 TS 使用 `.` 分隔，Python 使用 `_` 分隔）。所有的代码依赖都在生成的目录内部闭环完成。
+> 包内的各个文件会根据目标语言的规范采用不同的命名风格（如 TS 使用 `.` 分隔，Python 和 Go 使用 `_` 分隔）。所有的代码依赖都在生成的目录内部闭环完成。
 
 ---
 
@@ -108,10 +135,10 @@ your-project/
 
 | 文件（逻辑名） | 职责 |
 |:---|:---|
-| `entry` (如 `index.ts`) | **函数入口**：创建并导出 AI 函数实例，你的业务代码直接引用它。 |
-| `types` (如 `.types.ts`) | **接口文件**：函数的输入、输出结构类型定义，提供强类型支持。 |
-| `aifunc` (如 `.aifunc.ts`) | **核心产物**：Prompt 模板、API 规范、模型配置的合并结果，使用目标语言包裹以保证运行时安全加载。 |
-| `mock` (如 `.mock.ts`) | **Mock 数据**：输入到输出的映射数据，同样使用目标语言包裹，用于离线测试模式。 |
+| `entry` (如 `index.ts`、`summarize.go`) | **函数入口**：创建并导出 AI 函数实例，你的业务代码直接引用它。 |
+| `types` (如 `.types.ts`、`_types.go`) | **接口文件**：函数的输入、输出结构类型定义，提供强类型支持。 |
+| `aifunc` (如 `.aifunc.ts`、`_aifunc.go`) | **核心产物**：Prompt 模板、API 规范、模型配置的合并结果，使用目标语言包裹以保证运行时安全加载。 |
+| `mock` (如 `.mock.ts`、`_mock.py`) | **Mock 数据**：输入到输出的映射数据，同样使用目标语言包裹，用于离线测试模式。（Go 直接内嵌在入口文件中。） |
 
 ---
 
@@ -119,13 +146,14 @@ your-project/
 
 ```text
 你的应用代码
-  │  await summarize(config, { text: "...", maxLength: 20 })
+  │  await summarize(config, { text: "...", maxLength: 20 })   ← TypeScript/Python
+  │  summarize.Summarize(ctx, config, SummarizeInput{...})     ← Go
   ▼
-生成的函数入口（aifunc/summarize/index.ts）
+生成的函数入口（aifunc/summarize/index.ts 或 summarize.go）
   │  强类型入口，无业务逻辑
-  │  引用同目录下的 .types.ts, .aifunc.ts, 以及 _engine
+  │  引用同目录下的类型文件、产物文件，以及 _engine
   ▼
-Engine SDK（aifunc/_engine/vX.Y.Z/runtime.ts）
+Engine SDK（aifunc/_engine/vX.Y.Z/runtime.ts|runtime.py|runtime.go）
   │  ① 解析由语言原生包裹的 .aifunc 配置对象
   │  ② 校验输入数据结构
   │  ③ 渲染 Prompt 模板（替换变量）
@@ -157,7 +185,7 @@ AI 模型 API
 
 | 字段 | 说明 |
 |:---|:---|
-| `language` | 目标语言，决定了生成的语言包裹格式及引擎 SDK 语言（当前支持 `typescript`, `python` 等） |
+| `language` | 目标语言，决定了生成的语言包裹格式及引擎 SDK 语言（当前支持 `typescript`, `python`, `go`） |
 | `outputDir` | 编译产物（包含生成的函数与 Engine SDK）的输出路径 |
 | `alias` | （仅 TS）用于 tsconfig paths 别名的设定 |
 | `packages` | 包名与对应安装源（支持 github 路径、本地路径）的映射关系 |
