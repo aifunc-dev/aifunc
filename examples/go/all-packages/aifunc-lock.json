@@ -1,0 +1,135 @@
+{
+  "lockVersion": 1,
+  "packages": {
+    "analyze-sentiment": {
+      "source": "github:aifunc-dev/aifunc-packages/analyze-sentiment",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:27:56Z"
+    },
+    "answer-question": {
+      "source": "github:aifunc-dev/aifunc-packages/answer-question",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:22Z"
+    },
+    "classify": {
+      "source": "github:aifunc-dev/aifunc-packages/classify",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:11Z"
+    },
+    "detect-language": {
+      "source": "github:aifunc-dev/aifunc-packages/detect-language",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:13Z"
+    },
+    "extract-entities": {
+      "source": "github:aifunc-dev/aifunc-packages/extract-entities",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:04Z"
+    },
+    "extract-json": {
+      "source": "github:aifunc-dev/aifunc-packages/extract-json",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:16Z"
+    },
+    "extract-keywords": {
+      "source": "github:aifunc-dev/aifunc-packages/extract-keywords",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:00Z"
+    },
+    "generate-email": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-email",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:02Z"
+    },
+    "generate-post": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-post",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:18Z"
+    },
+    "generate-reply": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-reply",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:06Z"
+    },
+    "generate-slug": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-slug",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:27:40Z"
+    },
+    "generate-title": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-title",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:27:44Z"
+    },
+    "recognize-intent": {
+      "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:27:46Z"
+    },
+    "rewrite": {
+      "source": "github:aifunc-dev/aifunc-packages/rewrite",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:20Z"
+    },
+    "score-quality": {
+      "source": "github:aifunc-dev/aifunc-packages/score-quality",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:09Z"
+    },
+    "summarize": {
+      "source": "github:aifunc-dev/aifunc-packages/summarize",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:27:49Z"
+    },
+    "translate": {
+      "source": "github:aifunc-dev/aifunc-packages/translate",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:27:51Z"
+    }
+  },
+  "engines": {
+    "v0.1.0": {
+      "source": "github:aifunc-dev/aifunc-packages",
+      "language": "go",
+      "path": "go/v0.1.0",
+      "resolvedFrom": "^0.1.0",
+      "resolvedAt": "2026-07-11T02:28:22Z",
+      "usedBy": [
+        "generate-slug",
+        "translate",
+        "analyze-sentiment",
+        "detect-language",
+        "generate-post",
+        "generate-title",
+        "classify",
+        "generate-reply",
+        "rewrite",
+        "score-quality",
+        "summarize",
+        "recognize-intent",
+        "extract-entities",
+        "extract-json",
+        "extract-keywords",
+        "generate-email",
+        "answer-question"
+      ]
+    }
+  }
+}

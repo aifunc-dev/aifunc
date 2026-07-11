@@ -1,0 +1,37 @@
+{
+  "lockVersion": 1,
+  "packages": {
+    "analyze-sentiment": {
+      "source": "gitee:aifunc-dev/aifunc-packages/analyze-sentiment",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:27:59Z"
+    },
+    "extract-json": {
+      "source": "gitee:aifunc-dev/aifunc-packages/extract-json",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:00Z"
+    },
+    "recognize-intent": {
+      "source": "gitee:aifunc-dev/aifunc-packages/recognize-intent",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:27:58Z"
+    }
+  },
+  "engines": {
+    "v0.1.0": {
+      "source": "gitee:aifunc-dev/aifunc-packages",
+      "language": "go",
+      "path": "go/v0.1.0",
+      "resolvedFrom": "^0.1.0",
+      "resolvedAt": "2026-07-11T02:28:00Z",
+      "usedBy": [
+        "analyze-sentiment",
+        "extract-json",
+        "recognize-intent"
+      ]
+    }
+  }
+}

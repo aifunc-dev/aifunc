@@ -1,0 +1,44 @@
+{
+  "lockVersion": 1,
+  "packages": {
+    "extract-keywords": {
+      "source": "github:aifunc-dev/aifunc-packages/extract-keywords",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:27:57Z"
+    },
+    "generate-reply": {
+      "source": "github:aifunc-dev/aifunc-packages/generate-reply",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:27:50Z"
+    },
+    "recognize-intent": {
+      "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:27:53Z"
+    },
+    "summarize": {
+      "source": "github:aifunc-dev/aifunc-packages/summarize",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-11T02:28:01Z"
+    }
+  },
+  "engines": {
+    "v0.1.0": {
+      "source": "github:aifunc-dev/aifunc-packages",
+      "language": "go",
+      "path": "go/v0.1.0",
+      "resolvedFrom": "^0.1.0",
+      "resolvedAt": "2026-07-11T02:28:02Z",
+      "usedBy": [
+        "recognize-intent",
+        "extract-keywords",
+        "summarize",
+        "generate-reply"
+      ]
+    }
+  }
+}
