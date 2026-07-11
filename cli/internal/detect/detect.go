@@ -15,6 +15,7 @@ type Language string
 const (
 	TypeScript Language = "typescript"
 	Python     Language = "python"
+	Go         Language = "go"
 )
 
 // Result describes the outcome of scanning the project environment.
@@ -22,10 +23,11 @@ type Result struct {
 	// Recommended is the language with the strongest evidence.
 	// It is empty when no signals were found.
 	Recommended Language
-	// TypeScriptScore / PythonScore expose the weighted evidence counts,
+	// TypeScriptScore / PythonScore / GoScore expose the weighted evidence counts,
 	// mainly useful for diagnostics and tests.
 	TypeScriptScore int
 	PythonScore     int
+	GoScore         int
 	// Reasons lists the signal files/markers that drove the recommendation.
 	Reasons []string
 }
@@ -61,6 +63,16 @@ var pyMarkers = []struct {
 	{"venv", 2},
 }
 
+// goMarkers are strong indicators of a Go project.
+var goMarkers = []struct {
+	name   string
+	weight int
+}{
+	{"go.mod", 5},
+	{"go.sum", 3},
+	{"go.work", 4},
+}
+
 // Scan inspects the given project root and recommends a language without
 // committing to it. The recommendation is advisory only; callers decide
 // whether and how to surface or honour it.
@@ -79,10 +91,16 @@ func Scan(root string) Result {
 			res.Reasons = append(res.Reasons, m.name)
 		}
 	}
+	for _, m := range goMarkers {
+		if exists(filepath.Join(root, m.name)) {
+			res.GoScore += m.weight
+			res.Reasons = append(res.Reasons, m.name)
+		}
+	}
 
 	// Source-file presence is a weaker, fallback signal: only scan the top
 	// level to keep this fast and avoid walking large trees.
-	tsFiles, pyFiles := countTopLevelSources(root)
+	tsFiles, pyFiles, goFiles := countTopLevelSources(root)
 	if tsFiles > 0 {
 		res.TypeScriptScore++
 		res.Reasons = append(res.Reasons, "*.ts")
@@ -91,12 +109,22 @@ func Scan(root string) Result {
 		res.PythonScore++
 		res.Reasons = append(res.Reasons, "*.py")
 	}
+	if goFiles > 0 {
+		res.GoScore++
+		res.Reasons = append(res.Reasons, "*.go")
+	}
 
-	switch {
-	case res.TypeScriptScore > res.PythonScore:
-		res.Recommended = TypeScript
-	case res.PythonScore > res.TypeScriptScore:
+	maxScore := res.TypeScriptScore
+	res.Recommended = TypeScript
+	if res.PythonScore > maxScore {
+		maxScore = res.PythonScore
 		res.Recommended = Python
+	}
+	if res.GoScore > maxScore {
+		res.Recommended = Go
+	}
+	if res.TypeScriptScore == 0 && res.PythonScore == 0 && res.GoScore == 0 {
+		res.Recommended = ""
 	}
 
 	return res
@@ -107,10 +135,10 @@ func exists(path string) bool {
 	return err == nil
 }
 
-func countTopLevelSources(root string) (tsCount, pyCount int) {
+func countTopLevelSources(root string) (tsCount, pyCount, goCount int) {
 	entries, err := os.ReadDir(root)
 	if err != nil {
-		return 0, 0
+		return 0, 0, 0
 	}
 	for _, e := range entries {
 		if e.IsDir() {
@@ -123,7 +151,9 @@ func countTopLevelSources(root string) (tsCount, pyCount int) {
 			tsCount++
 		case strings.HasSuffix(name, ".py"), strings.HasSuffix(name, ".pyi"):
 			pyCount++
+		case strings.HasSuffix(name, ".go"):
+			goCount++
 		}
 	}
-	return tsCount, pyCount
+	return tsCount, pyCount, goCount
 }

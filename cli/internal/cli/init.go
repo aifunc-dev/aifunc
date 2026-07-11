@@ -48,7 +48,7 @@ func doInit(ws *workspace.Workspace) error {
 		return err
 	}
 
-	options := []string{"TypeScript", "Python"}
+	options := []string{"TypeScript", "Python", "Go"}
 	defaultIdx := recommendLanguageDefault(ws.Root, options)
 
 	displayOptions := make([]string, len(options))
@@ -135,6 +135,8 @@ func languageDisplayName(lang detect.Language) string {
 		return "TypeScript"
 	case detect.Python:
 		return "Python"
+	case detect.Go:
+		return "Go"
 	default:
 		return string(lang)
 	}

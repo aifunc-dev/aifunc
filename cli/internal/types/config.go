@@ -25,7 +25,7 @@ func (c AifuncConfig) GetOutputDir() string {
 	if c.OutputDir != "" {
 		return c.OutputDir
 	}
-	if c.Language == "python" {
+	if c.Language == "python" || c.Language == "go" {
 		return "aifunc"
 	}
 	return "src/aifunc"
