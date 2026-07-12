@@ -28,9 +28,17 @@ async def <function_name>(config: AIFuncConfig, input: <Input>) -> <Output>
 func <FunctionName>(ctx context.Context, config *AIFuncConfig, input <Input>) (<Output>, error)
 ```
 
+### Java
+
+```java
+public static <Output> <ClassName>.<Output> <methodName>(AIFuncConfig config, <ClassName>.<Input> input)
+        throws AIFuncException
+```
+
 - `config` 控制运行模式（Mock 或真实调用）及模型连接参数
 - `input` / `output` 的类型由包的 `api.json` 定义，IDE 提供完整的类型提示
 - Go 函数为同步调用，通过 `context.Context` 支持超时与取消
+- Java 方法为同步调用；`AIFuncConfig` 使用 Builder 模式提供流式配置
 
 ---
 
@@ -85,6 +93,23 @@ type AIFuncConfig struct {
     Mock        bool
     MockData    any
 }
+```
+
+### Java
+
+```java
+AIFuncConfig config = AIFuncConfig.builder()
+    .baseUrl("https://your-api-endpoint/v1")
+    .apiKey("your-api-key")
+    .model("your-model-name")
+    .temperature(0.2)
+    .topP(0.9)
+    .maxTokens(300)
+    .timeoutMs(7000)
+    .maxRetries(1)
+    .mock(true)
+    .mockData(null)
+    .build();
 ```
 
 ### 字段说明
@@ -182,6 +207,22 @@ if err != nil {
 fmt.Println(result.Summary)
 ```
 
+```java
+import aifunc.summarize.Summarize;
+import aifunc.summarize.SummarizeTypes.SummarizeInput;
+import aifunc.summarize.SummarizeTypes.SummarizeOutput;
+import aifunc._engine.java.v0_1_0.Types.AIFuncConfig;
+
+AIFuncConfig config = AIFuncConfig.builder()
+        .baseUrl("https://your-api-endpoint/v1")
+        .model("your-model-name")
+        .apiKey("your-api-key")
+        .build();
+
+SummarizeOutput result = Summarize.summarize(config, new SummarizeInput("...", 50));
+System.out.println(result.getSummary());
+```
+
 ### 覆盖模型参数
 
 ```typescript
@@ -253,7 +294,17 @@ if err != nil {
 }
 ```
 
-所有错误均以标准 Error / Exception / `error` 返回，无自定义异常类型。
+### Java 错误处理
+
+```java
+try {
+    SummarizeOutput result = Summarize.summarize(config, input);
+} catch (AIFuncException e) {
+    System.err.println("AI function error: " + e.getMessage());
+}
+```
+
+所有错误均以标准 Error / Exception / `error` / `AIFuncException` 返回，Java 无自定义异常层级，仅 `AIFuncException extends RuntimeException`。
 
 ---
 

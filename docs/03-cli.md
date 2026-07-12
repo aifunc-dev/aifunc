@@ -1,4 +1,4 @@
-﻿# aifn CLI Command Reference
+# aifn CLI Command Reference
 
 > **Target audience**: All AIFunc users
 > **Content**: Summary of all commands and usage for aifn CLI v0.1.0
@@ -58,8 +58,8 @@ aifn init
 
 **Behavior:**
 
-- Interactive language selection (TypeScript / Python / Go), auto-detects project environment and provides recommendations
-- Configure artifact output directory (TypeScript defaults to `src/aifunc`, Python and Go default to `aifunc`)
+- Interactive language selection (TypeScript / Python / Go / Java), auto-detects project environment and provides recommendations
+- Configure artifact output directory (TypeScript defaults to `src/aifunc`; Python, Go, and Java default to `aifunc`)
 - TypeScript projects can configure a path alias (defaults to `./aifunc`)
 - Generates `aifunc.json`
 - Adds the cache directory (default `.aifunc/`) to `.gitignore`
@@ -94,7 +94,7 @@ Alias: `aifn i`
 
 | Option | Alias | Description |
 |:---|:---|:---|
-| `--lang <language>` | `-l` | Override `language` in `aifunc.json`. Values: `typescript`, `python`, `go` |
+| `--lang <language>` | `-l` | Override `language` in `aifunc.json`. Values: `typescript`, `python`, `go`, `java` |
 | `--output <dir>` | `-o` | Override `outputDir` in `aifunc.json` |
 
 ### Supported Package Source Formats
@@ -154,7 +154,7 @@ aifn build <package-name...> -l typescript -o src/aifunc
 
 | Option | Alias | Description |
 |:---|:---|:---|
-| `--lang <language>` | `-l` | Override `language` in `aifunc.json`. Values: `typescript`, `python`, `go` |
+| `--lang <language>` | `-l` | Override `language` in `aifunc.json`. Values: `typescript`, `python`, `go`, `java` |
 | `--output <dir>` | `-o` | Override `outputDir` in `aifunc.json` |
 
 > [!NOTE]
@@ -166,6 +166,7 @@ aifn build <package-name...> -l typescript -o src/aifunc
 aifn build -l typescript -o dist/ts
 aifn build -l python -o dist/py
 aifn build -l go -o dist/go
+aifn build -l java -o dist/java
 ```
 
 ---
@@ -305,6 +306,8 @@ aifn install ./my-summarizer
 # No interactive init needed, specify language and output directly
 aifn install -l typescript -o dist/ts
 aifn build -l python -o dist/py
+aifn build -l go -o dist/go
+aifn build -l java -o dist/java
 ```
 
 ### Maintenance: Recompile / remove packages

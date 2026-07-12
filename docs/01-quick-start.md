@@ -1,8 +1,8 @@
-# Quick Start
+﻿# Quick Start
 
 > **Target audience**: All developers who want to use AIFunc
 > **Content**: Complete workflow from installing the CLI to calling an AI function and getting results in 5 minutes
-> **Prerequisites**: Node.js 18+, Python 3.10+, or Go 1.23+
+> **Prerequisites**: Node.js 18+, Python 3.10+, Go 1.23+, or Java 11+
 
 ---
 
@@ -25,7 +25,7 @@ aifn install github:aifunc-dev/aifunc-packages/summarize
 ```
 
 The CLI will automatically:
-- Detect your project type (TypeScript / Python / Go)
+- Detect your project type (TypeScript / Python / Go / Java)
 - Generate importable code (with type definitions and built-in mock data)
 - Create a configuration file (if one doesn't exist)
 
@@ -107,6 +107,26 @@ func main() {
 ```
 
 Your IDE provides full type hints and autocompletion.
+
+### Java
+
+```java
+import aifunc.AIFuncConfig;
+import aifunc.summarize.Summarize;
+import aifunc.summarize.SummarizeTypes.SummarizeInput;
+
+AIFuncConfig config = AIFuncConfig.builder().mock(true).build();
+
+String text = "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+              "revealing thousands of galaxies in a single image.";
+
+Summarize.summarize(config, new SummarizeInput(text, 30))
+        .thenAccept(result -> {
+            System.out.println("Summary   : " + result.getSummary());
+            System.out.println("Word count: " + result.getWordCount());
+        })
+        .join();
+```
 
 ---
 
@@ -201,6 +221,29 @@ func main() {
 }
 ```
 
+### Java
+
+```java
+import aifunc.AIFuncConfig;
+import aifunc.summarize.Summarize;
+import aifunc.summarize.SummarizeTypes.SummarizeInput;
+
+AIFuncConfig config = AIFuncConfig.builder()
+        .baseUrl("https://your-api-endpoint/v1")
+        .model("your-model-name")
+        .apiKey("your-api-key")
+        .build();
+
+String text = "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+              "revealing thousands of galaxies in a single image.";
+
+Summarize.summarize(config, new SummarizeInput(text, 30))
+        .thenAccept(result -> {
+            System.out.println("Summary   : " + result.getSummary());
+            System.out.println("Word count: " + result.getWordCount());
+        })
+        .join();
+```
 Works with any OpenAI-compatible API endpoint.
 
 Run the code:
@@ -219,6 +262,10 @@ python main.py
 
 # Go
 go run main.go
+
+# Java
+javac Main.java
+java Main
 ```
 
 ---
@@ -289,7 +336,7 @@ The `.aifunc/` cache directory is automatically added to `.gitignore`.
 
 No. The CLI is only used when running `aifn` commands.
 
-The runtime is handled by generated TypeScript/Python/Go code with zero external dependencies.
+The runtime is handled by generated TypeScript/Python/Go/Java code with zero external dependencies.
 </details>
 
 <details>

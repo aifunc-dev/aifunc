@@ -1,4 +1,4 @@
-﻿# Runtime API Reference
+# Runtime API Reference
 
 > **Target audience**: Application developers (consumers)
 > **Content**: Complete API documentation for calling AI functions in code, including configuration, call patterns, mock mode, and error handling
@@ -28,9 +28,17 @@ async def <function_name>(config: AIFuncConfig, input: <Input>) -> <Output>
 func <FunctionName>(ctx context.Context, config *AIFuncConfig, input <Input>) (<Output>, error)
 ```
 
+### Java
+
+```java
+public static <Output> <ClassName>.<Output> <methodName>(AIFuncConfig config, <ClassName>.<Input> input)
+        throws AIFuncException
+```
+
 - `config` controls the runtime mode (mock or real call) and model connection parameters
 - `input` / `output` types are defined by the package's `api.json`, with full IDE type hints
 - Go functions are synchronous and accept a `context.Context` for timeout and cancellation
+- Java methods are synchronous; the `AIFuncConfig` builder pattern provides fluent configuration
 
 ---
 
@@ -85,6 +93,23 @@ type AIFuncConfig struct {
     Mock        bool
     MockData    any
 }
+```
+
+### Java
+
+```java
+AIFuncConfig config = AIFuncConfig.builder()
+    .baseUrl("https://your-api-endpoint/v1")
+    .apiKey("your-api-key")
+    .model("your-model-name")
+    .temperature(0.2)
+    .topP(0.9)
+    .maxTokens(300)
+    .timeoutMs(7000)
+    .maxRetries(1)
+    .mock(true)
+    .mockData(null)
+    .build();
 ```
 
 ### Field Descriptions
@@ -185,6 +210,22 @@ if err != nil {
 fmt.Println(result.Summary)
 ```
 
+```java
+import aifunc.summarize.Summarize;
+import aifunc.summarize.SummarizeTypes.SummarizeInput;
+import aifunc.summarize.SummarizeTypes.SummarizeOutput;
+import aifunc._engine.java.v0_1_0.Types.AIFuncConfig;
+
+AIFuncConfig config = AIFuncConfig.builder()
+        .baseUrl("https://your-api-endpoint/v1")
+        .model("your-model-name")
+        .apiKey("your-api-key")
+        .build();
+
+SummarizeOutput result = Summarize.summarize(config, new SummarizeInput("...", 50));
+System.out.println(result.getSummary());
+```
+
 ### Overriding Model Parameters
 
 ```typescript
@@ -256,7 +297,17 @@ if err != nil {
 }
 ```
 
-All errors are thrown as standard Error / Exception / `error` — no custom exception types.
+### Java Error Handling
+
+```java
+try {
+    SummarizeOutput result = Summarize.summarize(config, input);
+} catch (AIFuncException e) {
+    System.err.println("AI function error: " + e.getMessage());
+}
+```
+
+All errors are thrown as standard Error / Exception / `error` / `AIFuncException` — no custom exception hierarchy beyond `AIFuncException extends RuntimeException`.
 
 ---
 

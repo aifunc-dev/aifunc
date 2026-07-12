@@ -3,7 +3,7 @@
 
 > **目标读者**：所有想使用 AIFunc 的开发者
 > **本文内容**：5 分钟完成从安装 CLI 到调用 AI 函数拿到结果的完整流程
-> **前置条件**：Node.js 18+、Python 3.10+ 或 Go 1.23+
+> **前置条件**：Node.js 18+、Python 3.10+、Go 1.23+ 或 Java 11+
 
 ---
 
@@ -26,7 +26,7 @@ aifn install github:aifunc-dev/aifunc-packages/summarize
 ```
 
 CLI 会自动：
-- 识别项目类型（TypeScript / Python / Go）
+- 识别项目类型（TypeScript / Python / Go / Java）
 - 生成可直接 import 的代码（含类型定义和内置 mock 数据）
 - 创建配置文件（如果不存在）
 
@@ -94,9 +94,10 @@ func main() {
 	text := "The James Webb Space Telescope captured its first full-color images in July 2022, " +
 		"revealing thousands of galaxies in a single image."
 
+	maxLen := 30
 	result, err := summarize.Summarize(context.Background(), config, summarize.SummarizeInput{
 		Text:      text,
-		MaxLength: 30,
+		MaxLength: &maxLen,
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -107,6 +108,26 @@ func main() {
 ```
 
 IDE 提供完整的类型提示和自动补全。
+
+### Java
+
+```java
+import aifunc.AIFuncConfig;
+import aifunc.summarize.Summarize;
+import aifunc.summarize.SummarizeTypes.SummarizeInput;
+
+AIFuncConfig config = AIFuncConfig.builder().mock(true).build();
+
+String text = "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+              "revealing thousands of galaxies in a single image.";
+
+Summarize.summarize(config, new SummarizeInput(text, 30))
+        .thenAccept(result -> {
+            System.out.println("Summary   : " + result.getSummary());
+            System.out.println("Word count: " + result.getWordCount());
+        })
+        .join();
+```
 
 ---
 
@@ -201,6 +222,30 @@ func main() {
 }
 ```
 
+### Java
+
+```java
+import aifunc.AIFuncConfig;
+import aifunc.summarize.Summarize;
+import aifunc.summarize.SummarizeTypes.SummarizeInput;
+
+AIFuncConfig config = AIFuncConfig.builder()
+        .baseUrl("https://your-api-endpoint/v1")
+        .model("your-model-name")
+        .apiKey("your-api-key")
+        .build();
+
+String text = "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+              "revealing thousands of galaxies in a single image.";
+
+Summarize.summarize(config, new SummarizeInput(text, 30))
+        .thenAccept(result -> {
+            System.out.println("Summary   : " + result.getSummary());
+            System.out.println("Word count: " + result.getWordCount());
+        })
+        .join();
+```
+
 支持任何兼容 OpenAI 协议的服务端点。
 
 运行代码：
@@ -219,6 +264,10 @@ python main.py
 
 # Go
 go run main.go
+
+# Java
+javac Main.java
+java Main
 ```
 
 ---
@@ -289,7 +338,7 @@ const config: AIFuncConfig = {
 
 不会。CLI 只在执行 `aifn` 命令时使用。
 
-运行时由生成的 TypeScript/Python/Go 代码负责，零外部依赖。
+运行时由生成的 TypeScript/Python/Go/Java 代码负责，零外部依赖。
 
 </details>
 

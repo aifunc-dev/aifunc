@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 <!---->
 <h1>AIFunc</h1>
 <!---->
@@ -13,6 +13,7 @@
   <img alt="Node.js ≥ 18" src="https://img.shields.io/badge/Node.js-≥18-339933?logo=nodedotjs&logoColor=white">
   <img alt="Python ≥ 3.10" src="https://img.shields.io/badge/Python-≥3.10-3776AB?logo=python&logoColor=white">
   <img alt="Go ≥1.23" src="https://img.shields.io/badge/Go-≥1.23-00ADD8?logo=go&logoColor=white">
+  <img alt="Java ≥11" src="https://img.shields.io/badge/Java-≥11-ED8B00?logo=openjdk&logoColor=white">
   <img alt="TypeScript types" src="https://img.shields.io/badge/TypeScript-types-3178C6?logo=typescript&logoColor=white">
 </p>
 <!---->
@@ -119,6 +120,26 @@ func main() {
 }
 ```
 
+
+### Java
+
+```java
+import aifunc.summarize.Summarize;
+import aifunc.summarize.SummarizeTypes.SummarizeInput;
+import aifunc.summarize.SummarizeTypes.SummarizeOutput;
+import aifunc._engine.java.v0_1_0.Types.AIFuncConfig;
+
+// Mock mode: no API key needed, works offline
+AIFuncConfig config = AIFuncConfig.builder().mock(true).build();
+
+String text = "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+              "revealing thousands of galaxies in a single image.";
+
+SummarizeInput input = new SummarizeInput(text, 30);
+SummarizeOutput result = Summarize.summarize(config, input);
+System.out.println("Summary   : " + result.getSummary());   // IDE autocomplete, type-safe
+System.out.println("Word count: " + result.getWordCount());
+```
 To connect a real model, replace `mock: true` with your actual `baseURL`, `model`, and `apiKey`. Any OpenAI-compatible endpoint works.
 
 ```typescript

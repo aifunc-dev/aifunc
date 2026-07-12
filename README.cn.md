@@ -13,6 +13,7 @@
   <img alt="Node.js ≥ 18" src="https://img.shields.io/badge/Node.js-≥18-339933?logo=nodedotjs&logoColor=white">
   <img alt="Python ≥ 3.10" src="https://img.shields.io/badge/Python-≥3.10-3776AB?logo=python&logoColor=white">
   <img alt="Go ≥ 1.23" src="https://img.shields.io/badge/Go-≥1.23-00ADD8?logo=go&logoColor=white">
+  <img alt="Java ≥ 11" src="https://img.shields.io/badge/Java-≥11-ED8B00?logo=openjdk&logoColor=white">
   <img alt="TypeScript types" src="https://img.shields.io/badge/TypeScript-types-3178C6?logo=typescript&logoColor=white">
 </p>
 
@@ -119,10 +120,30 @@ func main() {
 }
 ```
 
+### Java
+
+```java
+import aifunc.summarize.Summarize;
+import aifunc.summarize.SummarizeTypes.SummarizeInput;
+import aifunc.summarize.SummarizeTypes.SummarizeOutput;
+import aifunc._engine.java.v0_1_0.Types.AIFuncConfig;
+
+// mock 模式：无需 API Key，离线即可运行
+AIFuncConfig config = AIFuncConfig.builder().mock(true).build();
+
+String text = "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+              "revealing thousands of galaxies in a single image.";
+
+SummarizeInput input = new SummarizeInput(text, 30);
+SummarizeOutput result = Summarize.summarize(config, input);
+System.out.println("Summary   : " + result.getSummary());   // IDE 自动补全，类型安全
+System.out.println("Word count: " + result.getWordCount());
+```
+
 连接真实模型时，把 `mock: true` 替换为实际的 `baseURL`、`model` 和 `apiKey` 即可，支持任何兼容 OpenAI 协议的服务端点。
 
 ```typescript
-// TypeScript / Python / Go 配置字段相同
+// TypeScript / Python / Go / Java 配置字段相同
 const config: AIFuncConfig = {
   baseURL: 'https://your-api-endpoint/v1',
   model: 'your-model-name',
@@ -130,7 +151,7 @@ const config: AIFuncConfig = {
 };
 ```
 
-> 完整可运行代码见 [examples/go/hello-aifunc](./examples/go/hello-aifunc)、[examples/typescript/hello-aifunc](./examples/typescript/hello-aifunc)、[examples/python/hello-aifunc](./examples/python/hello-aifunc)
+> 完整可运行代码见 [examples/go/hello-aifunc](./examples/go/hello-aifunc)、[examples/typescript/hello-aifunc](./examples/typescript/hello-aifunc)、[examples/python/hello-aifunc](./examples/python/hello-aifunc)、[examples/java/hello-aifunc](./examples/java/hello-aifunc)
 
 ---
 

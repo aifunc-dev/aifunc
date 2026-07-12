@@ -13,10 +13,10 @@
 | 组件 | 语言 | 作用 | 你是否直接接触 |
 |:---|:---|:---|:---|
 | **aifn CLI** | Go | 包管理、依赖解析、代码生成 | ✅ 你在终端执行命令 |
-| **Engine SDK** | 与目标语言一致（如 TypeScript、Python 或 Go） | 运行时加载编译产物、调用模型、校验输出 | ❌ 作为源码生成在你的项目中 |
+| **Engine SDK** | 与目标语言一致（如 TypeScript、Python、Go 或 Java） | 运行时加载编译产物、调用模型、校验输出 | ❌ 作为源码生成在你的项目中 |
 | **生成的函数** | 目标语言 | 你 import 的强类型入口 | ✅ 你在代码中调用 |
 
-CLI 是一个独立的 Go 二进制文件，与你的项目语言无关。Engine SDK 则是按需拉取的纯源码文件，仅使用语言标准库实现、零外部依赖，与生成的函数代码一起存放在你的项目目录中，无需通过 npm 或 pip 额外安装依赖。
+CLI 是一个独立的 Go 二进制文件，与你的项目语言无关。Engine SDK 则是按需拉取的纯源码文件，仅使用语言标准库实现、零外部依赖，与生成的函数代码一起存放在你的项目目录中，无需通过 npm、pip、`go get` 或 Maven 额外安装依赖。
 
 ---
 
@@ -33,6 +33,8 @@ CLI 是一个独立的 Go 二进制文件，与你的项目语言无关。Engine
 3. **编译与包裹（核心机制）**：为避免传统应用打包器（如 Webpack/Vite）或语言运行时在加载纯数据文件时可能出现的异常，CLI 不再单独输出纯配置文件。而是**将 API 定义、Prompt 模板、模型参数等内容，使用你的目标语言进行包裹**。
    * TypeScript 项目会生成包含配置对象的 `.ts` 文件。
    * Python 项目会生成包含配置字典的 `.py` 文件。
+   * Go 项目会生成包含配置 map 和结构体字面量的 `.go` 文件。
+   * Java 项目会生成包含静态 `Map<String,Object>` 初始化器的 `.java` 文件。
    * 同时生成对应的强类型接口文件和 Mock 数据包裹文件。
 4. **链接输出**：最后，CLI 将生成的强类型函数、语言包裹产物，以及所需的 Engine SDK 源文件，一并输出到你指定的项目目录（如 `src/aifunc/`）中。
 
@@ -40,7 +42,7 @@ CLI 是一个独立的 Go 二进制文件，与你的项目语言无关。Engine
 
 ## 3. 安装后的项目结构
 
-项目分为缓存区（不提交 Git）和编译产物区（提交 Git）。以下以 TypeScript、Python 和 Go 为例：
+项目分为缓存区（不提交 Git）和编译产物区（提交 Git）。以下以 TypeScript、Python、Go 和 Java 为例：
 
 ### TypeScript 项目示例
 
@@ -124,8 +126,43 @@ your-project/
                   └── ...
 ```
 
+### Java 项目示例
+
+```text
+your-project/
+├── aifunc.json
+├── aifunc-lock.json
+│
+├── .aifunc/                             ← 缓存目录（加入 .gitignore）
+│   ├── packages/summarize/
+│   └── _engine/java/v0_1_0/
+│
+└── aifunc/                              ← 编译产物输出目录（提交 Git）
+    ├── summarize/                       ← AI 函数包（package aifunc.summarize）
+    │   ├── Summarize.java               ← 函数入口（静态方法，返回 CompletableFuture）
+    │   ├── SummarizeTypes.java          ← SummarizeInput / SummarizeOutput POJO
+    │   ├── SummarizeAifunc.java         ← 编译产物（Map<String,Object> 字面量）
+    │   └── SummarizeAifuncMock.java     ← Mock 数据（Map 字面量，无 mock.json 时为 null）
+    │
+    ├── AIFuncConfig.java                ← 公开配置（package aifunc）
+    ├── AIFuncException.java             ← 公开异常（package aifunc）
+    └── _engine/
+        └── java/
+            └── v0_1_0/
+                  ├── Json.java          ← 零依赖 JSON 解析/序列化
+                  ├── Types.java
+                  ├── Runtime.java       ← executeAsync() 入口
+                  ├── Validator.java
+                  ├── Prompt.java
+                  ├── Request.java
+                  ├── Mock.java
+                  └── Artifact.java
+```
+
+无需构建工具 — 生成文件是纯 Java 源码，零外部依赖。将 `aifunc/` 与业务代码放在同级（或加为 source root），用 `javac` 编译即可。
+
 > [!NOTE]
-> 包内的各个文件会根据目标语言的规范采用不同的命名风格（如 TS 使用 `.` 分隔，Python 和 Go 使用 `_` 分隔）。所有的代码依赖都在生成的目录内部闭环完成。
+> 包内的各个文件会根据目标语言的规范采用不同的命名风格（如 TS 使用 `.` 分隔，Python 和 Go 使用 `_` 分隔，Java 使用 PascalCase）。所有的代码依赖都在生成的目录内部闭环完成。
 
 ---
 
@@ -135,10 +172,10 @@ your-project/
 
 | 文件（逻辑名） | 职责 |
 |:---|:---|
-| `entry` (如 `index.ts`、`summarize.go`) | **函数入口**：创建并导出 AI 函数实例，你的业务代码直接引用它。 |
-| `types` (如 `.types.ts`、`_types.go`) | **接口文件**：函数的输入、输出结构类型定义，提供强类型支持。 |
-| `aifunc` (如 `.aifunc.ts`、`_aifunc.go`) | **核心产物**：Prompt 模板、API 规范、模型配置的合并结果，使用目标语言包裹以保证运行时安全加载。 |
-| `mock` (如 `.mock.ts`、`_mock.py`) | **Mock 数据**：输入到输出的映射数据，同样使用目标语言包裹，用于离线测试模式。（Go 直接内嵌在入口文件中。） |
+| `entry` (如 `index.ts`、`summarize.go`、`Summarize.java`) | **函数入口**：创建并导出 AI 函数实例，你的业务代码直接引用它。 |
+| `types` (如 `.types.ts`、`_types.go`、`SummarizeTypes.java`) | **接口文件**：函数的输入、输出结构类型定义，提供强类型支持。 |
+| `aifunc` (如 `.aifunc.ts`、`_aifunc.go`、`SummarizeAifunc.java`) | **核心产物**：Prompt 模板、API 规范、模型配置的合并结果，使用目标语言包裹以保证运行时安全加载。 |
+| `mock` (如 `.mock.ts`、`_mock.py`、`SummarizeAifuncMock.java`) | **Mock 数据**：输入到输出的映射数据，同样使用目标语言包裹，用于离线测试模式。（Go 直接内嵌在入口文件中。） |
 
 ---
 
@@ -148,12 +185,13 @@ your-project/
 你的应用代码
   │  await summarize(config, { text: "...", maxLength: 20 })   ← TypeScript/Python
   │  summarize.Summarize(ctx, config, SummarizeInput{...})     ← Go
+  │  Summarize.summarize(config, new SummarizeInput("...", 20)) ← Java（CompletableFuture）
   ▼
-生成的函数入口（aifunc/summarize/index.ts 或 summarize.go）
+生成的函数入口（aifunc/summarize/index.ts | summarize.go | Summarize.java）
   │  强类型入口，无业务逻辑
   │  引用同目录下的类型文件、产物文件，以及 _engine
   ▼
-Engine SDK（aifunc/_engine/vX.Y.Z/runtime.ts|runtime.py|runtime.go）
+Engine SDK（aifunc/_engine/.../runtime.ts|runtime.py|runtime.go|Runtime.java）
   │  ① 解析由语言原生包裹的 .aifunc 配置对象
   │  ② 校验输入数据结构
   │  ③ 渲染 Prompt 模板（替换变量）
@@ -185,7 +223,7 @@ AI 模型 API
 
 | 字段 | 说明 |
 |:---|:---|
-| `language` | 目标语言，决定了生成的语言包裹格式及引擎 SDK 语言（当前支持 `typescript`, `python`, `go`） |
+| `language` | 目标语言，决定了生成的语言包裹格式及引擎 SDK 语言（当前支持 `typescript`, `python`, `go`, `java`） |
 | `outputDir` | 编译产物（包含生成的函数与 Engine SDK）的输出路径 |
 | `alias` | （仅 TS）用于 tsconfig paths 别名的设定 |
 | `packages` | 包名与对应安装源（支持 github 路径、本地路径）的映射关系 |
