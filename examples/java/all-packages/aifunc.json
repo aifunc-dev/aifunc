@@ -1,0 +1,24 @@
+{
+  "configVersion": 1,
+  "language": "java",
+  "outputDir": "aifunc",
+  "packages": {
+    "analyze-sentiment": "github:aifunc-dev/aifunc-packages/analyze-sentiment",
+    "answer-question": "github:aifunc-dev/aifunc-packages/answer-question",
+    "classify": "github:aifunc-dev/aifunc-packages/classify",
+    "detect-language": "github:aifunc-dev/aifunc-packages/detect-language",
+    "extract-entities": "github:aifunc-dev/aifunc-packages/extract-entities",
+    "extract-json": "github:aifunc-dev/aifunc-packages/extract-json",
+    "extract-keywords": "github:aifunc-dev/aifunc-packages/extract-keywords",
+    "generate-email": "github:aifunc-dev/aifunc-packages/generate-email",
+    "generate-post": "github:aifunc-dev/aifunc-packages/generate-post",
+    "generate-reply": "github:aifunc-dev/aifunc-packages/generate-reply",
+    "generate-slug": "github:aifunc-dev/aifunc-packages/generate-slug",
+    "generate-title": "github:aifunc-dev/aifunc-packages/generate-title",
+    "recognize-intent": "github:aifunc-dev/aifunc-packages/recognize-intent",
+    "rewrite": "github:aifunc-dev/aifunc-packages/rewrite",
+    "score-quality": "github:aifunc-dev/aifunc-packages/score-quality",
+    "summarize": "github:aifunc-dev/aifunc-packages/summarize",
+    "translate": "github:aifunc-dev/aifunc-packages/translate"
+  }
+}

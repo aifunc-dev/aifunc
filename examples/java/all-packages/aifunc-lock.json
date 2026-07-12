@@ -1,0 +1,135 @@
+{
+  "lockVersion": 1,
+  "packages": {
+    "analyze-sentiment": {
+      "source": "gitee:aifunc-dev/aifunc-packages/analyze-sentiment",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:13Z"
+    },
+    "answer-question": {
+      "source": "gitee:aifunc-dev/aifunc-packages/answer-question",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:19Z"
+    },
+    "classify": {
+      "source": "gitee:aifunc-dev/aifunc-packages/classify",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:03Z"
+    },
+    "detect-language": {
+      "source": "gitee:aifunc-dev/aifunc-packages/detect-language",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:05Z"
+    },
+    "extract-entities": {
+      "source": "gitee:aifunc-dev/aifunc-packages/extract-entities",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:06Z"
+    },
+    "extract-json": {
+      "source": "gitee:aifunc-dev/aifunc-packages/extract-json",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:14Z"
+    },
+    "extract-keywords": {
+      "source": "gitee:aifunc-dev/aifunc-packages/extract-keywords",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:21Z"
+    },
+    "generate-email": {
+      "source": "gitee:aifunc-dev/aifunc-packages/generate-email",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:01Z"
+    },
+    "generate-post": {
+      "source": "gitee:aifunc-dev/aifunc-packages/generate-post",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:23Z"
+    },
+    "generate-reply": {
+      "source": "gitee:aifunc-dev/aifunc-packages/generate-reply",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:07Z"
+    },
+    "generate-slug": {
+      "source": "gitee:aifunc-dev/aifunc-packages/generate-slug",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:35:58Z"
+    },
+    "generate-title": {
+      "source": "gitee:aifunc-dev/aifunc-packages/generate-title",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:16Z"
+    },
+    "recognize-intent": {
+      "source": "gitee:aifunc-dev/aifunc-packages/recognize-intent",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:15Z"
+    },
+    "rewrite": {
+      "source": "gitee:aifunc-dev/aifunc-packages/rewrite",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:02Z"
+    },
+    "score-quality": {
+      "source": "gitee:aifunc-dev/aifunc-packages/score-quality",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:09Z"
+    },
+    "summarize": {
+      "source": "gitee:aifunc-dev/aifunc-packages/summarize",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:35:59Z"
+    },
+    "translate": {
+      "source": "gitee:aifunc-dev/aifunc-packages/translate",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T06:36:00Z"
+    }
+  },
+  "engines": {
+    "v0.1.0": {
+      "source": "gitee:aifunc-dev/aifunc-packages",
+      "language": "java",
+      "path": "java/v0.1.0",
+      "resolvedFrom": "^0.1.0",
+      "resolvedAt": "2026-07-12T06:36:23Z",
+      "usedBy": [
+        "detect-language",
+        "recognize-intent",
+        "answer-question",
+        "extract-entities",
+        "extract-keywords",
+        "generate-email",
+        "generate-post",
+        "generate-reply",
+        "summarize",
+        "analyze-sentiment",
+        "extract-json",
+        "generate-slug",
+        "score-quality",
+        "rewrite",
+        "classify",
+        "generate-title",
+        "translate"
+      ]
+    }
+  }
+}
