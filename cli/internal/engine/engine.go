@@ -119,7 +119,7 @@ func Install(repoRoot string, version string, language string, ws *workspace.Wor
 	}
 
 	versionDir := "v" + version
-	if language == "python" {
+	if language == "python" || language == "java" {
 		versionDir = "v" + strings.ReplaceAll(version, ".", "_")
 	}
 	destPath := filepath.Join(ws.EngineCachePath(), language, versionDir)

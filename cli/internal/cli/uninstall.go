@@ -240,7 +240,7 @@ func engineRelPaths(eng types.EngineLock, key, defaultLang string) []string {
 	paths.Add(eng.Path)
 
 	if lang != "" {
-		if lang == "python" {
+		if lang == "python" || lang == "java" {
 			paths.Add(filepath.Join(lang, "v"+strings.ReplaceAll(version, ".", "_")))
 		}
 		paths.Add(filepath.Join(lang, "v"+version))

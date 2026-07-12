@@ -1,4 +1,4 @@
-﻿// Copyright 2026 GildenEye
+// Copyright 2026 GildenEye
 // SPDX-License-Identifier: Apache-2.0
 
 package cli
@@ -48,7 +48,7 @@ func doInit(ws *workspace.Workspace) error {
 		return err
 	}
 
-	options := []string{"TypeScript", "Python", "Go"}
+	options := []string{"TypeScript", "Python", "Go", "Java"}
 	defaultIdx := recommendLanguageDefault(ws.Root, options)
 
 	displayOptions := make([]string, len(options))
@@ -137,6 +137,8 @@ func languageDisplayName(lang detect.Language) string {
 		return "Python"
 	case detect.Go:
 		return "Go"
+	case detect.Java:
+		return "Java"
 	default:
 		return string(lang)
 	}

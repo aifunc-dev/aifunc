@@ -429,7 +429,7 @@ func resolveEngineFromCache(ws *workspace.Workspace, spec types.PackageSpec, lan
 			continue
 		}
 		version := strings.TrimPrefix(name, "v")
-		if language == "python" {
+		if language == "python" || language == "java" {
 			version = strings.ReplaceAll(version, "_", ".")
 		}
 		ok, err := engine.MatchesRange(version, engineRange)

@@ -1,4 +1,4 @@
-// Copyright 2026 GildenEye
+﻿// Copyright 2026 GildenEye
 // SPDX-License-Identifier: Apache-2.0
 
 package cli
@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	golang "aifunc/cli/internal/builder/go"
+	javabuild "aifunc/cli/internal/builder/java"
 	"aifunc/cli/internal/builder/python"
 	"aifunc/cli/internal/builder/typescript"
 	"aifunc/cli/internal/fileutil"
@@ -76,10 +77,10 @@ func runBuild(packageNames []string, langOverride string, outputOverride string)
 	}
 
 	switch cfg.Language {
-	case "typescript", "python", "go":
+	case "typescript", "python", "go", "java":
 		// valid
 	default:
-		return fmt.Errorf("unsupported language %q; supported languages are typescript, python and go", cfg.Language)
+		return fmt.Errorf("unsupported language %q; supported languages are typescript, python, go and java", cfg.Language)
 	}
 
 	ws.SetInputDir(cfg.GetInputDir())
@@ -149,7 +150,8 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 	fmt.Printf("  %s ... ", name)
 
 	pkgOutputName := name
-	if cfg.Language == "python" || cfg.Language == "go" {
+	switch cfg.Language {
+	case "python", "go", "java":
 		pkgOutputName = strings.ReplaceAll(name, "-", "_")
 	}
 	pkgOutputDir := filepath.Join(cfg.GetOutputDir(), pkgOutputName)
@@ -210,12 +212,26 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 			fmt.Println("failed")
 			return fmt.Errorf("generating Go mock: %w", err)
 		}
+	case "java":
+		hasMock := packageHasMock(pkgPath)
+		if err := javabuild.Generate(artifact, pkgOutputDir, hasMock, engineVersion, cfg, "aifunc"); err != nil {
+			fmt.Println("failed")
+			return fmt.Errorf("generating Java code: %w", err)
+		}
+		if err := removeJSONArtifact(pkgOutputDir, artifact.Package.Name); err != nil {
+			fmt.Println("failed")
+			return fmt.Errorf("removing JSON artifact: %w", err)
+		}
+		if err := writeJavaMockFile(pkgPath, name, pkgOutputDir, artifact); err != nil {
+			fmt.Println("failed")
+			return fmt.Errorf("generating Java mock: %w", err)
+		}
 	default:
 		fmt.Println("failed")
 		return fmt.Errorf("unsupported language: %s", cfg.Language)
 	}
 
-	if cfg.Language != "typescript" && cfg.Language != "python" && cfg.Language != "go" {
+	if cfg.Language != "typescript" && cfg.Language != "python" && cfg.Language != "go" && cfg.Language != "java" {
 		if err := copyMockToPackageDir(pkgPath, name, pkgOutputDir); err != nil {
 			fmt.Println("failed")
 			return fmt.Errorf("copying mock.json: %w", err)
@@ -224,7 +240,7 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 
 	engineSrc := filepath.Join(ws.EngineCachePath(), cfg.Language, "v"+engineVersion)
 	engineDstVersion := "v" + engineVersion
-	if cfg.Language == "python" {
+	if cfg.Language == "python" || cfg.Language == "java" {
 		engineSrc = filepath.Join(ws.EngineCachePath(), cfg.Language, "v"+strings.ReplaceAll(engineVersion, ".", "_"))
 		engineDstVersion = "v" + strings.ReplaceAll(engineVersion, ".", "_")
 	}
@@ -241,10 +257,27 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 		if cfg.Language == "python" {
 			ensurePythonInitFiles(cfg.GetOutputDir(), cfg.Language, engineDstVersion)
 		}
+		if cfg.Language == "java" {
+			promoteJavaRootTypes(engineDst, cfg.GetOutputDir())
+		}
 	}
 
 	fmt.Println("done")
 	return nil
+}
+
+// promoteJavaRootTypes moves AIFuncConfig.java and AIFuncException.java from
+// the engine output directory to the outputDir root, since they belong to the
+// root "aifunc" package, not the engine sub-package.
+func promoteJavaRootTypes(engineDst, outputDir string) {
+	for _, name := range []string{"AIFuncConfig.java", "AIFuncException.java"} {
+		src := filepath.Join(engineDst, name)
+		dst := filepath.Join(outputDir, name)
+		if data, err := os.ReadFile(src); err == nil {
+			os.WriteFile(dst, data, 0644)
+			os.Remove(src)
+		}
+	}
 }
 
 func ensurePythonRootMarkers(outputDir string) {
@@ -394,4 +427,23 @@ func copyMockToPackageDir(pkgPath, name, pkgOutputDir string) error {
 
 	mockDst := filepath.Join(pkgOutputDir, name+".mock.json")
 	return os.WriteFile(mockDst, data, 0644)
+}
+
+func writeJavaMockFile(pkgPath, name, pkgOutputDir string, artifact *types.CompiledArtifact) error {
+	mockSrc := filepath.Join(pkgPath, "mock.json")
+	if _, err := os.Stat(mockSrc); os.IsNotExist(err) {
+		return nil
+	}
+	data, err := fileutil.ReadJSON(mockSrc)
+	if err != nil {
+		return err
+	}
+	var mockRaw any
+	if err := json.Unmarshal(data, &mockRaw); err != nil {
+		return fmt.Errorf("parsing mock.json: %w", err)
+	}
+	safeName := strings.TrimPrefix(name, "@")
+	safeName = strings.ReplaceAll(safeName, "/", "__")
+	safeName = strings.ReplaceAll(safeName, "-", "_")
+	return javabuild.WriteMockFile(mockRaw, artifact, pkgOutputDir, safeName, "aifunc")
 }
