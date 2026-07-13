@@ -48,7 +48,7 @@ func doInit(ws *workspace.Workspace) error {
 		return err
 	}
 
-	options := []string{"TypeScript", "Python", "Go", "Java"}
+	options := []string{"TypeScript", "Python", "Go", "Java", "C#"}
 	defaultIdx := recommendLanguageDefault(ws.Root, options)
 
 	displayOptions := make([]string, len(options))
@@ -84,9 +84,10 @@ func doInit(ws *workspace.Workspace) error {
 		}
 	}
 
+	langKey := languageToConfigKey(language)
 	cfg := types.AifuncConfig{
 		ConfigVersion: 1,
-		Language:      strings.ToLower(language),
+		Language:      langKey,
 		OutputDir:     outputDir,
 		Packages:      map[string]string{},
 	}
@@ -122,11 +123,21 @@ func recommendLanguageDefault(root string, options []string) int {
 		languageDisplayName(res.Recommended), strings.Join(res.Reasons, ", "))
 
 	for i, opt := range options {
-		if strings.EqualFold(opt, string(res.Recommended)) {
+		if strings.EqualFold(opt, string(res.Recommended)) ||
+			(res.Recommended == detect.CSharp && opt == "C#") {
 			return i
 		}
 	}
 	return 0
+}
+
+func languageToConfigKey(display string) string {
+	switch display {
+	case "C#":
+		return "csharp"
+	default:
+		return strings.ToLower(display)
+	}
 }
 
 func languageDisplayName(lang detect.Language) string {
@@ -139,6 +150,8 @@ func languageDisplayName(lang detect.Language) string {
 		return "Go"
 	case detect.Java:
 		return "Java"
+	case detect.CSharp:
+		return "C#"
 	default:
 		return string(lang)
 	}

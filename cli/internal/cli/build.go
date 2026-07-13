@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	golang "aifunc/cli/internal/builder/go"
+	csharpbuild "aifunc/cli/internal/builder/csharp"
 	javabuild "aifunc/cli/internal/builder/java"
 	"aifunc/cli/internal/builder/python"
 	"aifunc/cli/internal/builder/typescript"
@@ -77,10 +78,10 @@ func runBuild(packageNames []string, langOverride string, outputOverride string)
 	}
 
 	switch cfg.Language {
-	case "typescript", "python", "go", "java":
+	case "typescript", "python", "go", "java", "csharp":
 		// valid
 	default:
-		return fmt.Errorf("unsupported language %q; supported languages are typescript, python, go and java", cfg.Language)
+		return fmt.Errorf("unsupported language %q; supported languages are typescript, python, go, java and csharp", cfg.Language)
 	}
 
 	ws.SetInputDir(cfg.GetInputDir())
@@ -151,7 +152,7 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 
 	pkgOutputName := name
 	switch cfg.Language {
-	case "python", "go", "java":
+	case "python", "go", "java", "csharp":
 		pkgOutputName = strings.ReplaceAll(name, "-", "_")
 	}
 	pkgOutputDir := filepath.Join(cfg.GetOutputDir(), pkgOutputName)
@@ -226,12 +227,26 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 			fmt.Println("failed")
 			return fmt.Errorf("generating Java mock: %w", err)
 		}
+	case "csharp":
+		hasMock := packageHasMock(pkgPath)
+		if err := csharpbuild.Generate(artifact, pkgOutputDir, hasMock, engineVersion, cfg, "Aifunc"); err != nil {
+			fmt.Println("failed")
+			return fmt.Errorf("generating C# code: %w", err)
+		}
+		if err := removeJSONArtifact(pkgOutputDir, artifact.Package.Name); err != nil {
+			fmt.Println("failed")
+			return fmt.Errorf("removing JSON artifact: %w", err)
+		}
+		if err := writeCSharpMockFile(pkgPath, name, pkgOutputDir, artifact); err != nil {
+			fmt.Println("failed")
+			return fmt.Errorf("generating C# mock: %w", err)
+		}
 	default:
 		fmt.Println("failed")
 		return fmt.Errorf("unsupported language: %s", cfg.Language)
 	}
 
-	if cfg.Language != "typescript" && cfg.Language != "python" && cfg.Language != "go" && cfg.Language != "java" {
+	if cfg.Language != "typescript" && cfg.Language != "python" && cfg.Language != "go" && cfg.Language != "java" && cfg.Language != "csharp" {
 		if err := copyMockToPackageDir(pkgPath, name, pkgOutputDir); err != nil {
 			fmt.Println("failed")
 			return fmt.Errorf("copying mock.json: %w", err)
@@ -240,7 +255,7 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 
 	engineSrc := filepath.Join(ws.EngineCachePath(), cfg.Language, "v"+engineVersion)
 	engineDstVersion := "v" + engineVersion
-	if cfg.Language == "python" || cfg.Language == "java" {
+	if cfg.Language == "python" || cfg.Language == "java" || cfg.Language == "csharp" {
 		engineSrc = filepath.Join(ws.EngineCachePath(), cfg.Language, "v"+strings.ReplaceAll(engineVersion, ".", "_"))
 		engineDstVersion = "v" + strings.ReplaceAll(engineVersion, ".", "_")
 	}
@@ -260,6 +275,9 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 		if cfg.Language == "java" {
 			promoteJavaRootTypes(engineDst, cfg.GetOutputDir())
 		}
+		if cfg.Language == "csharp" {
+			promoteCSharpRootTypes(engineDst, cfg.GetOutputDir())
+		}
 	}
 
 	fmt.Println("done")
@@ -271,6 +289,19 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 // root "aifunc" package, not the engine sub-package.
 func promoteJavaRootTypes(engineDst, outputDir string) {
 	for _, name := range []string{"AIFuncConfig.java", "AIFuncException.java"} {
+		src := filepath.Join(engineDst, name)
+		dst := filepath.Join(outputDir, name)
+		if data, err := os.ReadFile(src); err == nil {
+			os.WriteFile(dst, data, 0644)
+			os.Remove(src)
+		}
+	}
+}
+
+// promoteCSharpRootTypes moves AIFuncConfig.cs and AIFuncException.cs from
+// the engine output directory to the outputDir root (namespace Aifunc).
+func promoteCSharpRootTypes(engineDst, outputDir string) {
+	for _, name := range []string{"AIFuncConfig.cs", "AIFuncException.cs"} {
 		src := filepath.Join(engineDst, name)
 		dst := filepath.Join(outputDir, name)
 		if data, err := os.ReadFile(src); err == nil {
@@ -446,4 +477,23 @@ func writeJavaMockFile(pkgPath, name, pkgOutputDir string, artifact *types.Compi
 	safeName = strings.ReplaceAll(safeName, "/", "__")
 	safeName = strings.ReplaceAll(safeName, "-", "_")
 	return javabuild.WriteMockFile(mockRaw, artifact, pkgOutputDir, safeName, "aifunc")
+}
+
+func writeCSharpMockFile(pkgPath, name, pkgOutputDir string, artifact *types.CompiledArtifact) error {
+	mockSrc := filepath.Join(pkgPath, "mock.json")
+	if _, err := os.Stat(mockSrc); os.IsNotExist(err) {
+		return nil
+	}
+	data, err := fileutil.ReadJSON(mockSrc)
+	if err != nil {
+		return err
+	}
+	var mockRaw any
+	if err := json.Unmarshal(data, &mockRaw); err != nil {
+		return fmt.Errorf("parsing mock.json: %w", err)
+	}
+	safeName := strings.TrimPrefix(name, "@")
+	safeName = strings.ReplaceAll(safeName, "/", "__")
+	safeName = strings.ReplaceAll(safeName, "-", "_")
+	return csharpbuild.WriteMockFile(mockRaw, artifact, pkgOutputDir, safeName, "Aifunc")
 }

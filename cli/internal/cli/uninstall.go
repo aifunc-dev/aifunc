@@ -119,7 +119,7 @@ func removeSinglePackage(ws *workspace.Workspace, cfg types.AifuncConfig, lock *
 // outputName converts a package name to its output directory name,
 // handling language-specific conventions (e.g. Python uses underscores).
 func outputName(name, language string) string {
-	if language == "python" {
+	if language == "python" || language == "go" || language == "java" || language == "csharp" {
 		return strings.ReplaceAll(name, "-", "_")
 	}
 	return name
@@ -240,7 +240,7 @@ func engineRelPaths(eng types.EngineLock, key, defaultLang string) []string {
 	paths.Add(eng.Path)
 
 	if lang != "" {
-		if lang == "python" || lang == "java" {
+		if lang == "python" || lang == "java" || lang == "csharp" {
 			paths.Add(filepath.Join(lang, "v"+strings.ReplaceAll(version, ".", "_")))
 		}
 		paths.Add(filepath.Join(lang, "v"+version))

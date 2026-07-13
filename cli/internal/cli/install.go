@@ -429,7 +429,7 @@ func resolveEngineFromCache(ws *workspace.Workspace, spec types.PackageSpec, lan
 			continue
 		}
 		version := strings.TrimPrefix(name, "v")
-		if language == "python" || language == "java" {
+		if language == "python" || language == "java" || language == "csharp" {
 			version = strings.ReplaceAll(version, "_", ".")
 		}
 		ok, err := engine.MatchesRange(version, engineRange)
@@ -635,7 +635,7 @@ func mergeUsedBy(existing []string, newNames []string) []string {
 
 func engineCachePath(language string, version string) string {
 	versionDir := "v" + version
-	if language == "python" {
+	if language == "python" || language == "java" || language == "csharp" {
 		versionDir = "v" + strings.ReplaceAll(version, ".", "_")
 	}
 	return language + "/" + versionDir
