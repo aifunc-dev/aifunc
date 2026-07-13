@@ -58,8 +58,8 @@ aifn init
 
 **行为：**
 
-- 交互式选择项目语言（TypeScript / Python / Go / Java），自动检测项目环境并给出推荐
-- 配置产物输出目录（TypeScript 默认 `src/aifunc`；Python、Go 和 Java 默认 `aifunc`）
+- 交互式选择项目语言（TypeScript / Python / Go / Java / C#），自动检测项目环境并给出推荐
+- 配置产物输出目录（TypeScript 默认 `src/aifunc`；Python、Go、Java 和 C# 默认 `aifunc`）
 - TypeScript 项目可配置路径别名（默认 `./aifunc`）
 - 生成 `aifunc.json`
 - 将缓存目录（默认 `.aifunc/`）写入 `.gitignore`
@@ -94,7 +94,7 @@ aifn install <source...> -l python -o aifunc
 
 | 选项 | 别名 | 说明 |
 |:---|:---|:---|
-| `--lang <language>` | `-l` | 覆盖 `aifunc.json` 中的 `language`。可选值：`typescript`、`python`、`go`、`java` |
+| `--lang <language>` | `-l` | 覆盖 `aifunc.json` 中的 `language`。可选值：`typescript`、`python`、`go`、`java`、`csharp` |
 | `--output <dir>` | `-o` | 覆盖 `aifunc.json` 中的 `outputDir` |
 
 ### 支持的包来源格式
@@ -154,7 +154,7 @@ aifn build <package-name...> -l typescript -o src/aifunc
 
 | 选项 | 别名 | 说明 |
 |:---|:---|:---|
-| `--lang <language>` | `-l` | 覆盖 `aifunc.json` 中的 `language`。可选值：`typescript`、`python`、`go`、`java` |
+| `--lang <language>` | `-l` | 覆盖 `aifunc.json` 中的 `language`。可选值：`typescript`、`python`、`go`、`java`、`csharp` |
 | `--output <dir>` | `-o` | 覆盖 `aifunc.json` 中的 `outputDir` |
 
 > [!NOTE]
@@ -167,6 +167,7 @@ aifn build -l typescript -o dist/ts
 aifn build -l python -o dist/py
 aifn build -l go -o dist/go
 aifn build -l java -o dist/java
+aifn build -l csharp -o dist/csharp
 ```
 
 ---
@@ -306,6 +307,9 @@ aifn install ./my-summarizer
 # 无需交互式初始化，直接指定语言和输出目录
 aifn install -l typescript -o dist/ts
 aifn build -l python -o dist/py
+aifn build -l go -o dist/go
+aifn build -l java -o dist/java
+aifn build -l csharp -o dist/csharp
 ```
 
 ### 日常维护：重新编译 / 移除包

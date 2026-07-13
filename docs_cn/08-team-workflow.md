@@ -122,7 +122,7 @@ aifn init                                # 选择 python，输出到 aifunc
 aifn install ../aifunc-packages/summarize
 ```
 
-同一个 `summarize` 包，前者生成 `.ts` 文件，后者生成 `.py` 文件。包仓库无需为不同语言做适配。
+同一个 `summarize` 包，前者生成 `.ts` 文件，后者生成 `.py` 文件。Go（`.go`）、Java（`.java`）、C#（`.cs`）同理。包仓库无需为不同语言做适配。
 
 **长期使用：** 当上游 Prompt 工程师更新了包，应用开发者只需：
 
@@ -208,6 +208,9 @@ aifn install ../aifunc-packages/summarize
 ```bash
 aifn build -l typescript -o services/order-api/src/aifunc
 aifn build -l python -o services/data-pipeline/aifunc
+aifn build -l go -o services/risk-svc/aifunc
+aifn build -l java -o services/billing/aifunc
+aifn build -l csharp -o services/admin/aifunc
 ```
 
 ### 内部包目录（可选）
@@ -285,6 +288,14 @@ config = AIFuncConfig(mock=True)
 result = await summarize(config, SummarizeInput(text="test input", max_length=20))
 ```
 
+```csharp
+using Aifunc;
+using Aifunc.Summarize;
+
+var config = new AIFuncConfig { Mock = true };
+var result = await Summarize.SummarizeAsync(config, new SummarizeTypes.SummarizeInput("test input", 20));
+```
+
 ---
 
 ## CI/CD 集成
@@ -302,6 +313,9 @@ aifn build
 # 直接指定语言和输出目录（不依赖 aifunc.json 中的配置）
 aifn build -l typescript -o src/aifunc
 aifn build -l python -o aifunc
+aifn build -l go -o aifunc
+aifn build -l java -o aifunc
+aifn build -l csharp -o aifunc
 ```
 
 ### 多项目构建
@@ -309,6 +323,9 @@ aifn build -l python -o aifunc
 ```bash
 aifn build -l typescript -o services/order-api/src/aifunc
 aifn build -l python -o services/data-pipeline/aifunc
+aifn build -l go -o services/risk-svc/aifunc
+aifn build -l java -o services/billing/aifunc
+aifn build -l csharp -o services/admin/aifunc
 ```
 
 ---

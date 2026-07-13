@@ -8,9 +8,9 @@ Our goal is to make AI capabilities standard, typed, and predictable across all 
 
 Features currently being worked on and expected in the near future.
 
-- [ ] **Go Language Support**: First-class generation for Go.
-- [ ] **Java Support**: Bringing AI functions to the enterprise JVM ecosystem.
-- [ ] **C# Support**: Strongly-typed C# wrapper generation.
+- [x] **Go Language Support**: First-class generation for Go.
+- [x] **Java Support**: Bringing AI functions to the enterprise JVM ecosystem.
+- [x] **C# Support**: Strongly-typed C# wrapper generation (.NET 6+, zero NuGet dependencies).
 - [ ] **Robust Structured Output Handling**: Comprehensive parsing and validation for complex structured responses.
 - [ ] **Record/Replay Mocking**: Automatically record real API responses into mock files for zero-setup deterministic testing.
 - [ ] **Model-Specific Parameter Adaptation**: Progressively adding strongly-typed, provider-specific parameter support with full IDE autocomplete.

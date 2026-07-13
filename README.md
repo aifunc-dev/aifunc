@@ -1,42 +1,51 @@
 ﻿<div align="center">
-<!---->
+
 <h1>AIFunc</h1>
-<!---->
-<p><strong>AI as Function. Prompt as Code.</strong></p>
-<!---->
-<p>Call AI like a function. Share AI like an npm package.</p>
-<p>Typed · Testable · Cross-language · Zero-dependency · Model-agnostic · Git-native</p>
-<!---->
+
+<p><strong>AI as Functions, Prompts as Code</strong></p>
+
+<p>Use AI like calling a function, share AI like publishing an npm package</p>
+<p>Strongly Typed · Testable · Cross-Language · Zero Dependencies · Model Agnostic · Git Native</p>
+
 <p>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License"></a>
-  <a href="https://github.com/aifunc/cli"><img src="https://img.shields.io/badge/CLI-Go-00ADD8?logo=go&logoColor=white" alt="Go CLI"></a>
-  <img alt="Node.js ≥ 18" src="https://img.shields.io/badge/Node.js-≥18-339933?logo=nodedotjs&logoColor=white">
+  <img alt="TypeScript / Node.js ≥ 18" src="https://img.shields.io/badge/TypeScript_/_Node.js-≥18-3178C6?logo=typescript&logoColor=white">
   <img alt="Python ≥ 3.10" src="https://img.shields.io/badge/Python-≥3.10-3776AB?logo=python&logoColor=white">
-  <img alt="Go ≥1.23" src="https://img.shields.io/badge/Go-≥1.23-00ADD8?logo=go&logoColor=white">
-  <img alt="Java ≥11" src="https://img.shields.io/badge/Java-≥11-ED8B00?logo=openjdk&logoColor=white">
-  <img alt="TypeScript types" src="https://img.shields.io/badge/TypeScript-types-3178C6?logo=typescript&logoColor=white">
+  <img alt="Go ≥ 1.23" src="https://img.shields.io/badge/Go-≥1.23-00ADD8?logo=go&logoColor=white">
+  <img alt="Java ≥ 11" src="https://img.shields.io/badge/Java-≥11-ED8B00?logo=openjdk&logoColor=white">
+  <img alt="C# / .NET ≥ 6" src="https://img.shields.io/badge/C%23_/_NET-≥6-512BD4?logo=dotnet&logoColor=white">
 </p>
-<!---->
+
 </div>
 
 ---
 
 ## Why AIFunc
 
-Adding an AI feature to your product should be simple.
+Adding an AI feature to your product should be simple. In reality, it means: adopting a new framework, learning prompt engineering, writing glue code, and figuring out how to test it. A week of coding, and the core logic is just 3 lines.
 
-The reality: adopt a new framework, learn new orchestration abstractions, study prompt engineering, write glue code, figure out how to test, worry about switching models. A week of work for 3 lines of core logic.
+**80% of real-world needs are actually simple: text in, structured data out. Stateless, no memory. It's essentially a function.**
 
-80% of real-world AI needs are straightforward: **text in, structured data out. Stateless. No memory.** That's a function.
+AIFunc's goal is: **Let you use, manage, and share AI capabilities just like ordinary functions.**
 
-AIFunc makes this work out of the box. No new concepts, no architecture invasion. Just import.
+### How does it work?
+
+1. **Declarative package definition**: An AIFunc package is just a folder containing a package.json, an api.json, and a few prompts/*.md files. No code, no runtime.
+2. **CLI cross-language compilation**: With a single `aifn` CLI command, these declaration files are "compiled" into native language code for your current project (TypeScript, Python, Go, Java, C#).
+3. **Zero runtime dependencies**: The generated code only depends on the language's native standard library. You don't need to `npm install` or `pip install` any heavy framework — just `import` and use.
+
+### Why is this approach better?
+
+- **No new concepts, no architecture invasion**: What you get are strongly typed native functions. Use `if/else` to chain logic, use native arrays to manage context — say goodbye to complex Agent orchestration frameworks.
+- **Testing out of the box**: The generated code comes with mock data — set `mock: true` for offline execution. CI pipelines don't need real API keys.
+- **Git-native sharing**: Write a package, push it to a Git repository, and others can install it with a single command. No need for npm/PyPI — fork, PR, and version control reuse your existing Git workflow directly.
 
 ---
 
 ## Quick Start
 
 ```bash
-# Install CLI
+# Install the CLI
 brew tap aifunc-dev/aifn && brew install aifn   # macOS/Linux
 scoop bucket add aifn https://github.com/aifunc-dev/scoop-aifn && scoop install aifn  # Windows
 ```
@@ -51,7 +60,6 @@ aifn install github:aifunc-dev/aifunc-packages/summarize
 ```typescript
 import { summarize, AIFuncConfig, SummarizeInput } from './aifunc/summarize';
 
-// Mock mode: no API key needed, works offline
 const config: AIFuncConfig = { mock: true };
 
 const text =
@@ -60,7 +68,7 @@ const text =
 
 async function main() {
   const result = await summarize(config, { text, maxLength: 30 } as SummarizeInput);
-  console.log(`Summary   : ${result.summary}`);   // ← IDE autocomplete, type-safe
+  console.log(`Summary   : ${result.summary}`);   // ← IDE autocomplete, type safe
   console.log(`Word count: ${result.wordCount}`);
 }
 
@@ -76,8 +84,8 @@ from aifunc.summarize import summarize, AIFuncConfig, SummarizeInput
 config = AIFuncConfig(mock=True)
 
 text = (
-    'The James Webb Space Telescope captured its first full-color images in July 2022, '
-    'revealing thousands of galaxies in a single image.'
+  'The James Webb Space Telescope captured its first full-color images in July 2022, '
+  'revealing thousands of galaxies in a single image.'
 )
 
 async def main():
@@ -88,7 +96,8 @@ async def main():
 asyncio.run(main())
 ```
 
-### Go
+<details>
+<summary>Go</summary>
 
 ```go
 package main
@@ -120,8 +129,10 @@ func main() {
 }
 ```
 
+</details>
 
-### Java
+<details>
+<summary>Java</summary>
 
 ```java
 import aifunc.summarize.Summarize;
@@ -129,7 +140,6 @@ import aifunc.summarize.SummarizeTypes.SummarizeInput;
 import aifunc.summarize.SummarizeTypes.SummarizeOutput;
 import aifunc._engine.java.v0_1_0.Types.AIFuncConfig;
 
-// Mock mode: no API key needed, works offline
 AIFuncConfig config = AIFuncConfig.builder().mock(true).build();
 
 String text = "The James Webb Space Telescope captured its first full-color images in July 2022, " +
@@ -137,23 +147,69 @@ String text = "The James Webb Space Telescope captured its first full-color imag
 
 SummarizeInput input = new SummarizeInput(text, 30);
 SummarizeOutput result = Summarize.summarize(config, input);
-System.out.println("Summary   : " + result.getSummary());   // IDE autocomplete, type-safe
+System.out.println("Summary   : " + result.getSummary());
 System.out.println("Word count: " + result.getWordCount());
 ```
-To connect a real model, replace `mock: true` with your actual `baseURL`, `model`, and `apiKey`. Any OpenAI-compatible endpoint works.
 
-```typescript
-// TypeScript / Python / Go — same config fields
-config = { baseURL: "https://your-api-endpoint/v1", model: "your-model-name", apiKey: "your-api-key" }
+</details>
+
+<details>
+<summary>C#</summary>
+
+```csharp
+using Aifunc;
+using Aifunc.Summarize;
+
+var config = new AIFuncConfig { Mock = true };
+
+var text =
+    "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+    "revealing thousands of galaxies in a single image.";
+
+var result = await Summarize.SummarizeAsync(config, new SummarizeTypes.SummarizeInput(text, 30));
+Console.WriteLine($"Summary   : {result.Summary}");
+Console.WriteLine($"Word count: {result.WordCount}");
 ```
 
-> See fully runnable examples: [examples/go/hello-aifunc](./examples/go/hello-aifunc), [examples/typescript/hello-aifunc](./examples/typescript/hello-aifunc), [examples/python/hello-aifunc](./examples/python/hello-aifunc)
+</details>
+
+To connect to a real model, simply replace `mock: true` with your actual `baseURL`, `model`, and `apiKey`. Any endpoint compatible with the OpenAI protocol is supported.
+
+```typescript
+// Same config fields for TypeScript / Python / Go / Java / C#
+const config: AIFuncConfig = {
+  baseURL: 'https://your-api-endpoint/v1',
+  model: 'your-model-name',
+  apiKey: 'your-api-key',
+};
+```
+
+> Full runnable code available at [examples/go/hello-aifunc](./examples/go/hello-aifunc), [examples/typescript/hello-aifunc](./examples/typescript/hello-aifunc), [examples/python/hello-aifunc](./examples/python/hello-aifunc), [examples/java/hello-aifunc](./examples/java/hello-aifunc), [examples/csharp/hello-aifunc](./examples/csharp/hello-aifunc)
 
 ---
 
-## Compose Multiple AI Functions
+## Use Cases & Boundaries
 
-AI functions compose like regular functions. Use familiar control flow to wire business logic:
+AIFunc's design philosophy is **"reduce AI to ordinary functions"**, which gives it very clear boundaries:
+
+✅ **Great for**
+- **Integrating into existing systems**: Seamlessly add AI capabilities without changing your current architecture.
+- **Relatively fixed business workflows**: Such as data cleaning, information extraction (Text to JSON), intent recognition, text classification, content summarization, etc.
+- **Multi-turn conversations**: **Fully supported.** However, you manage context state through your own business code (e.g., using native arrays or a database), passing the conversation history to the AI function each time. No complex Agent memory framework needed.
+- **Multi-model switching and adaptation**: Compatible with the OpenAI protocol under the hood — just modify the `config` to switch between different vendors' LLMs at any time, with zero code changes.
+
+❌ **Not suitable for**
+- **Highly open-ended autonomous Agents**: Tasks that require AI to independently plan and loop through tool chains.
+  AIFunc advocates using code to orchestrate control flow, rather than letting AI act freely.
+
+> 💡 **About streaming output**
+> The current version focuses on "structured data extraction" (waiting for the complete result to return). **Streaming output support will be added in a future release.**
+
+---
+
+## Orchestrate AI Like Writing Business Code
+
+AI functions can be freely composed just like ordinary functions. Chain business logic using the control flow you're already familiar with:
 
 ```typescript
 import { analyzeSentiment, AIFuncConfig } from './aifunc/analyze-sentiment';
@@ -189,34 +245,35 @@ async function handleTicket(message: string) {
 }
 ```
 
-`if`, `switch`, `Promise.all` — control flow you already know. Nothing new to learn.
+Use `if`, `switch` for control flow, manage context and data with `array` or databases — native language features are all you need to chain logic together. No extra orchestration abstractions, seamless integration into existing systems.
 
-> Full examples: [examples/typescript/customer-support](./examples/typescript/customer-support), [examples/python/customer-support](./examples/python/customer-support) and [examples/go/customer-support](./examples/go/customer-support)
+Full examples: [TypeScript](./examples/typescript/customer-support) / [Python](./examples/python/customer-support) / [Go](./examples/go/customer-support) / [Java](./examples/java/customer-support) / [C#](./examples/csharp/customer-support)
 
-> **Want multi-turn conversations with memory and sliding window?** No heavy Agent framework needed — just use native arrays to manage context.
-> See [examples/typescript/chat-with-context](./examples/typescript/chat-with-context), [examples/python/chat-with-context](./examples/python/chat-with-context), [examples/go/chat-with-context](./examples/go/chat-with-context)
+Multi-turn conversation with memory examples: [TypeScript](./examples/typescript/chat-with-context) / [Python](./examples/python/chat-with-context) / [Go](./examples/go/chat-with-context) / [Java](./examples/java/chat-with-context) / [C#](./examples/csharp/chat-with-context)
 
 ---
 
 ## Features
 
-**Typed** — Full type definitions for inputs and outputs. IDE autocomplete. Misspell a field? Caught at compile time.
+**Strongly Typed** — Full type definitions for inputs and outputs, IDE autocomplete, compile-time errors for misspelled fields.
 
-**Testable** — Every package ships with mock data. `mock: true` runs offline. CI without API keys, zero cost.
+**Testable** — Every package includes mock data. Set `mock: true` for offline execution. CI requires no API key — zero-cost testing.
 
-**Cross-language** — One package definition (`api.json` + `package.json` + `prompts/`) compiles to TypeScript, Python, and Go with identical behavior.
+**Cross-Language** — One package definition (`api.json` + `package.json` + `prompts/`), compiled to TypeScript, Python, Go, Java, C# with consistent behavior.
 
-**Zero-dependency** — The runtime engine is pure source code generated into your project. Every language runtime uses only its native standard library — no third-party dependencies of any kind.
+**Zero Dependencies** — The runtime engine is pure source code generated into your project. Each language uses only native libraries with no third-party dependencies.
 
-**Model-agnostic** — Works with any OpenAI-compatible endpoint. Switch models by changing config, zero code changes.
+**Model Agnostic** — Supports any endpoint compatible with the OpenAI protocol. Switch models by changing config only — zero code changes.
 
-**Git-native** — Compiled output commits to Git. Team members clone and import directly, no CLI needed. Version control, code review, and access control all reuse your existing Git workflow.
+**Git Native** — Compiled artifacts are committed to Git. Team members clone and import directly — no CLI installation needed. Version management, code review, and access control all reuse your Git workflow.
+
+> In one sentence: **AIFunc turns AI capabilities into ordinary functions in your codebase — strongly typed, testable, and version-controlled.**
 
 ---
 
-## Share and Reuse
+## Sharing & Reuse
 
-Write an AI function, push to Git, anyone installs with one command:
+Write an AI function, push to Git, and anyone can install it with a single command:
 
 ```bash
 # Others install your published package
@@ -226,74 +283,74 @@ aifn install github:your-name/your-packages/summarize
 aifn install ../shared-packages/translate
 ```
 
-No npm publish, no registry. **A Git repo is a package registry.** Fork, PR, Tag, access control — your existing Git workflow, directly reused.
+No need to publish to npm, no registry required. **Your Git repository is the package registry.** Fork, PR, tag, access control — your existing Git workflow is reused directly.
 
-Want to create your own package? Just a `package.json` for metadata, an `api.json` for the interface, and a `prompts/` directory for the prompt:
+Want to create your own package? All you need is a `package.json` for the package definition, an `api.json` for the interface definition, and a `prompts/` directory for prompts:
 
 ```bash
 aifn create my-analyzer
-# Generates package skeleton — fill in package.json, api.json, and prompt
+# Generates the package skeleton — fill in package.json, api.json, and prompts
 ```
 
-> See [Create an AIFunc Package](./docs/05-create-package.md) and [Sharing & Publishing](./docs/07-sharing.md)
+> See [Creating AIFunc Packages](./docs_cn/05-create-package.md) and [Sharing & Publishing](./docs_cn/07-sharing.md) for details
 
 ---
 
-## Team Workflow
+## Team Collaboration
 
-| Role | Responsibility |
-|:---|:---|
-| AI Engineer | Create packages, write prompts, tune quality |
-| App Developer | `import` → call, no prompt knowledge needed |
-| Platform Lead | Manage package repo, review PRs, control versions |
+| Role             | Responsibility                                      |
+| ---------------- | --------------------------------------------------- |
+| AI Engineer      | Create packages, write prompts, tune performance    |
+| App Developer    | `import` → call — no prompt knowledge needed        |
+| Platform Lead    | Manage package repositories, review PRs, control versions |
 
 ---
 
-## Available Packages
+## Available AI Function Packages
 
-The official package registry provides ready-to-use AI functions:
+The official package repository provides ready-to-use common AI functions:
 
-| Package | Purpose |
-|:---|:---|
-| `summarize` | Text summarization |
-| `analyze-sentiment` | Sentiment analysis |
-| `recognize-intent` | Intent recognition |
-| `classify` | General text classification |
-| `extract-json` | Extract structured fields from text |
-| `extract-entities` | Entity extraction (names, places, orgs) |
-| `extract-keywords` | Keyword extraction |
-| `detect-language` | Language detection |
-| `translate` | Translation |
-| `rewrite` | Text rewriting |
-| `generate-reply` | Reply generation |
-| `generate-title` | Title generation |
-| `generate-slug` | URL slug generation |
-| `generate-email` | Email generation |
-| `generate-post` | Post generation |
-| `answer-question` | Question answering |
-| `score-quality` | Content quality scoring |
+| Package             | Purpose                                        |
+| ------------------- | ---------------------------------------------- |
+| `summarize`         | Text summarization                             |
+| `analyze-sentiment` | Sentiment analysis                             |
+| `recognize-intent`  | Intent recognition                             |
+| `classify`          | General text classification                    |
+| `extract-json`      | Extract structured fields from text            |
+| `extract-entities`  | Entity extraction (names, locations, orgs, etc.) |
+| `extract-keywords`  | Keyword extraction                             |
+| `detect-language`   | Language detection                             |
+| `translate`         | Translation                                    |
+| `rewrite`           | Text rewriting                                 |
+| `generate-reply`    | Generate replies                               |
+| `generate-title`    | Generate titles                                |
+| `generate-slug`     | Generate URL slugs                             |
+| `generate-email`    | Generate emails                                |
+| `generate-post`     | Generate articles                              |
+| `answer-question`   | Question answering                             |
+| `score-quality`     | Content quality scoring                        |
 
 Install any package:
 
 ```bash
-aifn install github:aifunc-dev/aifunc-packages/summarize  # Short form
-aifn install https://github.com/aifunc-dev/aifunc-packages/tree/main/summarize  # Full URL
+aifn install github:aifunc-dev/aifunc-packages/summarize  # Shorthand mode
+aifn install https://github.com/aifunc-dev/aifunc-packages/tree/main/summarize # Full URL mode
 ```
 
-> Full package list and docs: [aifunc-packages](https://github.com/aifunc-dev/aifunc-packages)
+> Full package list and documentation at [aifunc-packages](https://github.com/aifunc-dev/aifunc-packages)
 
 ---
 
 ## Documentation
 
-- [Quick Start](./docs/01-quick-start.md) — Up and running in 5 minutes
-- [Runtime API Reference](./docs/02-api.md)
-- [CLI Reference](./docs/03-cli.md)
-- [How It Works](./docs/04-how-it-works.md)
-- [Create a Package](./docs/05-create-package.md)
-- [Package Spec](./docs/06-spec.md)
-- [Sharing & Publishing](./docs/07-sharing.md)
-- [Team Workflow](./docs/08-team-workflow.md)
+- [Quick Start](./docs_cn/01-quick-start.md) — Get up and running in 5 minutes
+- [Runtime API Reference](./docs_cn/02-api.md)
+- [CLI Command Reference](./docs_cn/03-cli.md)
+- [How It Works](./docs_cn/04-how-it-works.md)
+- [Creating AIFunc Packages](./docs_cn/05-create-package.md)
+- [Package Format Specification](./docs_cn/06-spec.md)
+- [Sharing & Publishing](./docs_cn/07-sharing.md)
+- [Team Collaboration](./docs_cn/08-team-workflow.md)
 
 ---
 

@@ -35,10 +35,17 @@ public static <Output> <ClassName>.<Output> <methodName>(AIFuncConfig config, <C
         throws AIFuncException
 ```
 
+### C#
+
+```csharp
+public static Task<<Output>> <ClassName>.<MethodName>Async(AIFuncConfig config, <ClassName>.<Input> input)
+```
+
 - `config` controls the runtime mode (mock or real call) and model connection parameters
 - `input` / `output` types are defined by the package's `api.json`, with full IDE type hints
 - Go functions are synchronous and accept a `context.Context` for timeout and cancellation
 - Java methods are synchronous; the `AIFuncConfig` builder pattern provides fluent configuration
+- C# methods are async (`Task`); `AIFuncConfig` uses object initializers
 
 ---
 
@@ -112,17 +119,35 @@ AIFuncConfig config = AIFuncConfig.builder()
     .build();
 ```
 
+### C#
+
+```csharp
+var config = new AIFuncConfig
+{
+    BaseUrl = "https://your-api-endpoint/v1",
+    ApiKey = "your-api-key",
+    Model = "your-model-name",
+    Temperature = 0.2,
+    TopP = 0.9,
+    MaxTokens = 300,
+    TimeoutMs = 7000,
+    MaxRetries = 1,
+    Mock = true,
+    MockData = null,
+};
+```
+
 ### Field Descriptions
 
 | Field | Type | Default | Description |
 |:---|:---|:---|:---|
-| `baseURL` / `base_url` / `BaseURL` | string | — | Model API endpoint (OpenAI-compatible format). Required when mock mode is disabled |
-| `apiKey` / `api_key` / `APIKey` | string | — | API Key. Required when mock mode is disabled |
+| `baseURL` / `base_url` / `BaseURL` / `BaseUrl` | string | — | Model API endpoint (OpenAI-compatible format). Required when mock mode is disabled |
+| `apiKey` / `api_key` / `APIKey` / `ApiKey` | string | — | API Key. Required when mock mode is disabled |
 | `model` / `Model` | string | — | Model name. Required when mock mode is disabled |
 | `temperature` / `Temperature` | number | Defined by package | Priority: config → model-params.json → engine default |
-| `topP` / `top_p` | number | Defined by package | Use instead of temperature for nucleus sampling; same priority (TS/Python only) |
+| `topP` / `top_p` / `TopP` | number | Defined by package | Use instead of temperature for nucleus sampling; same priority |
 | `maxTokens` / `max_tokens` / `MaxTokens` | integer | Defined by package | Maximum output token count; same priority |
-| `timeout` / `Timeout` | number | 7000ms / 7.0s | Request timeout (TS/Go in ms, Python in seconds); priority: config → aifunc.json → engine default |
+| `timeout` / `Timeout` / `timeoutMs` / `TimeoutMs` | number | 7000ms / 7.0s | Request timeout (TS/Go in ms, Python in seconds, Java/C# via `timeoutMs`/`TimeoutMs`); priority: config → aifunc.json → engine default |
 | `maxRetries` / `max_retries` / `MaxRetries` | integer | 1 | Retry attempts on any failure, throws last error when exhausted; same priority |
 | `mock` / `Mock` | boolean | false | Enable mock mode, skips real model calls |
 
@@ -226,6 +251,21 @@ SummarizeOutput result = Summarize.summarize(config, new SummarizeInput("...", 5
 System.out.println(result.getSummary());
 ```
 
+```csharp
+using Aifunc;
+using Aifunc.Summarize;
+
+var config = new AIFuncConfig
+{
+    BaseUrl = "https://your-api-endpoint/v1",
+    Model = "your-model-name",
+    ApiKey = "your-api-key",
+};
+
+var result = await Summarize.SummarizeAsync(config, new SummarizeTypes.SummarizeInput("...", 50));
+Console.WriteLine(result.Summary);
+```
+
 ### Overriding Model Parameters
 
 ```typescript
@@ -307,7 +347,20 @@ try {
 }
 ```
 
-All errors are thrown as standard Error / Exception / `error` / `AIFuncException` — no custom exception hierarchy beyond `AIFuncException extends RuntimeException`.
+### C# Error Handling
+
+```csharp
+try
+{
+    var result = await Summarize.SummarizeAsync(config, input);
+}
+catch (AIFuncException e)
+{
+    Console.Error.WriteLine($"AI function error: {e.Message}");
+}
+```
+
+All errors are thrown as standard Error / Exception / `error` / `AIFuncException` — no custom exception hierarchy beyond `AIFuncException` (Java: `extends RuntimeException`; C#: `Exception`).
 
 ---
 

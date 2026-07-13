@@ -122,7 +122,7 @@ aifn init                                # Choose python, output to aifunc
 aifn install ../aifunc-packages/summarize
 ```
 
-The same `summarize` package generates `.ts` files for the former and `.py` files for the latter. The package repo needs no language-specific adaptations.
+The same `summarize` package generates `.ts` files for the former and `.py` files for the latter. The same applies to Go (`.go`), Java (`.java`), and C# (`.cs`). The package repo needs no language-specific adaptations.
 
 **Long-term usage:** When upstream prompt engineers update a package, application developers just need:
 
@@ -208,6 +208,9 @@ Generate artifacts for multiple sub-services in different languages within one r
 ```bash
 aifn build -l typescript -o services/order-api/src/aifunc
 aifn build -l python -o services/data-pipeline/aifunc
+aifn build -l go -o services/risk-svc/aifunc
+aifn build -l java -o services/billing/aifunc
+aifn build -l csharp -o services/admin/aifunc
 ```
 
 ### Internal Package Directory (Optional)
@@ -285,6 +288,14 @@ config = AIFuncConfig(mock=True)
 result = await summarize(config, SummarizeInput(text="test input", max_length=20))
 ```
 
+```csharp
+using Aifunc;
+using Aifunc.Summarize;
+
+var config = new AIFuncConfig { Mock = true };
+var result = await Summarize.SummarizeAsync(config, new SummarizeTypes.SummarizeInput("test input", 20));
+```
+
 ---
 
 ## CI/CD Integration
@@ -302,6 +313,9 @@ aifn build
 # Specify language and output directory directly (independent of aifunc.json config)
 aifn build -l typescript -o src/aifunc
 aifn build -l python -o aifunc
+aifn build -l go -o aifunc
+aifn build -l java -o aifunc
+aifn build -l csharp -o aifunc
 ```
 
 ### Multi-project Build
@@ -309,6 +323,9 @@ aifn build -l python -o aifunc
 ```bash
 aifn build -l typescript -o services/order-api/src/aifunc
 aifn build -l python -o services/data-pipeline/aifunc
+aifn build -l go -o services/risk-svc/aifunc
+aifn build -l java -o services/billing/aifunc
+aifn build -l csharp -o services/admin/aifunc
 ```
 
 ---

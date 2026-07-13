@@ -35,10 +35,17 @@ public static <Output> <ClassName>.<Output> <methodName>(AIFuncConfig config, <C
         throws AIFuncException
 ```
 
+### C#
+
+```csharp
+public static Task<<Output>> <ClassName>.<MethodName>Async(AIFuncConfig config, <ClassName>.<Input> input)
+```
+
 - `config` 控制运行模式（Mock 或真实调用）及模型连接参数
 - `input` / `output` 的类型由包的 `api.json` 定义，IDE 提供完整的类型提示
 - Go 函数为同步调用，通过 `context.Context` 支持超时与取消
 - Java 方法为同步调用；`AIFuncConfig` 使用 Builder 模式提供流式配置
+- C# 方法为异步（`Task`）；`AIFuncConfig` 使用对象初始化器
 
 ---
 
@@ -112,17 +119,35 @@ AIFuncConfig config = AIFuncConfig.builder()
     .build();
 ```
 
+### C#
+
+```csharp
+var config = new AIFuncConfig
+{
+    BaseUrl = "https://your-api-endpoint/v1",
+    ApiKey = "your-api-key",
+    Model = "your-model-name",
+    Temperature = 0.2,
+    TopP = 0.9,
+    MaxTokens = 300,
+    TimeoutMs = 7000,
+    MaxRetries = 1,
+    Mock = true,
+    MockData = null,
+};
+```
+
 ### 字段说明
 
 | 字段 | 类型 | 默认值 | 说明 |
 |:---|:---|:---|:---|
-| `baseURL` / `base_url` / `BaseURL` | string | — | 模型 API 端点（OpenAI 兼容格式）。非 Mock 模式下必填 |
-| `apiKey` / `api_key` / `APIKey` | string | — | API Key。非 Mock 模式下必填 |
+| `baseURL` / `base_url` / `BaseURL` / `BaseUrl` | string | — | 模型 API 端点（OpenAI 兼容格式）。非 Mock 模式下必填 |
+| `apiKey` / `api_key` / `APIKey` / `ApiKey` | string | — | API Key。非 Mock 模式下必填 |
 | `model` / `Model` | string | — | 模型名称。非 Mock 模式下必填 |
 | `temperature` / `Temperature` | number | 由包定义 | 生效优先级：config → model-params.json → Engine 默认 |
-| `topP` / `top_p` | number | 由包定义 | 与 temperature 二选一；生效优先级同上（仅 TS/Python） |
+| `topP` / `top_p` / `TopP` | number | 由包定义 | 与 temperature 二选一；生效优先级同上 |
 | `maxTokens` / `max_tokens` / `MaxTokens` | integer | 由包定义 | 最大输出 Token 数；生效优先级同上 |
-| `timeout` / `Timeout` | number | 7000ms / 7.0s | 请求超时（TS/Go 毫秒，Python 秒）；生效优先级：config → aifunc.json → Engine 默认 |
+| `timeout` / `Timeout` / `timeoutMs` / `TimeoutMs` | number | 7000ms / 7.0s | 请求超时（TS/Go 毫秒，Python 秒，Java/C# 为 `timeoutMs`/`TimeoutMs`）；生效优先级：config → aifunc.json → Engine 默认 |
 | `maxRetries` / `max_retries` / `MaxRetries` | integer | 1 | 失败重试次数，耗尽后抛出最后一次错误；生效优先级同上 |
 | `mock` / `Mock` | boolean | false | 启用 Mock 模式，不调用真实模型 |
 
@@ -223,6 +248,21 @@ SummarizeOutput result = Summarize.summarize(config, new SummarizeInput("...", 5
 System.out.println(result.getSummary());
 ```
 
+```csharp
+using Aifunc;
+using Aifunc.Summarize;
+
+var config = new AIFuncConfig
+{
+    BaseUrl = "https://your-api-endpoint/v1",
+    Model = "your-model-name",
+    ApiKey = "your-api-key",
+};
+
+var result = await Summarize.SummarizeAsync(config, new SummarizeTypes.SummarizeInput("...", 50));
+Console.WriteLine(result.Summary);
+```
+
 ### 覆盖模型参数
 
 ```typescript
@@ -304,7 +344,20 @@ try {
 }
 ```
 
-所有错误均以标准 Error / Exception / `error` / `AIFuncException` 返回，Java 无自定义异常层级，仅 `AIFuncException extends RuntimeException`。
+### C# 错误处理
+
+```csharp
+try
+{
+    var result = await Summarize.SummarizeAsync(config, input);
+}
+catch (AIFuncException e)
+{
+    Console.Error.WriteLine($"AI function error: {e.Message}");
+}
+```
+
+所有错误均以标准 Error / Exception / `error` / `AIFuncException` 返回，无额外自定义异常层级（Java：`AIFuncException extends RuntimeException`；C#：`AIFuncException` 继承 `Exception`）。
 
 ---
 

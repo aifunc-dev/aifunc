@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 <h1>AIFunc</h1>
 
@@ -9,12 +9,11 @@
 
 <p>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License"></a>
-  <a href="https://github.com/aifunc/cli"><img src="https://img.shields.io/badge/CLI-Go-00ADD8?logo=go&logoColor=white" alt="Go CLI"></a>
-  <img alt="Node.js ≥ 18" src="https://img.shields.io/badge/Node.js-≥18-339933?logo=nodedotjs&logoColor=white">
+  <img alt="TypeScript / Node.js ≥ 18" src="https://img.shields.io/badge/TypeScript_/_Node.js-≥18-3178C6?logo=typescript&logoColor=white">
   <img alt="Python ≥ 3.10" src="https://img.shields.io/badge/Python-≥3.10-3776AB?logo=python&logoColor=white">
   <img alt="Go ≥ 1.23" src="https://img.shields.io/badge/Go-≥1.23-00ADD8?logo=go&logoColor=white">
   <img alt="Java ≥ 11" src="https://img.shields.io/badge/Java-≥11-ED8B00?logo=openjdk&logoColor=white">
-  <img alt="TypeScript types" src="https://img.shields.io/badge/TypeScript-types-3178C6?logo=typescript&logoColor=white">
+  <img alt="C# / .NET ≥ 6" src="https://img.shields.io/badge/C%23_/_NET-≥6-512BD4?logo=dotnet&logoColor=white">
 </p>
 
 </div>
@@ -23,13 +22,23 @@
 
 ## 为什么 AIFunc
 
-加一个 AI 功能到产品里，本应很简单。
+加一个 AI 功能到产品里，本应很简单。现实却是：引入新框架、学 Prompt 工程、写胶水代码、想办法测试。写了一周代码，核心逻辑只有 3 行。
 
-现实是：引入新框架、理解新的流程抽象、学 Prompt 工程、写胶水代码、想办法测试、担心换模型怎么办。写了一周代码，核心逻辑只有 3 行。
+**80% 的真实需求其实很简单：文本进去，结构化数据出来。无状态，无记忆。它本质上就是一个函数。**
 
-80% 的真实需求其实很简单：**文本进去，结构化数据出来。无状态，无记忆。** 就是一个函数。
+AIFunc 的目标就是：**让你像使用普通函数一样，使用、管理和分享 AI 能力。**
 
-AIFunc 把这件事变成了开箱即用。不引入新概念，不入侵你的架构。你只需要 import。
+### 它是怎么做到的？
+
+1. **声明式的包定义**：一个 AIFunc 包，就是一个文件夹，里面只有 package.json、api.json 和几个 prompts/*.md 文件。没有代码，没有运行时。
+2. **CLI 跨语言编译**：通过 `aifn` CLI 一行命令，这些声明文件会被“编译”成你当前项目对应的原生语言代码（TypeScript、Python、Go、Java、C#）。
+3. **零运行时依赖**：生成的代码只依赖语言原生标准库。你不需要 `npm install` 或 `pip install` 任何重型框架，直接 `import` 就能用。
+
+### 为什么这样做更好？
+
+- **不引入新概念，不入侵架构**：你拿到的就是强类型的原生函数。用 `if/else` 串联逻辑，用原生数组管理上下文，告别复杂的 Agent 编排框架。
+- **开箱即用的测试**：生成的代码自带 Mock 数据，`mock: true` 即可离线运行。CI 流水线无需真实 API Key。
+- **Git 原生的分享机制**：写好一个包，推到 Git 仓库，别人一行命令安装。不需要 npm/PyPI，Fork、PR、版本控制直接复用你的 Git 工作流。
 
 ---
 
@@ -51,7 +60,6 @@ aifn install github:aifunc-dev/aifunc-packages/summarize
 ```typescript
 import { summarize, AIFuncConfig, SummarizeInput } from './aifunc/summarize';
 
-// mock 模式：无需 API Key，离线即可运行
 const config: AIFuncConfig = { mock: true };
 
 const text =
@@ -88,7 +96,8 @@ async def main():
 asyncio.run(main())
 ```
 
-### Go
+<details>
+<summary>Go</summary>
 
 ```go
 package main
@@ -120,7 +129,10 @@ func main() {
 }
 ```
 
-### Java
+</details>
+
+<details>
+<summary>Java</summary>
 
 ```java
 import aifunc.summarize.Summarize;
@@ -128,7 +140,6 @@ import aifunc.summarize.SummarizeTypes.SummarizeInput;
 import aifunc.summarize.SummarizeTypes.SummarizeOutput;
 import aifunc._engine.java.v0_1_0.Types.AIFuncConfig;
 
-// mock 模式：无需 API Key，离线即可运行
 AIFuncConfig config = AIFuncConfig.builder().mock(true).build();
 
 String text = "The James Webb Space Telescope captured its first full-color images in July 2022, " +
@@ -136,14 +147,36 @@ String text = "The James Webb Space Telescope captured its first full-color imag
 
 SummarizeInput input = new SummarizeInput(text, 30);
 SummarizeOutput result = Summarize.summarize(config, input);
-System.out.println("Summary   : " + result.getSummary());   // IDE 自动补全，类型安全
+System.out.println("Summary   : " + result.getSummary());
 System.out.println("Word count: " + result.getWordCount());
 ```
+
+</details>
+
+<details>
+<summary>C#</summary>
+
+```csharp
+using Aifunc;
+using Aifunc.Summarize;
+
+var config = new AIFuncConfig { Mock = true };
+
+var text =
+    "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+    "revealing thousands of galaxies in a single image.";
+
+var result = await Summarize.SummarizeAsync(config, new SummarizeTypes.SummarizeInput(text, 30));
+Console.WriteLine($"Summary   : {result.Summary}");
+Console.WriteLine($"Word count: {result.WordCount}");
+```
+
+</details>
 
 连接真实模型时，把 `mock: true` 替换为实际的 `baseURL`、`model` 和 `apiKey` 即可，支持任何兼容 OpenAI 协议的服务端点。
 
 ```typescript
-// TypeScript / Python / Go / Java 配置字段相同
+// TypeScript / Python / Go / Java / C# 配置字段相同
 const config: AIFuncConfig = {
   baseURL: 'https://your-api-endpoint/v1',
   model: 'your-model-name',
@@ -151,11 +184,30 @@ const config: AIFuncConfig = {
 };
 ```
 
-> 完整可运行代码见 [examples/go/hello-aifunc](./examples/go/hello-aifunc)、[examples/typescript/hello-aifunc](./examples/typescript/hello-aifunc)、[examples/python/hello-aifunc](./examples/python/hello-aifunc)、[examples/java/hello-aifunc](./examples/java/hello-aifunc)
+> 完整可运行代码见 [examples/go/hello-aifunc](./examples/go/hello-aifunc)、[examples/typescript/hello-aifunc](./examples/typescript/hello-aifunc)、[examples/python/hello-aifunc](./examples/python/hello-aifunc)、[examples/java/hello-aifunc](./examples/java/hello-aifunc)、[examples/csharp/hello-aifunc](./examples/csharp/hello-aifunc)
 
 ---
 
-## 组合多个 AI 函数
+## 适用场景与边界
+
+AIFunc 的设计哲学是**“把 AI 降维成普通函数”**，这决定了它有极其明确的适用边界：
+
+✅ **极其适合的场景**
+- **集成到既有系统**：在不改变现有架构的前提下，无缝插入 AI 能力。
+- **相对固定的业务流**：如数据清洗、信息抽取（Text to JSON）、意图识别、文本分类、内容摘要等。
+- **多轮对话场景**：**完全支持。** 但需要依靠你的业务代码（如使用原生数组或数据库）维护上下文状态，每次将历史记录拼接传给 AI 函数。不引入复杂的 Agent 记忆框架。
+- **多模型切换与适配**：底层兼容 OpenAI 协议，只需修改 `config` 即可随时切换不同厂商的大模型，零代码改动。
+
+❌ **不适合的场景**
+- **高度开放的自主 Agent**：如需要 AI 自行规划、循环调用工具链的开放性任务。
+  AIFunc 提倡用代码编排控制流，而非让 AI 自由发挥。
+
+> 💡 **关于流式输出**
+> 当前版本专注于“结构化数据提取”（等待完整结果返回），**流式输出支持将在后续版本中添加**。
+
+---
+
+## 像写业务代码一样编排 AI
 
 AI 函数可以像普通函数一样自由组合。用你熟悉的语言控制流串联业务逻辑：
 
@@ -193,12 +245,11 @@ async function handleTicket(message: string) {
 }
 ```
 
-`if`、`switch`、`Promise.all` —— 你本来就掌握的控制流，不需要学任何新东西。
+使用 `if`、`switch` 处理控制流，通过 `array` 或 db 管理上下文与数据 —— 依靠原生语言特性即可完成逻辑串联。不引入额外的编排抽象，能够无缝集成至现有系统。
 
-> 完整示例见 [examples/typescript/customer-support](./examples/typescript/customer-support)、[examples/python/customer-support](./examples/python/customer-support) 和 [examples/go/customer-support](./examples/go/customer-support)
+完整示例见：[TypeScript](./examples/typescript/customer-support) / [Python](./examples/python/customer-support) / [Go](./examples/go/customer-support) / [Java](./examples/java/customer-support) / [C#](./examples/csharp/customer-support)
 
-> **想实现带记忆和滑动窗口的多轮对话？** 无需引入重型 Agent 框架，用原生数组管理上下文即可。
-> 示例见 [examples/typescript/chat-with-context](./examples/typescript/chat-with-context)、[examples/python/chat-with-context](./examples/python/chat-with-context)、[examples/go/chat-with-context](./examples/go/chat-with-context)
+带记忆的多轮对话示例见：[TypeScript](./examples/typescript/chat-with-context) / [Python](./examples/python/chat-with-context) / [Go](./examples/go/chat-with-context) / [Java](./examples/java/chat-with-context) / [C#](./examples/csharp/chat-with-context)
 
 ---
 
@@ -208,13 +259,15 @@ async function handleTicket(message: string) {
 
 **可测试** — 每个包自带 Mock 数据，`mock: true` 即可离线运行。CI 无需 API Key，零成本测试。
 
-**跨语言** — 一份包定义（`api.json` + `package.json` + `prompts/`），编译到 TypeScript、Python、Go，行为一致。
+**跨语言** — 一份包定义（`api.json` + `package.json` + `prompts/`），编译到 TypeScript、Python、Go、Java、C#，行为一致。
 
 **零依赖** — 运行时 Engine 是生成在项目中的纯源码，各语言均只使用原生库，不引入任何第三方依赖。
 
 **模型无关** — 支持任何兼容 OpenAI 协议的端点。切换模型只改 config，零代码改动。
 
 **Git 原生** — 编译产物提交 Git，团队成员 clone 后直接 import 使用，无需安装 CLI。版本管理、Code Review、权限控制全部复用 Git 工作流。
+
+> 一句话：**AIFunc 把 AI 能力变成了你的代码库里的普通函数——强类型、可测试、可版本管理。**
 
 ---
 
@@ -251,7 +304,6 @@ aifn create my-analyzer
 | AI 工程师 | 创建包、编写 Prompt、调优效果        |
 | 应用开发者  | `import` → 调用，不需要懂 Prompt |
 | 平台负责人  | 管理包仓库、审核 PR、控制版本          |
-
 
 ---
 

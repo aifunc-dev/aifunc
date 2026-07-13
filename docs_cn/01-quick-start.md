@@ -3,7 +3,7 @@
 
 > **目标读者**：所有想使用 AIFunc 的开发者
 > **本文内容**：5 分钟完成从安装 CLI 到调用 AI 函数拿到结果的完整流程
-> **前置条件**：Node.js 18+、Python 3.10+、Go 1.23+ 或 Java 11+
+> **前置条件**：Node.js 18+、Python 3.10+、Go 1.23+、Java 11+ 或 .NET 6+
 
 ---
 
@@ -26,7 +26,7 @@ aifn install github:aifunc-dev/aifunc-packages/summarize
 ```
 
 CLI 会自动：
-- 识别项目类型（TypeScript / Python / Go / Java）
+- 识别项目类型（TypeScript / Python / Go / Java / C#）
 - 生成可直接 import 的代码（含类型定义和内置 mock 数据）
 - 创建配置文件（如果不存在）
 
@@ -127,6 +127,23 @@ Summarize.summarize(config, new SummarizeInput(text, 30))
             System.out.println("Word count: " + result.getWordCount());
         })
         .join();
+```
+
+### C#
+
+```csharp
+using Aifunc;
+using Aifunc.Summarize;
+
+var config = new AIFuncConfig { Mock = true };
+
+var text =
+    "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+    "revealing thousands of galaxies in a single image.";
+
+var result = await Summarize.SummarizeAsync(config, new SummarizeTypes.SummarizeInput(text, 30));
+Console.WriteLine($"Summary   : {result.Summary}");
+Console.WriteLine($"Word count: {result.WordCount}");
 ```
 
 ---
@@ -246,6 +263,28 @@ Summarize.summarize(config, new SummarizeInput(text, 30))
         .join();
 ```
 
+### C#
+
+```csharp
+using Aifunc;
+using Aifunc.Summarize;
+
+var config = new AIFuncConfig
+{
+    BaseUrl = "https://your-api-endpoint/v1",
+    Model = "your-model-name",
+    ApiKey = "your-api-key",
+};
+
+var text =
+    "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+    "revealing thousands of galaxies in a single image.";
+
+var result = await Summarize.SummarizeAsync(config, new SummarizeTypes.SummarizeInput(text, 30));
+Console.WriteLine($"Summary   : {result.Summary}");
+Console.WriteLine($"Word count: {result.WordCount}");
+```
+
 支持任何兼容 OpenAI 协议的服务端点。
 
 运行代码：
@@ -268,6 +307,9 @@ go run main.go
 # Java
 javac Main.java
 java Main
+
+# C#
+dotnet run
 ```
 
 ---
@@ -338,7 +380,7 @@ const config: AIFuncConfig = {
 
 不会。CLI 只在执行 `aifn` 命令时使用。
 
-运行时由生成的 TypeScript/Python/Go/Java 代码负责，零外部依赖。
+运行时由生成的 TypeScript/Python/Go/Java/C# 代码负责，零外部依赖（无需 npm / pip / `go get` / Maven / NuGet，仅生成源码）。
 
 </details>
 

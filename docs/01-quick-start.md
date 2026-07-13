@@ -2,7 +2,7 @@
 
 > **Target audience**: All developers who want to use AIFunc
 > **Content**: Complete workflow from installing the CLI to calling an AI function and getting results in 5 minutes
-> **Prerequisites**: Node.js 18+, Python 3.10+, Go 1.23+, or Java 11+
+> **Prerequisites**: Node.js 18+, Python 3.10+, Go 1.23+, Java 11+, or .NET 6+
 
 ---
 
@@ -25,7 +25,7 @@ aifn install github:aifunc-dev/aifunc-packages/summarize
 ```
 
 The CLI will automatically:
-- Detect your project type (TypeScript / Python / Go / Java)
+- Detect your project type (TypeScript / Python / Go / Java / C#)
 - Generate importable code (with type definitions and built-in mock data)
 - Create a configuration file (if one doesn't exist)
 
@@ -126,6 +126,23 @@ Summarize.summarize(config, new SummarizeInput(text, 30))
             System.out.println("Word count: " + result.getWordCount());
         })
         .join();
+```
+
+### C#
+
+```csharp
+using Aifunc;
+using Aifunc.Summarize;
+
+var config = new AIFuncConfig { Mock = true };
+
+var text =
+    "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+    "revealing thousands of galaxies in a single image.";
+
+var result = await Summarize.SummarizeAsync(config, new SummarizeTypes.SummarizeInput(text, 30));
+Console.WriteLine($"Summary   : {result.Summary}");
+Console.WriteLine($"Word count: {result.WordCount}");
 ```
 
 ---
@@ -244,6 +261,29 @@ Summarize.summarize(config, new SummarizeInput(text, 30))
         })
         .join();
 ```
+
+### C#
+
+```csharp
+using Aifunc;
+using Aifunc.Summarize;
+
+var config = new AIFuncConfig
+{
+    BaseUrl = "https://your-api-endpoint/v1",
+    Model = "your-model-name",
+    ApiKey = "your-api-key",
+};
+
+var text =
+    "The James Webb Space Telescope captured its first full-color images in July 2022, " +
+    "revealing thousands of galaxies in a single image.";
+
+var result = await Summarize.SummarizeAsync(config, new SummarizeTypes.SummarizeInput(text, 30));
+Console.WriteLine($"Summary   : {result.Summary}");
+Console.WriteLine($"Word count: {result.WordCount}");
+```
+
 Works with any OpenAI-compatible API endpoint.
 
 Run the code:
@@ -266,6 +306,9 @@ go run main.go
 # Java
 javac Main.java
 java Main
+
+# C#
+dotnet run
 ```
 
 ---
@@ -336,7 +379,7 @@ The `.aifunc/` cache directory is automatically added to `.gitignore`.
 
 No. The CLI is only used when running `aifn` commands.
 
-The runtime is handled by generated TypeScript/Python/Go/Java code with zero external dependencies.
+The runtime is handled by generated TypeScript/Python/Go/Java/C# code with zero external dependencies (no npm / pip / `go get` / Maven / NuGet packages needed — generated source only).
 </details>
 
 <details>
