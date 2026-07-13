@@ -1,0 +1,37 @@
+{
+  "lockVersion": 1,
+  "packages": {
+    "analyze-sentiment": {
+      "source": "github:aifunc-dev/aifunc-packages/analyze-sentiment",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T14:54:20Z"
+    },
+    "extract-json": {
+      "source": "github:aifunc-dev/aifunc-packages/extract-json",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T14:54:32Z"
+    },
+    "recognize-intent": {
+      "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
+      "version": "1.0.0",
+      "engineVersion": "0.1.0",
+      "resolvedAt": "2026-07-12T14:54:47Z"
+    }
+  },
+  "engines": {
+    "v0.1.0": {
+      "source": "github:aifunc-dev/aifunc-packages",
+      "language": "csharp",
+      "path": "csharp/v0_1_0",
+      "resolvedFrom": "^0.1.0",
+      "resolvedAt": "2026-07-12T14:54:47Z",
+      "usedBy": [
+        "analyze-sentiment",
+        "extract-json",
+        "recognize-intent"
+      ]
+    }
+  }
+}

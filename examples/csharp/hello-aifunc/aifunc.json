@@ -1,0 +1,8 @@
+{
+  "configVersion": 1,
+  "language": "csharp",
+  "outputDir": "aifunc",
+  "packages": {
+    "summarize": "github:aifunc-dev/aifunc-packages/summarize"
+  }
+}
