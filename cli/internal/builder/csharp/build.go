@@ -21,6 +21,12 @@ const (
 	defaultNS    = "Aifunc"
 )
 
+// isStreamOutput returns true when the artifact's output schema declares x-delivery-mode: stream.
+func isStreamOutput(artifact *types.CompiledArtifact) bool {
+	mode, _ := artifact.API.Output["x-delivery-mode"].(string)
+	return mode == "stream"
+}
+
 // Generate writes <Name>Types.cs, <Name>Aifunc.cs, <Name>AifuncMock.cs,
 // and <Name>.cs for the given compiled artifact into outputDir.
 // rootNamespace is the root C# namespace prefix (e.g. "Aifunc").
@@ -188,25 +194,71 @@ func generateTypes(artifact *types.CompiledArtifact, ns string) (string, error) 
 
 	baseName := toPascalCase(artifact.API.Name)
 	writeCSharpPojo(&b, baseName+"Input", artifact.API.Input)
-	b.WriteString("\n")
-	writeCSharpPojo(&b, baseName+"Output", artifact.API.Output)
+	if !isStreamOutput(artifact) {
+		b.WriteString("\n")
+		writeCSharpPojo(&b, baseName+"Output", artifact.API.Output)
+	}
 	b.WriteString("}\n")
 	return b.String(), nil
+}
+
+// nestedClassInfo describes a nested class to generate inside a Types class.
+type nestedClassInfo struct {
+	className string
+	schema    map[string]any
+}
+
+// arrayItemNestedClass returns the nested class name and schema when a property
+// is an array whose items are an object with properties, otherwise "".
+func arrayItemNestedClass(fieldKey string, prop map[string]any) (string, map[string]any, bool) {
+	if t, _ := prop["type"].(string); t != "array" {
+		return "", nil, false
+	}
+	items, ok := prop["items"].(map[string]any)
+	if !ok {
+		return "", nil, false
+	}
+	if t, _ := items["type"].(string); t != "object" {
+		return "", nil, false
+	}
+	itemProps, _ := items["properties"].(map[string]any)
+	if len(itemProps) == 0 {
+		return "", nil, false
+	}
+	// Derive class name: singularise the field name (strip trailing 's') then PascalCase.
+	singular := strings.TrimSuffix(fieldKey, "s")
+	if singular == fieldKey {
+		singular = fieldKey + "Item"
+	}
+	return toPascalCase(singular), items, true
 }
 
 func writeCSharpPojo(b *strings.Builder, className string, schema map[string]any) {
 	props, _ := schema["properties"].(map[string]any)
 	required := requiredSet(schema)
 
-	var reqKeys, optKeys []string
+	reqKeys := requiredKeysOrdered(schema)
+	var optKeys []string
 	for _, k := range sortedKeys(props) {
-		if required[k] {
-			reqKeys = append(reqKeys, k)
-		} else {
+		if !required[k] {
 			optKeys = append(optKeys, k)
 		}
 	}
 	allKeys := append(reqKeys, optKeys...)
+
+	// Collect nested classes needed for array-of-object fields.
+	var nested []nestedClassInfo
+	nestedByField := map[string]string{} // fieldKey -> nested class name
+	for _, key := range allKeys {
+		prop, ok := props[key].(map[string]any)
+		if !ok {
+			continue
+		}
+		if ncName, ncSchema, ok := arrayItemNestedClass(key, prop); ok {
+			nestedByField[key] = ncName
+			nested = append(nested, nestedClassInfo{ncName, ncSchema})
+		}
+	}
 
 	fmt.Fprintf(b, "%spublic sealed class %s\n%s{\n", csharpIndent, className, csharpIndent)
 
@@ -216,7 +268,16 @@ func writeCSharpPojo(b *strings.Builder, className string, schema map[string]any
 			continue
 		}
 		desc, _ := prop["description"].(string)
-		csType := jsonSchemaToCSharpType(prop, required[key])
+		var csType string
+		if ncName, isNested := nestedByField[key]; isNested {
+			if required[key] {
+				csType = "List<" + ncName + ">"
+			} else {
+				csType = "List<" + ncName + ">?"
+			}
+		} else {
+			csType = jsonSchemaToCSharpType(prop, required[key])
+		}
 		propName := toPascalCase(key)
 		if desc != "" {
 			fmt.Fprintf(b, "%s%s/// <summary>%s</summary>\n", csharpIndent, csharpIndent, desc)
@@ -236,7 +297,16 @@ func writeCSharpPojo(b *strings.Builder, className string, schema map[string]any
 		if !ok {
 			continue
 		}
-		csType := jsonSchemaToCSharpType(prop, required[key])
+		var csType string
+		if ncName, isNested := nestedByField[key]; isNested {
+			if required[key] {
+				csType = "List<" + ncName + ">"
+			} else {
+				csType = "List<" + ncName + ">?"
+			}
+		} else {
+			csType = jsonSchemaToCSharpType(prop, required[key])
+		}
 		param := toCamelCase(key)
 		if required[key] {
 			params = append(params, csType+" "+param)
@@ -261,6 +331,12 @@ func writeCSharpPojo(b *strings.Builder, className string, schema map[string]any
 	}
 
 	fmt.Fprintf(b, "%s}\n", csharpIndent)
+
+	// Emit nested classes after the parent class.
+	for _, nc := range nested {
+		b.WriteString("\n")
+		writeCSharpPojo(b, nc.className, nc.schema)
+	}
 }
 
 // ---- Artifact data file ----
@@ -308,6 +384,14 @@ func WriteMockFile(mockRaw any, artifact *types.CompiledArtifact, pkgOutputDir, 
 // ---- Entry file ----
 
 func generateEntry(artifact *types.CompiledArtifact, ns, baseName string, hasMock bool, engineNS string, cfg types.AifuncConfig, rootNS string) (string, error) {
+	if isStreamOutput(artifact) {
+		return generateStreamEntry(artifact, ns, baseName, hasMock, engineNS, cfg, rootNS)
+	}
+	return generateStandardEntry(artifact, ns, baseName, hasMock, engineNS, cfg, rootNS)
+}
+
+// generateStandardEntry produces the non-streaming entry file (Task<Output>).
+func generateStandardEntry(artifact *types.CompiledArtifact, ns, baseName string, hasMock bool, engineNS string, cfg types.AifuncConfig, rootNS string) (string, error) {
 	var b strings.Builder
 
 	funcPascal := toPascalCase(artifact.API.Name)
@@ -320,6 +404,7 @@ func generateEntry(artifact *types.CompiledArtifact, ns, baseName string, hasMoc
 	fmt.Fprintf(&b, "namespace %s;\n\n", ns)
 	b.WriteString("using System;\n")
 	b.WriteString("using System.Collections.Generic;\n")
+	b.WriteString("using System.Linq;\n")
 	b.WriteString("using System.Threading.Tasks;\n")
 	fmt.Fprintf(&b, "using %s;\n", rootNS)
 	fmt.Fprintf(&b, "using %s;\n\n", engineNS)
@@ -340,45 +425,16 @@ func generateEntry(artifact *types.CompiledArtifact, ns, baseName string, hasMoc
 	fmt.Fprintf(&b, "%spublic static async Task<%s.%s> %s(AIFuncConfig? config, %s.%s input)\n%s{\n",
 		csharpIndent, typeClass, outputName, methodName, typeClass, inputName, csharpIndent)
 
-	if hasMock {
-		fmt.Fprintf(&b, "%s%sif (config is null)\n", csharpIndent, csharpIndent)
-		fmt.Fprintf(&b, "%s%s%sconfig = new AIFuncConfig { Mock = true, MockData = MOCK_DATA };\n", csharpIndent, csharpIndent, csharpIndent)
-		fmt.Fprintf(&b, "%s%selse if (config.Mock && config.MockData is null)\n", csharpIndent, csharpIndent)
-		fmt.Fprintf(&b, "%s%s%sconfig = config.WithMockData(MOCK_DATA);\n\n", csharpIndent, csharpIndent, csharpIndent)
-	} else {
-		fmt.Fprintf(&b, "%s%sif (config is null)\n", csharpIndent, csharpIndent)
-		fmt.Fprintf(&b, "%s%s%sconfig = new AIFuncConfig();\n\n", csharpIndent, csharpIndent, csharpIndent)
-	}
+	writeConfigPreamble(&b, hasMock, baseName, cfg)
 
-	if cfg.Timeout != nil {
-		fmt.Fprintf(&b, "%s%sif (config.TimeoutMs == 0) config = config.With(timeoutMs: %d);\n", csharpIndent, csharpIndent, *cfg.Timeout)
-	}
-	if cfg.MaxRetries != nil {
-		fmt.Fprintf(&b, "%s%sif (config.MaxRetries == 0) config = config.With(maxRetries: %d);\n", csharpIndent, csharpIndent, *cfg.MaxRetries)
-	}
-
-	b.WriteString("\n")
 	fmt.Fprintf(&b, "%s%svar artifact = Artifact.FromMap(%sAifunc.ARTIFACT_DATA);\n", csharpIndent, csharpIndent, baseName)
 	fmt.Fprintf(&b, "%s%svar inputMap = InputToMap(input);\n", csharpIndent, csharpIndent)
 	fmt.Fprintf(&b, "%s%svar result = await Runtime.ExecuteAsync(artifact, inputMap, config).ConfigureAwait(false);\n", csharpIndent, csharpIndent)
 	fmt.Fprintf(&b, "%s%sreturn MapToOutput(result);\n", csharpIndent, csharpIndent)
 	fmt.Fprintf(&b, "%s}\n\n", csharpIndent)
 
-	// InputToMap
-	fmt.Fprintf(&b, "%sprivate static Dictionary<string, object?> InputToMap(%s.%s input)\n%s{\n", csharpIndent, typeClass, inputName, csharpIndent)
-	fmt.Fprintf(&b, "%s%svar m = new Dictionary<string, object?>();\n", csharpIndent, csharpIndent)
-	inputProps, _ := artifact.API.Input["properties"].(map[string]any)
-	for _, key := range sortedKeys(inputProps) {
-		propName := toPascalCase(key)
-		if isRequired(key, artifact.API.Input) {
-			fmt.Fprintf(&b, "%s%sm[%q] = input.%s;\n", csharpIndent, csharpIndent, key, propName)
-		} else {
-			fmt.Fprintf(&b, "%s%sif (input.%s is not null) m[%q] = input.%s;\n", csharpIndent, csharpIndent, propName, key, propName)
-		}
-	}
-	fmt.Fprintf(&b, "%s%sreturn m;\n%s}\n\n", csharpIndent, csharpIndent, csharpIndent)
+	writeInputToMap(&b, artifact, typeClass, inputName)
 
-	// MapToOutput
 	outputProps, _ := artifact.API.Output["properties"].(map[string]any)
 	outputRequired := requiredSet(artifact.API.Output)
 	var reqOutKeys, optOutKeys []string
@@ -416,6 +472,141 @@ func generateEntry(artifact *types.CompiledArtifact, ns, baseName string, hasMoc
 	fmt.Fprintf(&b, "%s%sreturn new %s.%s(%s);\n%s}\n}\n", csharpIndent, csharpIndent, typeClass, outputName, strings.Join(ctorArgs, ", "), csharpIndent)
 
 	return b.String(), nil
+}
+
+// generateStreamEntry produces the streaming entry file (IAsyncEnumerable<string> + CancellationToken).
+func generateStreamEntry(artifact *types.CompiledArtifact, ns, baseName string, hasMock bool, engineNS string, cfg types.AifuncConfig, rootNS string) (string, error) {
+	var b strings.Builder
+
+	funcPascal := toPascalCase(artifact.API.Name)
+	inputName := funcPascal + "Input"
+	typeClass := baseName + "Types"
+	methodName := funcPascal + "Async"
+
+	writeCSharpHeader(&b, artifact)
+	fmt.Fprintf(&b, "namespace %s;\n\n", ns)
+	b.WriteString("using System.Collections.Generic;\n")
+	b.WriteString("using System.Linq;\n")
+	b.WriteString("using System.Runtime.CompilerServices;\n")
+	b.WriteString("using System.Threading;\n")
+	fmt.Fprintf(&b, "using %s;\n", rootNS)
+	fmt.Fprintf(&b, "using %s;\n\n", engineNS)
+
+	desc := artifact.API.Description
+	if desc == "" {
+		desc = artifact.Package.Description
+	}
+	if desc != "" {
+		fmt.Fprintf(&b, "/// <summary>%s</summary>\n", desc)
+	}
+	fmt.Fprintf(&b, "public static class %s\n{\n", baseName)
+
+	if hasMock {
+		fmt.Fprintf(&b, "%sprivate static readonly object? MOCK_DATA = %sAifuncMock.MOCK_DATA;\n\n", csharpIndent, baseName)
+	}
+
+	// Primary streaming method
+	fmt.Fprintf(&b, "%s/// <summary>\n", csharpIndent)
+	if desc != "" {
+		fmt.Fprintf(&b, "%s/// %s\n", csharpIndent, desc)
+		fmt.Fprintf(&b, "%s/// </summary>\n", csharpIndent)
+		fmt.Fprintf(&b, "%s/// <remarks>\n", csharpIndent)
+	}
+	fmt.Fprintf(&b, "%s/// Pass a <see cref=\"CancellationToken\"/> to cancel the stream at any time.\n", csharpIndent)
+	fmt.Fprintf(&b, "%s/// <code>\n", csharpIndent)
+	fmt.Fprintf(&b, "%s/// using var cts = new CancellationTokenSource();\n", csharpIndent)
+	fmt.Fprintf(&b, "%s/// await foreach (var token in %s(config, input, cts.Token))\n", csharpIndent, methodName)
+	fmt.Fprintf(&b, "%s///     Console.Write(token);\n", csharpIndent)
+	fmt.Fprintf(&b, "%s/// </code>\n", csharpIndent)
+	if desc != "" {
+		fmt.Fprintf(&b, "%s/// </remarks>\n", csharpIndent)
+	} else {
+		fmt.Fprintf(&b, "%s/// </summary>\n", csharpIndent)
+	}
+
+	fmt.Fprintf(&b, "%spublic static async IAsyncEnumerable<string> %s(\n", csharpIndent, methodName)
+	fmt.Fprintf(&b, "%s%sAIFuncConfig? config,\n", csharpIndent, csharpIndent)
+	fmt.Fprintf(&b, "%s%s%s.%s input,\n", csharpIndent, csharpIndent, typeClass, inputName)
+	fmt.Fprintf(&b, "%s%s[EnumeratorCancellation] CancellationToken cancellationToken = default)\n", csharpIndent, csharpIndent)
+	fmt.Fprintf(&b, "%s{\n", csharpIndent)
+
+	writeConfigPreamble(&b, hasMock, baseName, cfg)
+
+	fmt.Fprintf(&b, "%s%svar artifact = Artifact.FromMap(%sAifunc.ARTIFACT_DATA);\n", csharpIndent, csharpIndent, baseName)
+	fmt.Fprintf(&b, "%s%svar inputMap = InputToMap(input);\n", csharpIndent, csharpIndent)
+	fmt.Fprintf(&b, "%s%sawait foreach (var token in Runtime.ExecuteStreamAsync(\n", csharpIndent, csharpIndent)
+	fmt.Fprintf(&b, "%s%s%sartifact, inputMap, config, cancellationToken))\n", csharpIndent, csharpIndent, csharpIndent)
+	fmt.Fprintf(&b, "%s%s{\n", csharpIndent, csharpIndent)
+	fmt.Fprintf(&b, "%s%s%syield return token;\n", csharpIndent, csharpIndent, csharpIndent)
+	fmt.Fprintf(&b, "%s%s}\n", csharpIndent, csharpIndent)
+	fmt.Fprintf(&b, "%s}\n\n", csharpIndent)
+
+	writeInputToMap(&b, artifact, typeClass, inputName)
+
+	// Close class
+	b.WriteString("}\n")
+
+	return b.String(), nil
+}
+
+// writeConfigPreamble writes the config null-check / mock-data wiring + project defaults into the method body.
+func writeConfigPreamble(b *strings.Builder, hasMock bool, baseName string, cfg types.AifuncConfig) {
+	if hasMock {
+		fmt.Fprintf(b, "%s%sif (config is null)\n", csharpIndent, csharpIndent)
+		fmt.Fprintf(b, "%s%s%sconfig = new AIFuncConfig { Mock = true, MockData = MOCK_DATA };\n", csharpIndent, csharpIndent, csharpIndent)
+		fmt.Fprintf(b, "%s%selse if (config.Mock && config.MockData is null)\n", csharpIndent, csharpIndent)
+		fmt.Fprintf(b, "%s%s%sconfig = config.WithMockData(MOCK_DATA);\n\n", csharpIndent, csharpIndent, csharpIndent)
+	} else {
+		fmt.Fprintf(b, "%s%sif (config is null)\n", csharpIndent, csharpIndent)
+		fmt.Fprintf(b, "%s%s%sconfig = new AIFuncConfig();\n\n", csharpIndent, csharpIndent, csharpIndent)
+	}
+	if cfg.Timeout != nil {
+		fmt.Fprintf(b, "%s%sif (config.TimeoutMs == 0) config = config.With(timeoutMs: %d);\n", csharpIndent, csharpIndent, *cfg.Timeout)
+	}
+	if cfg.MaxRetries != nil {
+		fmt.Fprintf(b, "%s%sif (config.MaxRetries == 0) config = config.With(maxRetries: %d);\n", csharpIndent, csharpIndent, *cfg.MaxRetries)
+	}
+	fmt.Fprintf(b, "\n")
+}
+
+// writeInputToMap writes the InputToMap helper method into the entry class.
+// For fields whose type is a generated nested class list, it emits an inline
+// projection back to List<Dictionary<string,object?>> so the engine receives
+// plain maps as it expects.
+func writeInputToMap(b *strings.Builder, artifact *types.CompiledArtifact, typeClass, inputName string) {
+	fmt.Fprintf(b, "%sprivate static System.Collections.Generic.Dictionary<string, object?> InputToMap(%s.%s input)\n%s{\n",
+		csharpIndent, typeClass, inputName, csharpIndent)
+	fmt.Fprintf(b, "%s%svar m = new System.Collections.Generic.Dictionary<string, object?>();\n", csharpIndent, csharpIndent)
+	inputProps, _ := artifact.API.Input["properties"].(map[string]any)
+	for _, key := range sortedKeys(inputProps) {
+		propName := toPascalCase(key)
+		prop, _ := inputProps[key].(map[string]any)
+		_, ncSchema, isNested := arrayItemNestedClass(key, prop)
+		if isNested {
+			ncProps, _ := ncSchema["properties"].(map[string]any)
+			ncRequired := requiredSet(ncSchema)
+			// Build a LINQ-style projection: input.Prop.Select(x => new Dict { ... }).ToList()
+			var entries []string
+			for _, nk := range sortedKeys(ncProps) {
+				nPropName := toPascalCase(nk)
+				entries = append(entries, fmt.Sprintf("[%q] = x.%s", nk, nPropName))
+			}
+			projection := "new System.Collections.Generic.Dictionary<string, object?> { " + strings.Join(entries, ", ") + " }"
+			_ = ncRequired
+			if isRequired(key, artifact.API.Input) {
+				fmt.Fprintf(b, "%s%sm[%q] = input.%s.Select(x => %s).ToList<object?>();\n",
+					csharpIndent, csharpIndent, key, propName, projection)
+			} else {
+				fmt.Fprintf(b, "%s%sif (input.%s is not null) m[%q] = input.%s.Select(x => %s).ToList<object?>();\n",
+					csharpIndent, csharpIndent, propName, key, propName, projection)
+			}
+		} else if isRequired(key, artifact.API.Input) {
+			fmt.Fprintf(b, "%s%sm[%q] = input.%s;\n", csharpIndent, csharpIndent, key, propName)
+		} else {
+			fmt.Fprintf(b, "%s%sif (input.%s is not null) m[%q] = input.%s;\n", csharpIndent, csharpIndent, propName, key, propName)
+		}
+	}
+	fmt.Fprintf(b, "%s%sreturn m;\n%s}\n\n", csharpIndent, csharpIndent, csharpIndent)
 }
 
 // ---- C# literal serializer ----
@@ -717,6 +908,29 @@ func requiredSet(schema map[string]any) map[string]bool {
 		}
 	}
 	return set
+}
+
+// requiredKeysOrdered returns required keys in their schema declaration order,
+// followed by any required keys not listed in the required array (alphabetical).
+func requiredKeysOrdered(schema map[string]any) []string {
+	arr, _ := schema["required"].([]any)
+	seen := make(map[string]bool)
+	var ordered []string
+	for _, v := range arr {
+		if s, ok := v.(string); ok {
+			ordered = append(ordered, s)
+			seen[s] = true
+		}
+	}
+	// Fallback: any required keys present in properties but not in required array.
+	props, _ := schema["properties"].(map[string]any)
+	set := requiredSet(schema)
+	for _, k := range sortedKeys(props) {
+		if set[k] && !seen[k] {
+			ordered = append(ordered, k)
+		}
+	}
+	return ordered
 }
 
 func isRequired(key string, schema map[string]any) bool {

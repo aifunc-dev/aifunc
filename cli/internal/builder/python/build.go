@@ -22,6 +22,14 @@ const (
 	outputSuffix   = "Output"
 )
 
+// outputIsStream returns true when the output schema declares x-delivery-mode: stream.
+func outputIsStream(schema map[string]any) bool {
+	if mode, _ := schema["x-delivery-mode"].(string); mode == "stream" {
+		return true
+	}
+	return false
+}
+
 // Generate writes __init__.py, <name>_types.py, and <name>_aifunc.py for the given compiled artifact into outputDir.
 func Generate(artifact *types.CompiledArtifact, outputDir string, hasMock bool, engineVersion string, cfg types.AifuncConfig) error {
 	if err := os.MkdirAll(outputDir, dirPerm); err != nil {
@@ -63,12 +71,17 @@ func generateTypes(artifact *types.CompiledArtifact) (string, error) {
 	var b strings.Builder
 
 	writeHeader(&b, artifact)
+	isStream := outputIsStream(artifact.API.Output)
+
 	b.WriteString("from typing import Any, Optional\nfrom dataclasses import dataclass\n\n\n")
 
 	baseName := toPascalCase(artifact.API.Name)
 	writeDataclass(&b, baseName+inputSuffix, schemaToDataclassFields(artifact.API.Input))
-	b.WriteString("\n\n")
-	writeDataclass(&b, baseName+outputSuffix, schemaToDataclassFields(artifact.API.Output))
+
+	if !isStream {
+		b.WriteString("\n\n")
+		writeDataclass(&b, baseName+outputSuffix, schemaToDataclassFields(artifact.API.Output))
+	}
 	b.WriteString("\n")
 
 	return b.String(), nil
@@ -92,6 +105,14 @@ func writeDataclass(b *strings.Builder, name, fields string) {
 }
 
 func generateInit(artifact *types.CompiledArtifact, hasMock bool, engineVersion string, cfg types.AifuncConfig) (string, error) {
+	isStream := outputIsStream(artifact.API.Output)
+	if isStream {
+		return generateInitStream(artifact, hasMock, engineVersion, cfg)
+	}
+	return generateInitNormal(artifact, hasMock, engineVersion, cfg)
+}
+
+func generateInitNormal(artifact *types.CompiledArtifact, hasMock bool, engineVersion string, cfg types.AifuncConfig) (string, error) {
 	var b strings.Builder
 
 	fileBase := sanitizeFileName(artifact.Package.Name)
@@ -114,7 +135,62 @@ func generateInit(artifact *types.CompiledArtifact, hasMock bool, engineVersion 
 
 	b.WriteString(fmt.Sprintf("async def %s(config: Optional[AIFuncConfig], input_data: Union[%s, dict[str, Any]]) -> %s:\n", funcName, inputName, outputName))
 	b.WriteString(fmt.Sprintf("    \"\"\"%s\"\"\"\n", artifact.API.Description))
+	writeMockConfigBlock(&b, hasMock)
 
+	b.WriteString("\n    _artifact = AIFuncArtifact.from_dict(artifact)\n")
+	b.WriteString("    if isinstance(input_data, dict):\n")
+	b.WriteString("        _input = input_data\n")
+	b.WriteString("    else:\n")
+	b.WriteString("        _input = _to_camel_dict(asdict(input_data))\n")
+	projectDefaultsLiteral := buildProjectDefaultsLiteral(cfg)
+	b.WriteString(fmt.Sprintf("    _project_defaults = %s\n", projectDefaultsLiteral))
+	b.WriteString("    result = await execute(_artifact, _input, config, _project_defaults)\n")
+	b.WriteString(fmt.Sprintf("    return %s(**_to_snake_dict(result))\n\n\n", outputName))
+
+	writeHelpers(&b)
+	return b.String(), nil
+}
+
+func generateInitStream(artifact *types.CompiledArtifact, hasMock bool, engineVersion string, cfg types.AifuncConfig) (string, error) {
+	var b strings.Builder
+
+	fileBase := sanitizeFileName(artifact.Package.Name)
+	funcName := toSnakeCase(artifact.API.Name)
+	baseName := toPascalCase(artifact.API.Name)
+	inputName := baseName + inputSuffix
+
+	writeHeader(&b, artifact)
+	b.WriteString("from typing import Any, Optional, Union, AsyncGenerator\nfrom dataclasses import asdict, replace\n\n")
+
+	engineVer := strings.ReplaceAll(engineVersion, ".", "_")
+	b.WriteString(fmt.Sprintf("from .._engine.python.v%s import execute_stream, AIFuncConfig, AIFuncArtifact, ProjectDefaults\n", engineVer))
+	b.WriteString(fmt.Sprintf("from .%s_aifunc import artifact\n", fileBase))
+	if hasMock {
+		b.WriteString(fmt.Sprintf("from .%s_mock import mock_data\n", fileBase))
+	}
+	b.WriteString(fmt.Sprintf("from .%s_types import %s\n\n", fileBase, inputName))
+	b.WriteString(fmt.Sprintf("__all__ = [\"AIFuncConfig\", \"%s\", \"%s\"]\n\n\n", inputName, funcName))
+
+	b.WriteString(fmt.Sprintf("async def %s(\n", funcName))
+	b.WriteString(fmt.Sprintf("    config: Optional[AIFuncConfig],\n"))
+	b.WriteString(fmt.Sprintf("    input_data: Union[%s, dict[str, Any]],\n", inputName))
+	b.WriteString(fmt.Sprintf(") -> AsyncGenerator[str, None]:\n"))
+	b.WriteString(fmt.Sprintf("    \"\"\"%s\"\"\"\n", artifact.API.Description))
+	writeMockConfigBlock(&b, hasMock)
+	b.WriteString("\n    _artifact = AIFuncArtifact.from_dict(artifact)\n")
+	b.WriteString("    if isinstance(input_data, dict):\n")
+	b.WriteString("        _input = input_data\n")
+	b.WriteString("    else:\n")
+	b.WriteString("        _input = _to_camel_dict(asdict(input_data))\n")
+	projectDefaultsLiteral := buildProjectDefaultsLiteral(cfg)
+	b.WriteString(fmt.Sprintf("    _project_defaults = %s\n", projectDefaultsLiteral))
+	b.WriteString("    return await execute_stream(_artifact, _input, config, _project_defaults)\n\n\n")
+
+	writeHelpers(&b)
+	return b.String(), nil
+}
+
+func writeMockConfigBlock(b *strings.Builder, hasMock bool) {
 	if hasMock {
 		b.WriteString("    if config is None:\n")
 		b.WriteString("        config = AIFuncConfig(mock=True, mock_data=mock_data)\n")
@@ -124,18 +200,9 @@ func generateInit(artifact *types.CompiledArtifact, hasMock bool, engineVersion 
 		b.WriteString("    if config is None:\n")
 		b.WriteString("        config = AIFuncConfig()\n")
 	}
+}
 
-	b.WriteString("\n    _artifact = AIFuncArtifact.from_dict(artifact)\n")
-	b.WriteString("    if isinstance(input_data, dict):\n")
-	b.WriteString("        _input = input_data\n")
-	b.WriteString("    else:\n")
-	b.WriteString("        _input = _to_camel_dict(asdict(input_data))\n")
-	// Inject project_defaults from aifunc.json (build-time injection)
-	projectDefaultsLiteral := buildProjectDefaultsLiteral(cfg)
-	b.WriteString(fmt.Sprintf("    _project_defaults = %s\n", projectDefaultsLiteral))
-	b.WriteString(fmt.Sprintf("    result = await execute(_artifact, _input, config, _project_defaults)\n"))
-	b.WriteString(fmt.Sprintf("    return %s(**_to_snake_dict(result))\n\n\n", outputName))
-
+func writeHelpers(b *strings.Builder) {
 	b.WriteString("def _to_camel(name: str) -> str:\n")
 	b.WriteString("    parts = name.split(\"_\")\n")
 	b.WriteString("    return parts[0] + \"\".join(p.capitalize() for p in parts[1:])\n\n\n")
@@ -150,8 +217,6 @@ func generateInit(artifact *types.CompiledArtifact, hasMock bool, engineVersion 
 	b.WriteString("    return {_to_camel(k): v for k, v in d.items() if v is not None}\n\n\n")
 	b.WriteString("def _to_snake_dict(d: dict) -> dict:\n")
 	b.WriteString("    return {_to_snake(k): v for k, v in d.items()}\n")
-
-	return b.String(), nil
 }
 
 func generateArtifactModule(artifact *types.CompiledArtifact) (string, error) {

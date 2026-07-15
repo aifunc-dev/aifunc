@@ -1,4 +1,4 @@
-// Copyright 2026 GildenEye
+﻿// Copyright 2026 GildenEye
 // SPDX-License-Identifier: Apache-2.0
 
 package golang
@@ -22,8 +22,7 @@ const (
 
 // Generate writes <name>_types.go, <name>_aifunc.go, and <name>.go for the
 // given compiled artifact into outputDir.
-// goModule is the Go module name from go.mod (e.g. "hello-aifunc"); it is used
-// to build a proper module-path import for the engine instead of a relative path.
+// goModule is the Go module name from go.mod (e.g. "hello-aifunc").
 func Generate(artifact *types.CompiledArtifact, outputDir string, hasMock bool, engineVersion string, cfg types.AifuncConfig, goModule string) error {
 	if err := os.MkdirAll(outputDir, dirPerm); err != nil {
 		return fmt.Errorf("create output dir: %w", err)
@@ -58,27 +57,83 @@ func Generate(artifact *types.CompiledArtifact, outputDir string, hasMock bool, 
 	return nil
 }
 
-// generateTypes produces <name>_types.go with strongly-typed Input/Output structs.
+// isStreamOutput reports whether the output schema has x-delivery-mode: stream.
+func isStreamOutput(artifact *types.CompiledArtifact) bool {
+	mode, _ := artifact.API.Output["x-delivery-mode"].(string)
+	return mode == "stream"
+}
+
+// nestedStructDef holds info for a named struct generated from an array-of-object field.
+type nestedStructDef struct {
+	typeName string
+	schema   map[string]any
+}
+
+// collectNestedStructs scans top-level properties of a JSON Schema object and
+// returns an ordered list of nestedStructDef for every array field whose items
+// schema is an object with properties.  It also returns a map from JSON key to
+// Go type name for use in field generation.
+func collectNestedStructs(schema map[string]any) ([]nestedStructDef, map[string]string) {
+	props, _ := schema["properties"].(map[string]any)
+	namedTypes := map[string]string{}
+	var defs []nestedStructDef
+	for _, key := range sortedKeys(props) {
+		prop, _ := props[key].(map[string]any)
+		if prop["type"] != "array" {
+			continue
+		}
+		items, _ := prop["items"].(map[string]any)
+		if items["type"] != "object" {
+			continue
+		}
+		if _, hasProps := items["properties"].(map[string]any); !hasProps {
+			continue
+		}
+		typeName := toPascalCase(camelToSnake(key))
+		if strings.HasSuffix(typeName, "s") {
+			typeName = typeName[:len(typeName)-1]
+		}
+		namedTypes[key] = typeName
+		defs = append(defs, nestedStructDef{typeName: typeName, schema: items})
+	}
+	return defs, namedTypes
+}
+
+// generateTypes produces <name>_types.go.
+// For streaming packages the Output type is omitted; the caller receives
+// (<-chan string, <-chan error) directly.
 func generateTypes(artifact *types.CompiledArtifact, pkgName string) (string, error) {
 	var b strings.Builder
 	writeGoHeader(&b, artifact, pkgName)
 
 	baseName := toPascalCase(artifact.API.Name)
 	inputName := baseName + "Input"
-	outputName := baseName + "Output"
 
-	inputFields := schemaToGoFields(artifact.API.Input)
-	outputFields := schemaToGoFields(artifact.API.Output)
+	nestedDefs, namedTypes := collectNestedStructs(artifact.API.Input)
+	for _, def := range nestedDefs {
+		nestedRequired := requiredSet(def.schema)
+		fmt.Fprintf(&b, "// %s represents a single item in a message list.\n", def.typeName)
+		fmt.Fprintf(&b, "type %s struct {\n", def.typeName)
+		b.WriteString(schemaToGoFieldsWithNamed(def.schema, nestedRequired, nil))
+		b.WriteString("}\n\n")
+	}
+
+	inputFields := schemaToGoFieldsWithNamed(artifact.API.Input, nil, namedTypes)
 
 	fmt.Fprintf(&b, "// %s holds the input parameters.\n", inputName)
 	fmt.Fprintf(&b, "type %s struct {\n", inputName)
 	b.WriteString(inputFields)
-	b.WriteString("}\n\n")
-
-	fmt.Fprintf(&b, "// %s holds the function result.\n", outputName)
-	fmt.Fprintf(&b, "type %s struct {\n", outputName)
-	b.WriteString(outputFields)
 	b.WriteString("}\n")
+
+	if !isStreamOutput(artifact) {
+		outputName := baseName + "Output"
+		outputFields := schemaToGoFields(artifact.API.Output)
+		b.WriteString("\n")
+		fmt.Fprintf(&b, "// %s holds the function result.\n", outputName)
+		fmt.Fprintf(&b, "type %s struct {\n", outputName)
+		b.WriteString(outputFields)
+		b.WriteString("}\n")
+	}
 
 	return b.String(), nil
 }
@@ -95,8 +150,74 @@ func generateArtifactModule(artifact *types.CompiledArtifact, pkgName string) (s
 	return b.String(), nil
 }
 
-// generateEntry produces <name>.go — the callable function the user imports.
+// generateEntry produces <name>.go -- the callable function the user imports.
+// Dispatches to the streaming or non-streaming variant based on x-delivery-mode.
 func generateEntry(artifact *types.CompiledArtifact, pkgName, fileBase string, hasMock bool, engineImport string, cfg types.AifuncConfig) (string, error) {
+	if isStreamOutput(artifact) {
+		return generateStreamEntry(artifact, pkgName, engineImport, cfg)
+	}
+	return generateNonStreamEntry(artifact, pkgName, fileBase, hasMock, engineImport, cfg)
+}
+
+// generateStreamEntry generates <name>.go for a streaming package.
+// The exported function signature is (<-chan string, <-chan error).
+func generateStreamEntry(artifact *types.CompiledArtifact, pkgName string, engineImport string, cfg types.AifuncConfig) (string, error) {
+	var b strings.Builder
+
+	funcName := toPascalCase(artifact.API.Name)
+	baseName := toPascalCase(artifact.API.Name)
+	inputName := baseName + "Input"
+
+	b.WriteString("// Generated by aifn -- do not edit manually.\n")
+	fmt.Fprintf(&b, "// Package: %s v%s\n\n", artifact.Package.Name, artifact.Package.Version)
+	fmt.Fprintf(&b, "package %s\n\n", pkgName)
+	b.WriteString("import (\n\t\"context\"\n\t\"fmt\"\n\n")
+	fmt.Fprintf(&b, "\tengine %q\n", engineImport)
+	b.WriteString(")\n\n")
+
+	b.WriteString("// AIFuncConfig controls the runtime mode and model connection.\n")
+	b.WriteString("type AIFuncConfig = engine.AIFuncConfig\n\n")
+
+	desc := artifact.API.Description
+	if desc == "" {
+		desc = artifact.Package.Description
+	}
+	if desc != "" {
+		fmt.Fprintf(&b, "// %s %s\n", funcName, desc)
+	}
+	b.WriteString("// ctx controls cancellation -- cancel it to stop the stream at any time.\n")
+	b.WriteString("// Returns (tokensCh, errCh): range over tokensCh, then read errCh once.\n")
+
+	fmt.Fprintf(&b, "func %s(ctx context.Context, config *AIFuncConfig, input %s) (<-chan string, <-chan error) {\n", funcName, inputName)
+	b.WriteString("\tif config == nil {\n")
+	b.WriteString("\t\tconfig = &AIFuncConfig{Mock: true}\n")
+	b.WriteString("\t}\n")
+	if cfg.Timeout != nil {
+		fmt.Fprintf(&b, "\tif config.Timeout == 0 { config.Timeout = %d }\n", *cfg.Timeout)
+	}
+	if cfg.MaxRetries != nil {
+		fmt.Fprintf(&b, "\tif config.MaxRetries == 0 { config.MaxRetries = %d }\n", *cfg.MaxRetries)
+	}
+	b.WriteString("\n")
+	b.WriteString("\tartifact, err := engine.ArtifactFromMap(artifactData)\n")
+	b.WriteString("\tif err != nil {\n")
+	b.WriteString("\t\ttokens := make(chan string)\n")
+	b.WriteString("\t\terrc := make(chan error, 1)\n")
+	b.WriteString("\t\tclose(tokens)\n")
+	b.WriteString("\t\terrc <- fmt.Errorf(\"load artifact: %w\", err)\n")
+	b.WriteString("\t\tclose(errc)\n")
+	b.WriteString("\t\treturn tokens, errc\n")
+	b.WriteString("\t}\n\n")
+	b.WriteString("\treturn engine.ExecuteStream(ctx, artifact, inputToMap(input), *config)\n")
+	b.WriteString("}\n\n")
+
+	b.WriteString(buildInputToMap(artifact, inputName))
+
+	return b.String(), nil
+}
+
+// generateNonStreamEntry generates <name>.go for a regular (non-streaming) package.
+func generateNonStreamEntry(artifact *types.CompiledArtifact, pkgName, fileBase string, hasMock bool, engineImport string, cfg types.AifuncConfig) (string, error) {
 	var b strings.Builder
 
 	funcName := toPascalCase(artifact.API.Name)
@@ -128,7 +249,6 @@ func generateEntry(artifact *types.CompiledArtifact, pkgName, fileBase string, h
 	}
 
 	fmt.Fprintf(&b, "func %s(ctx context.Context, config *AIFuncConfig, input %s) (%s, error) {\n", funcName, inputName, outputName)
-
 	b.WriteString("\tif config == nil {\n")
 	if hasMock {
 		b.WriteString("\t\tconfig = &AIFuncConfig{Mock: true, MockData: mockData}\n")
@@ -164,13 +284,48 @@ func generateEntry(artifact *types.CompiledArtifact, pkgName, fileBase string, h
 	b.WriteString("\treturn mapToOutput(result), nil\n")
 	b.WriteString("}\n\n")
 
-	// inputToMap helper — BUG FIX: slice/map optional fields must not be dereferenced
+	b.WriteString(buildInputToMap(artifact, inputName))
+
+	b.WriteString("func mapToOutput(m map[string]any) " + outputName + " {\n")
+	b.WriteString("\tvar out " + outputName + "\n")
+	outputProps, _ := artifact.API.Output["properties"].(map[string]any)
+	for _, camelKey := range sortedKeys(outputProps) {
+		goField := toPascalCase(camelToSnake(camelKey))
+		propSchema, _ := outputProps[camelKey].(map[string]any)
+		goType := jsonSchemaToGoType(propSchema, false)
+		fmt.Fprintf(&b, "\tif v, ok := m[%q]; ok { out.%s = coerce%s(v) }\n", camelKey, goField, cleanTypeName(goType))
+	}
+	b.WriteString("\treturn out\n}\n\n")
+
+	b.WriteString(generateCoercionHelpers(outputProps))
+
+	return b.String(), nil
+}
+
+// buildInputToMap emits the inputToMap helper shared by both stream and non-stream paths.
+func buildInputToMap(artifact *types.CompiledArtifact, inputName string) string {
+	_, namedTypes := collectNestedStructs(artifact.API.Input)
+
+	var b strings.Builder
 	b.WriteString("func inputToMap(input " + inputName + ") map[string]any {\n")
 	b.WriteString("\tm := map[string]any{}\n")
 	inputProps, _ := artifact.API.Input["properties"].(map[string]any)
 	for _, camelKey := range sortedKeys(inputProps) {
 		goField := toPascalCase(camelToSnake(camelKey))
-		if isRequired(camelKey, artifact.API.Input) {
+		isReq := isRequired(camelKey, artifact.API.Input)
+
+		if typeName, isNamed := namedTypes[camelKey]; isNamed {
+			// Convert []TypeName to []map[string]any for the engine.
+			if isReq {
+				fmt.Fprintf(&b, "\t{\n\t\tms := make([]map[string]any, len(input.%s))\n", goField)
+				fmt.Fprintf(&b, "\t\tfor i, v := range input.%s { ms[i] = %sToMap(v) }\n", goField, typeName)
+				fmt.Fprintf(&b, "\t\tm[%q] = ms\n\t}\n", camelKey)
+			} else {
+				fmt.Fprintf(&b, "\tif input.%s != nil {\n\t\tms := make([]map[string]any, len(input.%s))\n", goField, goField)
+				fmt.Fprintf(&b, "\t\tfor i, v := range input.%s { ms[i] = %sToMap(v) }\n", goField, typeName)
+				fmt.Fprintf(&b, "\t\tm[%q] = ms\n\t}\n", camelKey)
+			}
+		} else if isReq {
 			fmt.Fprintf(&b, "\tm[%q] = input.%s\n", camelKey, goField)
 		} else {
 			propSchema, _ := inputProps[camelKey].(map[string]any)
@@ -184,22 +339,20 @@ func generateEntry(artifact *types.CompiledArtifact, pkgName, fileBase string, h
 	}
 	b.WriteString("\treturn m\n}\n\n")
 
-	// mapToOutput helper
-	b.WriteString("func mapToOutput(m map[string]any) " + outputName + " {\n")
-	b.WriteString("\tvar out " + outputName + "\n")
-	outputProps, _ := artifact.API.Output["properties"].(map[string]any)
-	for _, camelKey := range sortedKeys(outputProps) {
-		goField := toPascalCase(camelToSnake(camelKey))
-		propSchema, _ := outputProps[camelKey].(map[string]any)
-		goType := jsonSchemaToGoType(propSchema, false)
-		fmt.Fprintf(&b, "\tif v, ok := m[%q]; ok { out.%s = coerce%s(v) }\n", camelKey, goField, cleanTypeName(goType))
+	// Emit a ToMap helper for each named nested struct.
+	nestedDefs, _ := collectNestedStructs(artifact.API.Input)
+	for _, def := range nestedDefs {
+		fmt.Fprintf(&b, "func %sToMap(v %s) map[string]any {\n", def.typeName, def.typeName)
+		b.WriteString("\treturn map[string]any{\n")
+		itemProps, _ := def.schema["properties"].(map[string]any)
+		for _, k := range sortedKeys(itemProps) {
+			goF := toPascalCase(camelToSnake(k))
+			fmt.Fprintf(&b, "\t\t%q: v.%s,\n", k, goF)
+		}
+		b.WriteString("\t}\n}\n\n")
 	}
-	b.WriteString("\treturn out\n}\n\n")
 
-	// coercion helpers
-	b.WriteString(generateCoercionHelpers(outputProps))
-
-	return b.String(), nil
+	return b.String()
 }
 
 // isSliceOrMap reports whether a Go type is a slice or map (neither is a pointer).
@@ -265,8 +418,15 @@ func cleanTypeName(goType string) string {
 	}
 }
 
-// schemaToGoFields converts a JSON Schema object's properties to Go struct fields.
+// schemaToGoFields converts a JSON Schema object properties to Go struct fields.
 func schemaToGoFields(schema map[string]any) string {
+	return schemaToGoFieldsWithNamed(schema, nil, nil)
+}
+
+// schemaToGoFieldsWithNamed is like schemaToGoFields but accepts an optional
+// requiredOverride set and a namedTypes map (json key -> Go type name) for
+// array-of-object fields that should use a named struct instead of map[string]any.
+func schemaToGoFieldsWithNamed(schema map[string]any, requiredOverride map[string]bool, namedTypes map[string]string) string {
 	if t, _ := schema["type"].(string); t != "object" {
 		return ""
 	}
@@ -274,7 +434,10 @@ func schemaToGoFields(schema map[string]any) string {
 	if !ok || len(props) == 0 {
 		return ""
 	}
-	required := requiredSet(schema)
+	required := requiredOverride
+	if required == nil {
+		required = requiredSet(schema)
+	}
 	keys := sortedKeys(props)
 
 	var reqFields, optFields []string
@@ -286,7 +449,14 @@ func schemaToGoFields(schema map[string]any) string {
 		}
 		isReq := required[key]
 		goFieldName := toPascalCase(camelToSnake(key))
-		goType := jsonSchemaToGoType(prop, !isReq)
+
+		var goType string
+		if named, ok := namedTypes[key]; ok {
+			goType = "[]" + named
+		} else {
+			goType = jsonSchemaToGoType(prop, !isReq)
+		}
+
 		desc, _ := prop["description"].(string)
 
 		var line strings.Builder

@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"aifunc/cli/internal/detect"
@@ -105,8 +106,41 @@ func doInit(ws *workspace.Workspace) error {
 		return fmt.Errorf("failed to update .gitignore: %w", err)
 	}
 	fmt.Fprintf(os.Stdout, "Added %s/ to .gitignore\n", inputDir)
+	if langKey == "java" {
+		if err := ensureJavaVscodeSettings(ws.Root, inputDir); err != nil {
+			return fmt.Errorf("failed to write Java IDE settings: %w", err)
+		}
+	}
 	fmt.Fprintln(os.Stdout, "Add packages to aifunc.json and run aifunc install.")
 	return nil
+}
+
+// ensureJavaVscodeSettings writes .vscode/settings.json so the Red Hat Java
+// extension excludes the .aifunc cache. That cache holds a second copy of the
+// engine sources (same package names as aifunc/_engine), and compiling both
+// breaks nested-type resolution for streaming wrappers.
+func ensureJavaVscodeSettings(root, inputDir string) error {
+	dir := filepath.Join(root, ".vscode")
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+	path := filepath.Join(dir, "settings.json")
+	if _, err := os.Stat(path); err == nil {
+		return nil // leave existing user settings alone
+	} else if !errors.Is(err, os.ErrNotExist) {
+		return err
+	}
+	// Escape the cache dir name for the java.project.resourceFilters regex.
+	filter := strings.ReplaceAll(inputDir, ".", "\\.")
+	content := fmt.Sprintf(`{
+  "java.project.resourceFilters": [
+    "node_modules",
+    "\\.git",
+    "%s"
+  ]
+}
+`, filter)
+	return os.WriteFile(path, []byte(content), 0644)
 }
 
 // recommendLanguageDefault scans the project environment and returns the index

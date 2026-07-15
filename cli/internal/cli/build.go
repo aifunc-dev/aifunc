@@ -274,6 +274,7 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 		}
 		if cfg.Language == "java" {
 			promoteJavaRootTypes(engineDst, cfg.GetOutputDir())
+			removeJavaEngineRootDuplicates(filepath.Join(cfg.GetOutputDir(), "_engine", cfg.Language))
 		}
 		if cfg.Language == "csharp" {
 			promoteCSharpRootTypes(engineDst, cfg.GetOutputDir())
@@ -284,9 +285,21 @@ func buildOneWithEngine(ws *workspace.Workspace, cfg types.AifuncConfig, name st
 	return nil
 }
 
-// promoteJavaRootTypes moves AIFuncConfig.java and AIFuncException.java from
-// the engine output directory to the outputDir root, since they belong to the
-// root "aifunc" package, not the engine sub-package.
+// removeJavaEngineRootDuplicates scans all version directories under
+// javaEngineDir (e.g. _engine/java/) and removes any leftover AIFuncConfig.java
+// and AIFuncException.java that would conflict with the promoted copies in the
+// output root.
+func removeJavaEngineRootDuplicates(javaEngineDir string) {
+	entries, _ := os.ReadDir(javaEngineDir)
+	for _, e := range entries {
+		if !e.IsDir() {
+			continue
+		}
+		for _, name := range []string{"AIFuncConfig.java", "AIFuncException.java"} {
+			os.Remove(filepath.Join(javaEngineDir, e.Name(), name))
+		}
+	}
+}
 func promoteJavaRootTypes(engineDst, outputDir string) {
 	for _, name := range []string{"AIFuncConfig.java", "AIFuncException.java"} {
 		src := filepath.Join(engineDst, name)
@@ -298,8 +311,6 @@ func promoteJavaRootTypes(engineDst, outputDir string) {
 	}
 }
 
-// promoteCSharpRootTypes moves AIFuncConfig.cs and AIFuncException.cs from
-// the engine output directory to the outputDir root (namespace Aifunc).
 func promoteCSharpRootTypes(engineDst, outputDir string) {
 	for _, name := range []string{"AIFuncConfig.cs", "AIFuncException.cs"} {
 		src := filepath.Join(engineDst, name)
