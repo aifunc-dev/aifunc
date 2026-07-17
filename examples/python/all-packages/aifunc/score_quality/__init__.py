@@ -4,7 +4,7 @@
 from typing import Any, Optional, Union
 from dataclasses import asdict, replace
 
-from .._engine.python.v0_1_0 import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults
+from .._engine.python.v0_2_0 import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults
 from .score_quality_aifunc import artifact
 from .score_quality_mock import mock_data
 from .score_quality_types import ScoreQualityInput, ScoreQualityOutput

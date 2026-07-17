@@ -68,8 +68,8 @@ final class GenerateSlugAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:0e508a60148b537c7c3e7f427f3d787db1bf8857add3c48eaae483496bdb9228");
-				put("generatedAt", "2026-07-12T06:36:24Z");
+				put("contentHash", "sha256:3e67cff0dd0cab1548eba66e4e3e16b95315e349bf715d2602478069c8b3457e");
+				put("generatedAt", "2026-07-17T00:03:10Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -91,7 +91,7 @@ final class GenerateSlugAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Generate SEO-friendly URL slugs, meta descriptions, and tag suggestions from titles.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "generate-slug");
 				put("type", "standalone");
 				put("version", "1.0.0");

@@ -5,9 +5,10 @@ namespace Aifunc.ExtractEntities;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Extract named entities from text, identifying their type and position.</summary>
 public static class ExtractEntities
@@ -28,9 +29,9 @@ public static class ExtractEntities
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(ExtractEntitiesTypes.ExtractEntitiesInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(ExtractEntitiesTypes.ExtractEntitiesInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.EntityTypes is not null) m["entityTypes"] = input.EntityTypes;
 		m["text"] = input.Text;
 		return m;
@@ -38,11 +39,17 @@ public static class ExtractEntities
 
 	private static ExtractEntitiesTypes.ExtractEntitiesOutput MapToOutput(Dictionary<string, object?> m)
 	{
-		List<Dictionary<string, object?>> entities;
+		List<ExtractEntitiesTypes.Entity> entities;
 		if (m.TryGetValue("entities", out var _v0))
-			entities = _v0 is List<Dictionary<string, object?>> _l0 ? _l0 : new List<Dictionary<string, object?>>();
+			entities = (_v0 is System.Collections.IEnumerable _en0
+				? _en0.Cast<object?>().Select(_item0 =>
+				{
+					var _d0 = _item0 as Dictionary<string, object?> ?? new Dictionary<string, object?>();
+					return new ExtractEntitiesTypes.Entity((_d0.TryGetValue("text", out var _nv0_0) ? _nv0_0 is string _s0 ? _s0 : (_nv0_0?.ToString() ?? "") : ""), (_d0.TryGetValue("type", out var _nv0_1) ? _nv0_1 is string _s1 ? _s1 : (_nv0_1?.ToString() ?? "") : ""), (_d0.TryGetValue("start", out var _nv0_2) ? _nv0_2 is IConvertible _c2 ? Convert.ToInt32(_c2) : 0 : 0), (_d0.TryGetValue("end", out var _nv0_3) ? _nv0_3 is IConvertible _c3 ? Convert.ToInt32(_c3) : 0 : 0));
+				}).ToList()
+				: new List<ExtractEntitiesTypes.Entity>());
 		else
-			entities = new List<Dictionary<string, object?>>();
+			entities = new List<ExtractEntitiesTypes.Entity>();
 		return new ExtractEntitiesTypes.ExtractEntitiesOutput(entities);
 	}
 }

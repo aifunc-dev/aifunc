@@ -5,9 +5,10 @@ namespace Aifunc.Translate;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Translate text into a specified target language with automatic source language detection.</summary>
 public static class Translate
@@ -28,9 +29,9 @@ public static class Translate
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(TranslateTypes.TranslateInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(TranslateTypes.TranslateInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.SourceLang is not null) m["sourceLang"] = input.SourceLang;
 		m["targetLang"] = input.TargetLang;
 		m["text"] = input.Text;
@@ -39,16 +40,16 @@ public static class Translate
 
 	private static TranslateTypes.TranslateOutput MapToOutput(Dictionary<string, object?> m)
 	{
-		string sourceLang;
-		if (m.TryGetValue("sourceLang", out var _v0))
-			sourceLang = _v0 is string _s0 ? _s0 : (_v0?.ToString() ?? "");
-		else
-			sourceLang = "";
 		string translation;
-		if (m.TryGetValue("translation", out var _v1))
-			translation = _v1 is string _s1 ? _s1 : (_v1?.ToString() ?? "");
+		if (m.TryGetValue("translation", out var _v0))
+			translation = _v0 is string _s0 ? _s0 : (_v0?.ToString() ?? "");
 		else
 			translation = "";
-		return new TranslateTypes.TranslateOutput(sourceLang, translation);
+		string sourceLang;
+		if (m.TryGetValue("sourceLang", out var _v1))
+			sourceLang = _v1 is string _s1 ? _s1 : (_v1?.ToString() ?? "");
+		else
+			sourceLang = "";
+		return new TranslateTypes.TranslateOutput(translation, sourceLang);
 	}
 }

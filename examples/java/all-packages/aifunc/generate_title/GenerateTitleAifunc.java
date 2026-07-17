@@ -64,8 +64,8 @@ final class GenerateTitleAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:1b034f24cb6f462c2b3e848382d68d156cc14939078808c7a84c1746bff345d2");
-				put("generatedAt", "2026-07-12T06:36:23Z");
+				put("contentHash", "sha256:22ec3881fab0d05cf08324780aa9ed1dcddb7ff0cbfca1ab00cb289c0dd35ce4");
+				put("generatedAt", "2026-07-17T00:03:11Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -87,7 +87,7 @@ final class GenerateTitleAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Generate title or headline candidates for a piece of content.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "generate-title");
 				put("type", "standalone");
 				put("version", "1.0.0");

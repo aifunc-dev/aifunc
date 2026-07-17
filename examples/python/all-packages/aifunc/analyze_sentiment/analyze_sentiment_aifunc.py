@@ -85,8 +85,8 @@ artifact = {
     },
     "artifactVersion": "0.1.0",
     "metadata": {
-        "contentHash": "sha256:364e94e985dff03311bed0e8e0a72976a51d2f642b8b73d41e51f803e587ca78",
-        "generatedAt": "2026-07-09T14:24:23Z",
+        "contentHash": "sha256:97e9f6d0005065820b666b81cc4d51300845531b5404ca1c4533689f0d15233c",
+        "generatedAt": "2026-07-15T13:20:50Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -108,7 +108,7 @@ artifact = {
             "name": "GildenEye",
         },
         "description": "Analyze the sentiment of input text with customizable labels (zero-shot classification).",
-        "engine": "^0.1.0",
+        "engine": "^0.2.0",
         "name": "analyze-sentiment",
         "type": "standalone",
         "version": "1.0.0",

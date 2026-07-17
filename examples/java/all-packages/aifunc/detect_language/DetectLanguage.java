@@ -4,9 +4,9 @@
 package aifunc.detect_language;
 
 import aifunc.AIFuncConfig;
-import aifunc._engine.java.v0_1_0.Runtime;
-import aifunc._engine.java.v0_1_0.Artifact;
-import aifunc._engine.java.v0_1_0.Types.AIFuncArtifact;
+import aifunc._engine.java.v0_2_0.Runtime;
+import aifunc._engine.java.v0_2_0.Artifact;
+import aifunc._engine.java.v0_2_0.Types.AIFuncArtifact;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -25,7 +25,6 @@ public final class DetectLanguage {
 		} else if (config.isMock() && config.getMockData() == null) {
 			config = config.toBuilder().mockData(MOCK_DATA).build();
 		}
-
 
 		AIFuncArtifact artifact = Artifact.fromMap(DetectLanguageAifunc.ARTIFACT_DATA);
 		Map<String, Object> inputMap = inputToMap(input);

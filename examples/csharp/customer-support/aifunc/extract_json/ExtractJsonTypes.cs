@@ -9,15 +9,32 @@ public static class ExtractJsonTypes
 {
 	public sealed class ExtractJsonInput
 	{
-		/// <summary>Schema describing the fields to extract.</summary>
-		public List<Dictionary<string, object?>> Fields { get; }
 		/// <summary>The natural language text to extract information from.</summary>
 		public string Text { get; }
+		/// <summary>Schema describing the fields to extract.</summary>
+		public List<Field> Fields { get; }
 
-		public ExtractJsonInput(List<Dictionary<string, object?>> fields, string text)
+		public ExtractJsonInput(string text, List<Field> fields)
 		{
-			Fields = fields;
 			Text = text;
+			Fields = fields;
+		}
+	}
+
+	public sealed class Field
+	{
+		/// <summary>Field name (will be the key in the output JSON).</summary>
+		public string Name { get; }
+		/// <summary>What this field represents, to guide extraction.</summary>
+		public string Description { get; }
+		/// <summary>Expected value type.</summary>
+		public string Type { get; }
+
+		public Field(string name, string description, string type)
+		{
+			Name = name;
+			Description = description;
+			Type = type;
 		}
 	}
 

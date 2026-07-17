@@ -85,8 +85,8 @@ final class ExtractEntitiesAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:c4e635a44440fd8fb1ac9be0c9a102a163dc81b1df07d150c46e2e196beef37b");
-				put("generatedAt", "2026-07-12T06:36:23Z");
+				put("contentHash", "sha256:f302a2b25694fb3cc2cbd56901803b9e9e35e12e2339c9a64aee6e7376a9ddb5");
+				put("generatedAt", "2026-07-17T00:03:10Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -108,7 +108,7 @@ final class ExtractEntitiesAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Extract named entities (people, places, organizations, dates, etc.) from text.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "extract-entities");
 				put("type", "standalone");
 				put("version", "1.0.0");

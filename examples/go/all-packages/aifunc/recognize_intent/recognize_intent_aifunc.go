@@ -83,8 +83,8 @@ var artifactData = map[string]any{
 	},
 	"artifactVersion": "0.1.0",
 	"metadata": map[string]any{
-		"contentHash": "sha256:447ebba1e669ee49b44239ad85f6cae2de2eaa4ea7ed1e658c1d4e3c0f909d91",
-		"generatedAt": "2026-07-11T02:28:22Z",
+		"contentHash": "sha256:07c541267c7f6bb5709c430bd4ee0783ad452ff8262bba97ef6b55a26c615d45",
+		"generatedAt": "2026-07-16T12:26:01Z",
 		"sourcePackageVersion": "1.0.0",
 	},
 	"modelParams": map[string]any{
@@ -96,7 +96,7 @@ var artifactData = map[string]any{
 			"name": "GildenEye",
 		},
 		"description": "Recognize user intent from conversational text with confidence scores (zero-shot).",
-		"engine": "^0.1.0",
+		"engine": "^0.2.0",
 		"name": "recognize-intent",
 		"type": "standalone",
 		"version": "1.0.0",

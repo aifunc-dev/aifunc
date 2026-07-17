@@ -65,8 +65,8 @@ artifact = {
     },
     "artifactVersion": "0.1.0",
     "metadata": {
-        "contentHash": "sha256:19bc07226587b2060125840142f8d58cca5bc2a6c8788b284cff285e1dccf76a",
-        "generatedAt": "2026-07-09T14:24:24Z",
+        "contentHash": "sha256:8b8750e4662d91a0df018f5c75860566c09e45dcf72de0bb64e5a9827a81d6b3",
+        "generatedAt": "2026-07-15T13:20:50Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -88,7 +88,7 @@ artifact = {
             "name": "GildenEye",
         },
         "description": "Generate a social media post or short article from a topic or brief.",
-        "engine": "^0.1.0",
+        "engine": "^0.2.0",
         "name": "generate-post",
         "type": "standalone",
         "version": "1.0.0",

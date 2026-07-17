@@ -3,10 +3,20 @@
 
 package extract_json
 
+// Field represents a single item in a message list.
+type Field struct {
+	// What this field represents, to guide extraction.
+	Description string
+	// Field name (will be the key in the output JSON).
+	Name string
+	// Expected value type.
+	Type string
+}
+
 // ExtractJsonInput holds the input parameters.
 type ExtractJsonInput struct {
 	// Schema describing the fields to extract.
-	Fields []map[string]any
+	Fields []Field
 	// The natural language text to extract information from.
 	Text string
 }

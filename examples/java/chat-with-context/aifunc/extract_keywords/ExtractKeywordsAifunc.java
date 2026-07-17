@@ -74,8 +74,8 @@ final class ExtractKeywordsAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:f49479cf6345416543e65403ae75117266329f69dfa1b5abe90e56dce7117c2a");
-				put("generatedAt", "2026-07-12T06:47:38Z");
+				put("contentHash", "sha256:f9b675229aa079c3225565e76baef7270f03bc30e31ea6c4e17673afbe90ea90");
+				put("generatedAt", "2026-07-17T10:48:49Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -97,7 +97,7 @@ final class ExtractKeywordsAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Extract keywords and key phrases from text with relevance scores.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "extract-keywords");
 				put("type", "standalone");
 				put("version", "1.0.0");

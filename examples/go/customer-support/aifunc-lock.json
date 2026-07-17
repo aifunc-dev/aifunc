@@ -2,31 +2,31 @@
   "lockVersion": 1,
   "packages": {
     "analyze-sentiment": {
-      "source": "gitee:aifunc-dev/aifunc-packages/analyze-sentiment",
+      "source": "github:aifunc-dev/aifunc-packages/analyze-sentiment",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:27:59Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T13:45:35Z"
     },
     "extract-json": {
-      "source": "gitee:aifunc-dev/aifunc-packages/extract-json",
+      "source": "github:aifunc-dev/aifunc-packages/extract-json",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:00Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T13:45:43Z"
     },
     "recognize-intent": {
-      "source": "gitee:aifunc-dev/aifunc-packages/recognize-intent",
+      "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:27:58Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T13:45:53Z"
     }
   },
   "engines": {
-    "v0.1.0": {
-      "source": "gitee:aifunc-dev/aifunc-packages",
+    "v0.2.0": {
+      "source": "github:aifunc-dev/aifunc-packages",
       "language": "go",
-      "path": "go/v0.1.0",
-      "resolvedFrom": "^0.1.0",
-      "resolvedAt": "2026-07-11T02:28:00Z",
+      "path": "go/v0.2.0",
+      "resolvedFrom": "^0.2.0",
+      "resolvedAt": "2026-07-16T13:45:53Z",
       "usedBy": [
         "analyze-sentiment",
         "extract-json",

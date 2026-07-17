@@ -5,9 +5,10 @@ namespace Aifunc.GenerateTitle;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Generate title or headline candidates for a piece of content.</summary>
 public static class GenerateTitle
@@ -28,9 +29,9 @@ public static class GenerateTitle
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(GenerateTitleTypes.GenerateTitleInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(GenerateTitleTypes.GenerateTitleInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		m["content"] = input.Content;
 		if (input.Count is not null) m["count"] = input.Count;
 		if (input.MaxLength is not null) m["maxLength"] = input.MaxLength;

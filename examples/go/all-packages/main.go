@@ -243,12 +243,12 @@ func main() {
 		"experience with Kubernetes. Salary range: €80,000–€110,000."
 	ejR, err := extract_json.ExtractJson(ctx, config, extract_json.ExtractJsonInput{
 		Text: jobPost,
-		Fields: []map[string]any{
-			{"name": "title", "description": "Job title", "type": "string"},
-			{"name": "location", "description": "City or country", "type": "string"},
-			{"name": "skills", "description": "Required technical skills", "type": "array"},
-			{"name": "experience_years", "description": "Minimum years of experience", "type": "number"},
-			{"name": "salary_range", "description": "Salary range", "type": "string"},
+		Fields: []extract_json.Field{
+			{Name: "title", Description: "Job title", Type: "string"},
+			{Name: "location", Description: "City or country", Type: "string"},
+			{Name: "skills", Description: "Required technical skills", Type: "array"},
+			{Name: "experience_years", Description: "Minimum years of experience", Type: "number"},
+			{Name: "salary_range", Description: "Salary range", Type: "string"},
 		},
 	})
 	if err != nil {

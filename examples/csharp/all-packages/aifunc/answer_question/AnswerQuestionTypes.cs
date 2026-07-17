@@ -31,16 +31,16 @@ public static class AnswerQuestionTypes
 	{
 		/// <summary>The generated answer.</summary>
 		public string Answer { get; }
-		/// <summary>Confidence score between 0 and 1.</summary>
-		public double Confidence { get; }
 		/// <summary>True if the answer is based on the provided context, false if from general knowledge.</summary>
 		public bool Grounded { get; }
+		/// <summary>Confidence score between 0 and 1.</summary>
+		public double Confidence { get; }
 
-		public AnswerQuestionOutput(string answer, double confidence, bool grounded)
+		public AnswerQuestionOutput(string answer, bool grounded, double confidence)
 		{
 			Answer = answer;
-			Confidence = confidence;
 			Grounded = grounded;
+			Confidence = confidence;
 		}
 	}
 }

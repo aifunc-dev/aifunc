@@ -96,8 +96,8 @@ internal static class ClassifyAifunc
 			["artifactVersion"] = "0.1.0",
 			["metadata"] = new Dictionary<string, object?>
 			{
-				["contentHash"] = "sha256:de1695d4164aab5906d66496030b77676dfb754e96971dddebf1f82a9df19b69",
-				["generatedAt"] = "2026-07-12T14:20:06Z",
+				["contentHash"] = "sha256:c03ff1ed44ea276c17aecfc0c16cee640b30c1be1611bff945d356bdd3e04d3e",
+				["generatedAt"] = "2026-07-16T23:51:14Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>
@@ -126,7 +126,7 @@ internal static class ClassifyAifunc
 					["name"] = "GildenEye",
 				},
 				["description"] = "Classify text into user-defined categories with confidence scores (zero-shot).",
-				["engine"] = "^0.1.0",
+				["engine"] = "^0.2.0",
 				["name"] = "classify",
 				["type"] = "standalone",
 				["version"] = "1.0.0",

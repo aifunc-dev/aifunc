@@ -47,8 +47,8 @@ var artifactData = map[string]any{
 	},
 	"artifactVersion": "0.1.0",
 	"metadata": map[string]any{
-		"contentHash": "sha256:d730cdf6c2da955b293cb369f21c58c745d22e5f1676db19b025d70e152adcbc",
-		"generatedAt": "2026-07-11T02:28:22Z",
+		"contentHash": "sha256:92c35e91bb7faca14e3a8518734e69fef224bfdceca21326a4bd4798ff72bf11",
+		"generatedAt": "2026-07-16T12:26:01Z",
 		"sourcePackageVersion": "1.0.0",
 	},
 	"modelParams": map[string]any{
@@ -70,7 +70,7 @@ var artifactData = map[string]any{
 			"name": "GildenEye",
 		},
 		"description": "Rewrite text in a specified style or tone, such as formal, casual, concise, or expanded.",
-		"engine": "^0.1.0",
+		"engine": "^0.2.0",
 		"name": "rewrite",
 		"type": "standalone",
 		"version": "1.0.0",

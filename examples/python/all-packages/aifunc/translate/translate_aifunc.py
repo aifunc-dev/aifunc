@@ -49,8 +49,8 @@ artifact = {
     },
     "artifactVersion": "0.1.0",
     "metadata": {
-        "contentHash": "sha256:d6549eabd59eb0977b11b08ae27ab309b88ad6546e62f7eadcc8f40243b56df5",
-        "generatedAt": "2026-07-09T14:24:24Z",
+        "contentHash": "sha256:012dc373afe5d5cca4da2bbab66a253096d028702875fafbb526c2f7357fa25d",
+        "generatedAt": "2026-07-15T13:20:50Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -72,7 +72,7 @@ artifact = {
             "name": "GildenEye",
         },
         "description": "Translate text into a specified target language with automatic source language detection.",
-        "engine": "^0.1.0",
+        "engine": "^0.2.0",
         "name": "translate",
         "type": "standalone",
         "version": "1.0.0",

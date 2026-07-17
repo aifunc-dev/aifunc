@@ -9,7 +9,7 @@ const artifact = {
     "author": {
       "name": "GildenEye"
     },
-    "engine": "^0.1.0"
+    "engine": "^0.2.0"
   },
   "api": {
     "name": "summarize",
@@ -74,8 +74,8 @@ const artifact = {
   },
   "metadata": {
     "sourcePackageVersion": "1.0.0",
-    "generatedAt": "2026-07-09T15:07:58Z",
-    "contentHash": "sha256:48cfa8b2183761308b7c77d705f9a785122077790f7267c8275c5e0452b38f6f"
+    "generatedAt": "2026-07-16T11:49:22Z",
+    "contentHash": "sha256:2b1e7439696465851cc4e8259aaf744dcc058d61d69aba494a40e34c5df46f9c"
   }
 };
 

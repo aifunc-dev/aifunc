@@ -9,17 +9,17 @@ public static class RewriteTypes
 {
 	public sealed class RewriteInput
 	{
-		/// <summary>Target style or tone (e.g. 'formal', 'casual', 'concise', 'expanded', 'academic', 'humorous').</summary>
-		public string Style { get; }
 		/// <summary>The original text to rewrite.</summary>
 		public string Text { get; }
+		/// <summary>Target style or tone (e.g. 'formal', 'casual', 'concise', 'expanded', 'academic', 'humorous').</summary>
+		public string Style { get; }
 		/// <summary>Additional rewriting instructions or constraints.</summary>
 		public string? Instructions { get; set; }
 
-		public RewriteInput(string style, string text, string? instructions = null)
+		public RewriteInput(string text, string style, string? instructions = null)
 		{
-			Style = style;
 			Text = text;
+			Style = style;
 			Instructions = instructions;
 		}
 	}

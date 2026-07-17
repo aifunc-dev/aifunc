@@ -5,9 +5,10 @@ namespace Aifunc.DetectLanguage;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Detect the language of input text, returning a language code, language name, and confidence score.</summary>
 public static class DetectLanguage
@@ -28,30 +29,30 @@ public static class DetectLanguage
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(DetectLanguageTypes.DetectLanguageInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(DetectLanguageTypes.DetectLanguageInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		m["text"] = input.Text;
 		return m;
 	}
 
 	private static DetectLanguageTypes.DetectLanguageOutput MapToOutput(Dictionary<string, object?> m)
 	{
-		double confidence;
-		if (m.TryGetValue("confidence", out var _v0))
-			confidence = _v0 is IConvertible _c0 ? Convert.ToDouble(_c0) : 0.0;
-		else
-			confidence = 0.0;
 		string language;
-		if (m.TryGetValue("language", out var _v1))
-			language = _v1 is string _s1 ? _s1 : (_v1?.ToString() ?? "");
+		if (m.TryGetValue("language", out var _v0))
+			language = _v0 is string _s0 ? _s0 : (_v0?.ToString() ?? "");
 		else
 			language = "";
 		string languageName;
-		if (m.TryGetValue("languageName", out var _v2))
-			languageName = _v2 is string _s2 ? _s2 : (_v2?.ToString() ?? "");
+		if (m.TryGetValue("languageName", out var _v1))
+			languageName = _v1 is string _s1 ? _s1 : (_v1?.ToString() ?? "");
 		else
 			languageName = "";
-		return new DetectLanguageTypes.DetectLanguageOutput(confidence, language, languageName);
+		double confidence;
+		if (m.TryGetValue("confidence", out var _v2))
+			confidence = _v2 is IConvertible _c2 ? Convert.ToDouble(_c2) : 0.0;
+		else
+			confidence = 0.0;
+		return new DetectLanguageTypes.DetectLanguageOutput(language, languageName, confidence);
 	}
 }

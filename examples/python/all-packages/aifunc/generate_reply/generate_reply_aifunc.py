@@ -46,8 +46,8 @@ artifact = {
     },
     "artifactVersion": "0.1.0",
     "metadata": {
-        "contentHash": "sha256:bd15142db6ed0425bb35a1ae82edfeb3700680180b576b8592b4f74ce5b459f1",
-        "generatedAt": "2026-07-09T14:24:23Z",
+        "contentHash": "sha256:c3745cc04d837fa82f505f627f03429a1f852fd9fee6a5a83bf09bfbe1bbbb39",
+        "generatedAt": "2026-07-15T13:20:50Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -69,7 +69,7 @@ artifact = {
             "name": "GildenEye",
         },
         "description": "Generate a contextually appropriate reply to a message or comment.",
-        "engine": "^0.1.0",
+        "engine": "^0.2.0",
         "name": "generate-reply",
         "type": "standalone",
         "version": "1.0.0",

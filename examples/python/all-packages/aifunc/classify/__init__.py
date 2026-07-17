@@ -4,7 +4,7 @@
 from typing import Any, Optional, Union
 from dataclasses import asdict, replace
 
-from .._engine.python.v0_1_0 import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults
+from .._engine.python.v0_2_0 import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults
 from .classify_aifunc import artifact
 from .classify_mock import mock_data
 from .classify_types import ClassifyInput, ClassifyOutput

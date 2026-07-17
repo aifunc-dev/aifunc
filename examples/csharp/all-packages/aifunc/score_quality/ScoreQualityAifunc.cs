@@ -145,8 +145,8 @@ internal static class ScoreQualityAifunc
 			["artifactVersion"] = "0.1.0",
 			["metadata"] = new Dictionary<string, object?>
 			{
-				["contentHash"] = "sha256:762f256bb8916716b45cb2a91f6c3692630d1124fcb890e1dac2542ec25a0fdc",
-				["generatedAt"] = "2026-07-12T14:20:07Z",
+				["contentHash"] = "sha256:79d6f5a90194dede133d2c89da1e7e35c27718e490eea613107036895d42da73",
+				["generatedAt"] = "2026-07-16T23:51:14Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>
@@ -199,7 +199,7 @@ internal static class ScoreQualityAifunc
 					["name"] = "GildenEye",
 				},
 				["description"] = "Evaluate text quality across multiple dimensions and return structured scores with improvement advice.",
-				["engine"] = "^0.1.0",
+				["engine"] = "^0.2.0",
 				["name"] = "score-quality",
 				["type"] = "standalone",
 				["version"] = "1.0.0",

@@ -5,9 +5,10 @@ namespace Aifunc.Classify;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Classify text into user-defined categories with confidence scores.</summary>
 public static class Classify
@@ -28,9 +29,9 @@ public static class Classify
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(ClassifyTypes.ClassifyInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(ClassifyTypes.ClassifyInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.AllowMultiple is not null) m["allowMultiple"] = input.AllowMultiple;
 		m["categories"] = input.Categories;
 		m["text"] = input.Text;
@@ -39,11 +40,17 @@ public static class Classify
 
 	private static ClassifyTypes.ClassifyOutput MapToOutput(Dictionary<string, object?> m)
 	{
-		List<Dictionary<string, object?>> classifications;
+		List<ClassifyTypes.Classification> classifications;
 		if (m.TryGetValue("classifications", out var _v0))
-			classifications = _v0 is List<Dictionary<string, object?>> _l0 ? _l0 : new List<Dictionary<string, object?>>();
+			classifications = (_v0 is System.Collections.IEnumerable _en0
+				? _en0.Cast<object?>().Select(_item0 =>
+				{
+					var _d0 = _item0 as Dictionary<string, object?> ?? new Dictionary<string, object?>();
+					return new ClassifyTypes.Classification((_d0.TryGetValue("category", out var _nv0_0) ? _nv0_0 is string _s0 ? _s0 : (_nv0_0?.ToString() ?? "") : ""), (_d0.TryGetValue("confidence", out var _nv0_1) ? _nv0_1 is IConvertible _c1 ? Convert.ToDouble(_c1) : 0.0 : 0.0));
+				}).ToList()
+				: new List<ClassifyTypes.Classification>());
 		else
-			classifications = new List<Dictionary<string, object?>>();
+			classifications = new List<ClassifyTypes.Classification>();
 		return new ClassifyTypes.ClassifyOutput(classifications);
 	}
 }

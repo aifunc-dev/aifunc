@@ -32,18 +32,18 @@ public static class GeneratePostTypes
 
 	public sealed class GeneratePostOutput
 	{
-		/// <summary>Character count of the generated post.</summary>
-		public int CharCount { get; }
-		/// <summary>Suggested hashtags (empty if includeHashtags is false).</summary>
-		public List<string> Hashtags { get; }
 		/// <summary>The generated post content.</summary>
 		public string Post { get; }
+		/// <summary>Suggested hashtags (empty if includeHashtags is false).</summary>
+		public List<string> Hashtags { get; }
+		/// <summary>Character count of the generated post.</summary>
+		public int CharCount { get; }
 
-		public GeneratePostOutput(int charCount, List<string> hashtags, string post)
+		public GeneratePostOutput(string post, List<string> hashtags, int charCount)
 		{
-			CharCount = charCount;
-			Hashtags = hashtags;
 			Post = post;
+			Hashtags = hashtags;
+			CharCount = charCount;
 		}
 	}
 }

@@ -1,0 +1,103 @@
+const artifact = {
+  "schemaVersion": "0.1.0",
+  "artifactVersion": "0.1.0",
+  "package": {
+    "type": "standalone",
+    "name": "review-stream",
+    "version": "1.0.0",
+    "description": "Stream a structured review of code or a document, with issues and suggestions delivered incrementally. Returns plain text.",
+    "author": {
+      "name": "GildenEye"
+    },
+    "engine": "^0.2.0",
+    "engineOptions": {
+      "injectOutputSchema": false
+    }
+  },
+  "api": {
+    "name": "review_stream",
+    "description": "Stream a structured review of code or a document, with issues and suggestions delivered incrementally. Returns plain text.",
+    "input": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "description": "The code or document text to review.",
+          "minLength": 1,
+          "type": "string"
+        },
+        "context": {
+          "description": "Optional context about the codebase, project, or purpose to inform the review.",
+          "type": "string"
+        },
+        "focus": {
+          "description": "Review focus areas (e.g. 'correctness, security', 'style, clarity', 'performance'). If omitted, covers all areas.",
+          "type": "string"
+        },
+        "language": {
+          "description": "Programming language (when type is 'code', e.g. 'TypeScript', 'Python', 'Go'). Ignored for non-code types.",
+          "type": "string"
+        },
+        "outputLanguage": {
+          "description": "Language for the review output. If omitted, matches the language of the content or defaults to English.",
+          "type": "string"
+        },
+        "severity": {
+          "default": "all",
+          "description": "Minimum severity level to report: 'all', 'suggestions-and-above', 'warnings-and-above', 'errors-only'. Default: 'all'.",
+          "enum": [
+            "all",
+            "suggestions-and-above",
+            "warnings-and-above",
+            "errors-only"
+          ],
+          "type": "string"
+        },
+        "type": {
+          "default": "code",
+          "description": "Content type: 'code', 'document', 'pull-request', 'essay'. Default: 'code'.",
+          "enum": [
+            "code",
+            "document",
+            "pull-request",
+            "essay"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "content"
+      ],
+      "type": "object"
+    },
+    "output": {
+      "description": "The review findings as plain text, delivered incrementally.",
+      "type": "string",
+      "x-delivery-mode": "stream"
+    },
+    "injectOutputSchema": false
+  },
+  "modelParams": {
+    "schemaVersion": "0.1.0",
+    "rules": [
+      {
+        "match": {
+          "pattern": ".*"
+        },
+        "params": {
+          "temperature": 0.3,
+          "maxTokens": 4096
+        }
+      }
+    ]
+  },
+  "prompts": {
+    "general": "# System\n\nYou are a thorough and constructive code and document reviewer. Your task is to review the provided content and deliver actionable, well-organized feedback.\n\n## Requirements\n\n- Content type: {{input.type}}\n- Programming language: {{input.language}} (applies when type is 'code')\n- Focus areas: {{input.focus}} — if not specified, cover all relevant dimensions (correctness, security, performance, style, readability, maintainability)\n- Severity filter: {{input.severity}} — only report issues at or above this level\n  - \"errors-only\": bugs, security vulnerabilities, data loss risks\n  - \"warnings-and-above\": also include likely problems and bad practices\n  - \"suggestions-and-above\": also include improvements and style issues\n  - \"all\": include all of the above plus minor nitpicks\n- Structure your review as a numbered list of findings. Each finding should state:\n  1. Severity: [Error | Warning | Suggestion | Nitpick]\n  2. Location: line number or section (if determinable)\n  3. Issue: what the problem or opportunity is\n  4. Recommendation: what to do about it\n- End with a brief overall summary (2-3 sentences).\n- Output plain text only — no Markdown formatting, no JSON, no code fences.\n- If an output language is specified, write the review in that language. Otherwise, use English.\n- Be specific and actionable. Avoid vague praise or generic advice.\n\n## Context\n\n{{input.context}}\n\n## Content to Review\n\n{{input.content}}\n\nOutput language: {{input.outputLanguage}}\n"
+  },
+  "metadata": {
+    "sourcePackageVersion": "1.0.0",
+    "generatedAt": "2026-07-16T12:05:18Z",
+    "contentHash": "sha256:91ad80317086e2640a83045874c158a4419b3469ea911a1406e661d7caf5cd0f"
+  }
+};
+
+export default artifact;

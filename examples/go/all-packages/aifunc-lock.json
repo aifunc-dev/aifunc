@@ -4,131 +4,131 @@
     "analyze-sentiment": {
       "source": "github:aifunc-dev/aifunc-packages/analyze-sentiment",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:27:56Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:25:33Z"
     },
     "answer-question": {
       "source": "github:aifunc-dev/aifunc-packages/answer-question",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:22Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:24:11Z"
     },
     "classify": {
       "source": "github:aifunc-dev/aifunc-packages/classify",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:11Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:24:50Z"
     },
     "detect-language": {
       "source": "github:aifunc-dev/aifunc-packages/detect-language",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:13Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:25:39Z"
     },
     "extract-entities": {
       "source": "github:aifunc-dev/aifunc-packages/extract-entities",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:04Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:24:21Z"
     },
     "extract-json": {
       "source": "github:aifunc-dev/aifunc-packages/extract-json",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:16Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:24:57Z"
     },
     "extract-keywords": {
       "source": "github:aifunc-dev/aifunc-packages/extract-keywords",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:00Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:25:04Z"
     },
     "generate-email": {
       "source": "github:aifunc-dev/aifunc-packages/generate-email",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:02Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:25:07Z"
     },
     "generate-post": {
       "source": "github:aifunc-dev/aifunc-packages/generate-post",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:18Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:24:30Z"
     },
     "generate-reply": {
       "source": "github:aifunc-dev/aifunc-packages/generate-reply",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:06Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:25:51Z"
     },
     "generate-slug": {
       "source": "github:aifunc-dev/aifunc-packages/generate-slug",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:27:40Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:25:18Z"
     },
     "generate-title": {
       "source": "github:aifunc-dev/aifunc-packages/generate-title",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:27:44Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:25:24Z"
     },
     "recognize-intent": {
       "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:27:46Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:24:34Z"
     },
     "rewrite": {
       "source": "github:aifunc-dev/aifunc-packages/rewrite",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:20Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:24:37Z"
     },
     "score-quality": {
       "source": "github:aifunc-dev/aifunc-packages/score-quality",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:28:09Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:25:58Z"
     },
     "summarize": {
       "source": "github:aifunc-dev/aifunc-packages/summarize",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:27:49Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:24:46Z"
     },
     "translate": {
       "source": "github:aifunc-dev/aifunc-packages/translate",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-11T02:27:51Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T12:26:01Z"
     }
   },
   "engines": {
-    "v0.1.0": {
+    "v0.2.0": {
       "source": "github:aifunc-dev/aifunc-packages",
       "language": "go",
-      "path": "go/v0.1.0",
-      "resolvedFrom": "^0.1.0",
-      "resolvedAt": "2026-07-11T02:28:22Z",
+      "path": "go/v0.2.0",
+      "resolvedFrom": "^0.2.0",
+      "resolvedAt": "2026-07-16T12:26:01Z",
       "usedBy": [
-        "generate-slug",
-        "translate",
-        "analyze-sentiment",
-        "detect-language",
-        "generate-post",
-        "generate-title",
-        "classify",
-        "generate-reply",
-        "rewrite",
-        "score-quality",
-        "summarize",
-        "recognize-intent",
+        "answer-question",
         "extract-entities",
+        "generate-post",
+        "recognize-intent",
+        "rewrite",
+        "summarize",
+        "classify",
         "extract-json",
         "extract-keywords",
         "generate-email",
-        "answer-question"
+        "generate-slug",
+        "generate-title",
+        "analyze-sentiment",
+        "detect-language",
+        "generate-reply",
+        "score-quality",
+        "translate"
       ]
     }
   }

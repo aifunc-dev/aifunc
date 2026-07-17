@@ -61,8 +61,8 @@ artifact = {
     },
     "artifactVersion": "0.1.0",
     "metadata": {
-        "contentHash": "sha256:f49479cf6345416543e65403ae75117266329f69dfa1b5abe90e56dce7117c2a",
-        "generatedAt": "2026-07-09T14:39:57Z",
+        "contentHash": "sha256:f9b675229aa079c3225565e76baef7270f03bc30e31ea6c4e17673afbe90ea90",
+        "generatedAt": "2026-07-15T13:29:15Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -84,7 +84,7 @@ artifact = {
             "name": "GildenEye",
         },
         "description": "Extract keywords and key phrases from text with relevance scores.",
-        "engine": "^0.1.0",
+        "engine": "^0.2.0",
         "name": "extract-keywords",
         "type": "standalone",
         "version": "1.0.0",

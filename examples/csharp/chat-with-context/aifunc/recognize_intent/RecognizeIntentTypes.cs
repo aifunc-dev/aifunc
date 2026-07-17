@@ -9,35 +9,49 @@ public static class RecognizeIntentTypes
 {
 	public sealed class RecognizeIntentInput
 	{
-		/// <summary>List of candidate intents to recognize from.</summary>
-		public List<string> Intents { get; }
 		/// <summary>The user message to recognize intent from.</summary>
 		public string Text { get; }
+		/// <summary>List of candidate intents to recognize from.</summary>
+		public List<string> Intents { get; }
 		/// <summary>Optional conversation context or system description to improve recognition accuracy.</summary>
 		public string? Context { get; set; }
 
-		public RecognizeIntentInput(List<string> intents, string text, string? context = null)
+		public RecognizeIntentInput(string text, List<string> intents, string? context = null)
 		{
-			Intents = intents;
 			Text = text;
+			Intents = intents;
 			Context = context;
 		}
 	}
 
 	public sealed class RecognizeIntentOutput
 	{
-		/// <summary>Confidence score of the top intent, between 0 and 1.</summary>
-		public double Confidence { get; }
 		/// <summary>The highest-confidence recognized intent.</summary>
 		public string Intent { get; }
+		/// <summary>Confidence score of the top intent, between 0 and 1.</summary>
+		public double Confidence { get; }
 		/// <summary>All intents ranked by confidence (highest first).</summary>
-		public List<Dictionary<string, object?>> Rankings { get; }
+		public List<Ranking> Rankings { get; }
 
-		public RecognizeIntentOutput(double confidence, string intent, List<Dictionary<string, object?>> rankings)
+		public RecognizeIntentOutput(string intent, double confidence, List<Ranking> rankings)
 		{
-			Confidence = confidence;
 			Intent = intent;
+			Confidence = confidence;
 			Rankings = rankings;
+		}
+	}
+
+	public sealed class Ranking
+	{
+		/// <summary>Intent label.</summary>
+		public string Intent { get; }
+		/// <summary>Confidence score between 0 and 1.</summary>
+		public double Confidence { get; }
+
+		public Ranking(string intent, double confidence)
+		{
+			Intent = intent;
+			Confidence = confidence;
 		}
 	}
 }

@@ -4,35 +4,35 @@
     "extract-keywords": {
       "source": "github:aifunc-dev/aifunc-packages/extract-keywords",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-09T14:39:37Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-15T13:29:02Z"
     },
     "generate-reply": {
       "source": "github:aifunc-dev/aifunc-packages/generate-reply",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-09T14:39:57Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-15T13:29:15Z"
     },
     "recognize-intent": {
       "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-09T14:39:33Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-15T13:28:48Z"
     },
     "summarize": {
       "source": "github:aifunc-dev/aifunc-packages/summarize",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-09T14:39:48Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-15T13:29:08Z"
     }
   },
   "engines": {
-    "v0.1.0": {
+    "v0.2.0": {
       "source": "github:aifunc-dev/aifunc-packages",
       "language": "python",
-      "path": "python/v0_1_0",
-      "resolvedFrom": "^0.1.0",
-      "resolvedAt": "2026-07-09T14:39:57Z",
+      "path": "python/v0_2_0",
+      "resolvedFrom": "^0.2.0",
+      "resolvedAt": "2026-07-15T13:29:15Z",
       "usedBy": [
         "recognize-intent",
         "extract-keywords",

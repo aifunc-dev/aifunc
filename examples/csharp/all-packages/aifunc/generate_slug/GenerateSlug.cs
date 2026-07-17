@@ -5,9 +5,10 @@ namespace Aifunc.GenerateSlug;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Generate an SEO-friendly URL slug, meta description, and tag suggestions from a title.</summary>
 public static class GenerateSlug
@@ -28,9 +29,9 @@ public static class GenerateSlug
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(GenerateSlugTypes.GenerateSlugInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(GenerateSlugTypes.GenerateSlugInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.Description is not null) m["description"] = input.Description;
 		if (input.Language is not null) m["language"] = input.Language;
 		m["title"] = input.Title;
@@ -39,21 +40,21 @@ public static class GenerateSlug
 
 	private static GenerateSlugTypes.GenerateSlugOutput MapToOutput(Dictionary<string, object?> m)
 	{
-		string metaDescription;
-		if (m.TryGetValue("metaDescription", out var _v0))
-			metaDescription = _v0 is string _s0 ? _s0 : (_v0?.ToString() ?? "");
-		else
-			metaDescription = "";
 		string slug;
-		if (m.TryGetValue("slug", out var _v1))
-			slug = _v1 is string _s1 ? _s1 : (_v1?.ToString() ?? "");
+		if (m.TryGetValue("slug", out var _v0))
+			slug = _v0 is string _s0 ? _s0 : (_v0?.ToString() ?? "");
 		else
 			slug = "";
+		string metaDescription;
+		if (m.TryGetValue("metaDescription", out var _v1))
+			metaDescription = _v1 is string _s1 ? _s1 : (_v1?.ToString() ?? "");
+		else
+			metaDescription = "";
 		List<string> tags;
 		if (m.TryGetValue("tags", out var _v2))
 			tags = _v2 is List<string> _l2 ? _l2 : new List<string>();
 		else
 			tags = new List<string>();
-		return new GenerateSlugTypes.GenerateSlugOutput(metaDescription, slug, tags);
+		return new GenerateSlugTypes.GenerateSlugOutput(slug, metaDescription, tags);
 	}
 }

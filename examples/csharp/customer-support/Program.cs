@@ -83,43 +83,43 @@ Console.WriteLine($"Intent: {intentResult.Intent} ({intentResult.Confidence:P0})
 var fields = intentResult.Intent switch
 {
     "query_order" =>
-        new List<Dictionary<string, object?>>
+        new List<ExtractJsonTypes.Field>
         {
-            new() { ["name"] = "order_id", ["description"] = "Order number",                    ["type"] = "string" },
-            new() { ["name"] = "issue",    ["description"] = "What the customer wants to know", ["type"] = "string" },
+            new("order_id", "Order number", "string"),
+            new("issue", "What the customer wants to know", "string"),
         },
     "request_refund" =>
-        new List<Dictionary<string, object?>>
+        new List<ExtractJsonTypes.Field>
         {
-            new() { ["name"] = "order_id", ["description"] = "Order number",       ["type"] = "string" },
-            new() { ["name"] = "reason",   ["description"] = "Reason for refund",  ["type"] = "string" },
+            new("order_id", "Order number", "string"),
+            new("reason", "Reason for refund", "string"),
         },
     "technical_support" =>
-        new List<Dictionary<string, object?>>
+        new List<ExtractJsonTypes.Field>
         {
-            new() { ["name"] = "issue",    ["description"] = "Technical problem",  ["type"] = "string" },
-            new() { ["name"] = "platform", ["description"] = "Device or platform", ["type"] = "string" },
+            new("issue", "Technical problem", "string"),
+            new("platform", "Device or platform", "string"),
         },
     "billing_issue" =>
-        new List<Dictionary<string, object?>>
+        new List<ExtractJsonTypes.Field>
         {
-            new() { ["name"] = "transaction_id", ["description"] = "Transaction ID",    ["type"] = "string" },
-            new() { ["name"] = "problem",        ["description"] = "Billing problem",   ["type"] = "string" },
+            new("transaction_id", "Transaction ID", "string"),
+            new("problem", "Billing problem", "string"),
         },
     "feature_request" =>
-        new List<Dictionary<string, object?>>
+        new List<ExtractJsonTypes.Field>
         {
-            new() { ["name"] = "feature", ["description"] = "Requested feature", ["type"] = "string" },
+            new("feature", "Requested feature", "string"),
         },
     _ =>
-        new List<Dictionary<string, object?>>
+        new List<ExtractJsonTypes.Field>
         {
-            new() { ["name"] = "question", ["description"] = "Customer's question", ["type"] = "string" },
+            new("question", "Customer's question", "string"),
         },
 };
 
 var info = await ExtractJson.ExtractJsonAsync(config,
-    new ExtractJsonTypes.ExtractJsonInput(fields: fields, text: message));
+    new ExtractJsonTypes.ExtractJsonInput(text: message, fields: fields));
 
 var e = info.Extracted;
 Console.WriteLine(intentResult.Intent switch

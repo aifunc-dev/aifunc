@@ -109,8 +109,8 @@ internal static class RecognizeIntentAifunc
 			["artifactVersion"] = "0.1.0",
 			["metadata"] = new Dictionary<string, object?>
 			{
-				["contentHash"] = "sha256:447ebba1e669ee49b44239ad85f6cae2de2eaa4ea7ed1e658c1d4e3c0f909d91",
-				["generatedAt"] = "2026-07-12T14:54:47Z",
+				["contentHash"] = "sha256:07c541267c7f6bb5709c430bd4ee0783ad452ff8262bba97ef6b55a26c615d45",
+				["generatedAt"] = "2026-07-17T10:38:15Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>
@@ -125,7 +125,7 @@ internal static class RecognizeIntentAifunc
 					["name"] = "GildenEye",
 				},
 				["description"] = "Recognize user intent from conversational text with confidence scores (zero-shot).",
-				["engine"] = "^0.1.0",
+				["engine"] = "^0.2.0",
 				["name"] = "recognize-intent",
 				["type"] = "standalone",
 				["version"] = "1.0.0",

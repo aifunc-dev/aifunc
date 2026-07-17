@@ -5,9 +5,10 @@ namespace Aifunc.ScoreQuality;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Evaluate text quality across multiple dimensions and return structured scores with improvement advice.</summary>
 public static class ScoreQuality
@@ -28,9 +29,9 @@ public static class ScoreQuality
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(ScoreQualityTypes.ScoreQualityInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(ScoreQualityTypes.ScoreQualityInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.MaxSuggestions is not null) m["maxSuggestions"] = input.MaxSuggestions;
 		if (input.Purpose is not null) m["purpose"] = input.Purpose;
 		if (input.Strictness is not null) m["strictness"] = input.Strictness;
@@ -41,46 +42,46 @@ public static class ScoreQuality
 
 	private static ScoreQualityTypes.ScoreQualityOutput MapToOutput(Dictionary<string, object?> m)
 	{
-		int actionabilityScore;
-		if (m.TryGetValue("actionabilityScore", out var _v0))
-			actionabilityScore = _v0 is IConvertible _c0 ? Convert.ToInt32(_c0) : 0;
+		int overallScore;
+		if (m.TryGetValue("overallScore", out var _v0))
+			overallScore = _v0 is IConvertible _c0 ? Convert.ToInt32(_c0) : 0;
 		else
-			actionabilityScore = 0;
+			overallScore = 0;
 		int clarityScore;
 		if (m.TryGetValue("clarityScore", out var _v1))
 			clarityScore = _v1 is IConvertible _c1 ? Convert.ToInt32(_c1) : 0;
 		else
 			clarityScore = 0;
-		string level;
-		if (m.TryGetValue("level", out var _v2))
-			level = _v2 is string _s2 ? _s2 : (_v2?.ToString() ?? "");
-		else
-			level = "";
-		int overallScore;
-		if (m.TryGetValue("overallScore", out var _v3))
-			overallScore = _v3 is IConvertible _c3 ? Convert.ToInt32(_c3) : 0;
-		else
-			overallScore = 0;
 		int structureScore;
-		if (m.TryGetValue("structureScore", out var _v4))
-			structureScore = _v4 is IConvertible _c4 ? Convert.ToInt32(_c4) : 0;
+		if (m.TryGetValue("structureScore", out var _v2))
+			structureScore = _v2 is IConvertible _c2 ? Convert.ToInt32(_c2) : 0;
 		else
 			structureScore = 0;
-		List<string> suggestions;
-		if (m.TryGetValue("suggestions", out var _v5))
-			suggestions = _v5 is List<string> _l5 ? _l5 : new List<string>();
+		int toneScore;
+		if (m.TryGetValue("toneScore", out var _v3))
+			toneScore = _v3 is IConvertible _c3 ? Convert.ToInt32(_c3) : 0;
 		else
-			suggestions = new List<string>();
+			toneScore = 0;
+		int actionabilityScore;
+		if (m.TryGetValue("actionabilityScore", out var _v4))
+			actionabilityScore = _v4 is IConvertible _c4 ? Convert.ToInt32(_c4) : 0;
+		else
+			actionabilityScore = 0;
+		string level;
+		if (m.TryGetValue("level", out var _v5))
+			level = _v5 is string _s5 ? _s5 : (_v5?.ToString() ?? "");
+		else
+			level = "";
 		string summary;
 		if (m.TryGetValue("summary", out var _v6))
 			summary = _v6 is string _s6 ? _s6 : (_v6?.ToString() ?? "");
 		else
 			summary = "";
-		int toneScore;
-		if (m.TryGetValue("toneScore", out var _v7))
-			toneScore = _v7 is IConvertible _c7 ? Convert.ToInt32(_c7) : 0;
+		List<string> suggestions;
+		if (m.TryGetValue("suggestions", out var _v7))
+			suggestions = _v7 is List<string> _l7 ? _l7 : new List<string>();
 		else
-			toneScore = 0;
-		return new ScoreQualityTypes.ScoreQualityOutput(actionabilityScore, clarityScore, level, overallScore, structureScore, suggestions, summary, toneScore);
+			suggestions = new List<string>();
+		return new ScoreQualityTypes.ScoreQualityOutput(overallScore, clarityScore, structureScore, toneScore, actionabilityScore, level, summary, suggestions);
 	}
 }

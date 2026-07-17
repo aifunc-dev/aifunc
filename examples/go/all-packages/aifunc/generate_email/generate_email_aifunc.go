@@ -65,8 +65,8 @@ var artifactData = map[string]any{
 	},
 	"artifactVersion": "0.1.0",
 	"metadata": map[string]any{
-		"contentHash": "sha256:cde93eb8df15df168dc26ad673e60cbf8b4616c6b6b79c25a0ec0e0e762504f1",
-		"generatedAt": "2026-07-11T02:28:22Z",
+		"contentHash": "sha256:286eecfba834d48c50f83f04632919761f88f5763bbe28b702c0ffedbf3c739d",
+		"generatedAt": "2026-07-16T12:26:01Z",
 		"sourcePackageVersion": "1.0.0",
 	},
 	"modelParams": map[string]any{
@@ -88,7 +88,7 @@ var artifactData = map[string]any{
 			"name": "GildenEye",
 		},
 		"description": "Generate a complete email from a brief description of intent and context.",
-		"engine": "^0.1.0",
+		"engine": "^0.2.0",
 		"name": "generate-email",
 		"type": "standalone",
 		"version": "1.0.0",

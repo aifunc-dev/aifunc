@@ -69,8 +69,8 @@ artifact = {
     },
     "artifactVersion": "0.1.0",
     "metadata": {
-        "contentHash": "sha256:de1695d4164aab5906d66496030b77676dfb754e96971dddebf1f82a9df19b69",
-        "generatedAt": "2026-07-09T14:24:24Z",
+        "contentHash": "sha256:c03ff1ed44ea276c17aecfc0c16cee640b30c1be1611bff945d356bdd3e04d3e",
+        "generatedAt": "2026-07-15T13:20:50Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -92,7 +92,7 @@ artifact = {
             "name": "GildenEye",
         },
         "description": "Classify text into user-defined categories with confidence scores (zero-shot).",
-        "engine": "^0.1.0",
+        "engine": "^0.2.0",
         "name": "classify",
         "type": "standalone",
         "version": "1.0.0",

@@ -26,17 +26,17 @@ public static class GenerateSlugTypes
 
 	public sealed class GenerateSlugOutput
 	{
-		/// <summary>SEO meta description (120-160 characters recommended).</summary>
-		public string MetaDescription { get; }
 		/// <summary>URL-safe slug using lowercase ASCII letters, numbers, and hyphens.</summary>
 		public string Slug { get; }
+		/// <summary>SEO meta description (120-160 characters recommended).</summary>
+		public string MetaDescription { get; }
 		/// <summary>Suggested tags or keywords for the content.</summary>
 		public List<string> Tags { get; }
 
-		public GenerateSlugOutput(string metaDescription, string slug, List<string> tags)
+		public GenerateSlugOutput(string slug, string metaDescription, List<string> tags)
 		{
-			MetaDescription = metaDescription;
 			Slug = slug;
+			MetaDescription = metaDescription;
 			Tags = tags;
 		}
 	}

@@ -93,8 +93,8 @@ final class RecognizeIntentAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:447ebba1e669ee49b44239ad85f6cae2de2eaa4ea7ed1e658c1d4e3c0f909d91");
-				put("generatedAt", "2026-07-12T06:36:23Z");
+				put("contentHash", "sha256:07c541267c7f6bb5709c430bd4ee0783ad452ff8262bba97ef6b55a26c615d45");
+				put("generatedAt", "2026-07-17T00:03:10Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -106,7 +106,7 @@ final class RecognizeIntentAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Recognize user intent from conversational text with confidence scores (zero-shot).");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "recognize-intent");
 				put("type", "standalone");
 				put("version", "1.0.0");

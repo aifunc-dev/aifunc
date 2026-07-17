@@ -59,8 +59,8 @@ final class DetectLanguageAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:a1de9b8449d941e016d225a854871a9a8a7f73b0ce9d45a37449559c37794c5f");
-				put("generatedAt", "2026-07-12T06:36:23Z");
+				put("contentHash", "sha256:0bc7feaed23b58934e19b091ec436607f16a8dd3867f083332f1764c1ef023ea");
+				put("generatedAt", "2026-07-17T00:03:10Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -82,7 +82,7 @@ final class DetectLanguageAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Detect the language of input text, returning a language code and confidence score.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "detect-language");
 				put("type", "standalone");
 				put("version", "1.0.0");

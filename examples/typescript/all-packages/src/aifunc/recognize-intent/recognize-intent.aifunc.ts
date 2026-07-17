@@ -9,7 +9,7 @@ const artifact = {
     "author": {
       "name": "GildenEye"
     },
-    "engine": "^0.1.0"
+    "engine": "^0.2.0"
   },
   "api": {
     "name": "recognize-intent",
@@ -97,8 +97,8 @@ const artifact = {
   },
   "metadata": {
     "sourcePackageVersion": "1.0.0",
-    "generatedAt": "2026-07-09T15:12:49Z",
-    "contentHash": "sha256:447ebba1e669ee49b44239ad85f6cae2de2eaa4ea7ed1e658c1d4e3c0f909d91"
+    "generatedAt": "2026-07-16T00:03:04Z",
+    "contentHash": "sha256:07c541267c7f6bb5709c430bd4ee0783ad452ff8262bba97ef6b55a26c615d45"
   }
 };
 

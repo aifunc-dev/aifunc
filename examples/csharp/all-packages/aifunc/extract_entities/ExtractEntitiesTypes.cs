@@ -24,11 +24,31 @@ public static class ExtractEntitiesTypes
 	public sealed class ExtractEntitiesOutput
 	{
 		/// <summary>List of extracted entities.</summary>
-		public List<Dictionary<string, object?>> Entities { get; }
+		public List<Entity> Entities { get; }
 
-		public ExtractEntitiesOutput(List<Dictionary<string, object?>> entities)
+		public ExtractEntitiesOutput(List<Entity> entities)
 		{
 			Entities = entities;
+		}
+	}
+
+	public sealed class Entity
+	{
+		/// <summary>The entity text as it appears in the input.</summary>
+		public string Text { get; }
+		/// <summary>Entity type (e.g. 'person', 'location', 'organization', 'date', 'money', 'product').</summary>
+		public string Type { get; }
+		/// <summary>Start character offset in the input text (0-based).</summary>
+		public int Start { get; }
+		/// <summary>End character offset (exclusive) in the input text.</summary>
+		public int End { get; }
+
+		public Entity(string text, string type, int start, int end)
+		{
+			Text = text;
+			Type = type;
+			Start = start;
+			End = end;
 		}
 	}
 }

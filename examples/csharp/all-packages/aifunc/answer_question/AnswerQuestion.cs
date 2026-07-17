@@ -5,9 +5,10 @@ namespace Aifunc.AnswerQuestion;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Answer a question based on provided context or general knowledge.</summary>
 public static class AnswerQuestion
@@ -28,9 +29,9 @@ public static class AnswerQuestion
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(AnswerQuestionTypes.AnswerQuestionInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(AnswerQuestionTypes.AnswerQuestionInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.Context is not null) m["context"] = input.Context;
 		if (input.Language is not null) m["language"] = input.Language;
 		if (input.MaxLength is not null) m["maxLength"] = input.MaxLength;
@@ -45,16 +46,16 @@ public static class AnswerQuestion
 			answer = _v0 is string _s0 ? _s0 : (_v0?.ToString() ?? "");
 		else
 			answer = "";
-		double confidence;
-		if (m.TryGetValue("confidence", out var _v1))
-			confidence = _v1 is IConvertible _c1 ? Convert.ToDouble(_c1) : 0.0;
-		else
-			confidence = 0.0;
 		bool grounded;
-		if (m.TryGetValue("grounded", out var _v2))
-			grounded = _v2 is bool _b2 ? _b2 : false;
+		if (m.TryGetValue("grounded", out var _v1))
+			grounded = _v1 is bool _b1 ? _b1 : false;
 		else
 			grounded = false;
-		return new AnswerQuestionTypes.AnswerQuestionOutput(answer, confidence, grounded);
+		double confidence;
+		if (m.TryGetValue("confidence", out var _v2))
+			confidence = _v2 is IConvertible _c2 ? Convert.ToDouble(_c2) : 0.0;
+		else
+			confidence = 0.0;
+		return new AnswerQuestionTypes.AnswerQuestionOutput(answer, grounded, confidence);
 	}
 }

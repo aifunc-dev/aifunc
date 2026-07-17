@@ -5,9 +5,10 @@ namespace Aifunc.ExtractKeywords;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Extract keywords and key phrases from text, ranked by relevance.</summary>
 public static class ExtractKeywords
@@ -28,9 +29,9 @@ public static class ExtractKeywords
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(ExtractKeywordsTypes.ExtractKeywordsInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(ExtractKeywordsTypes.ExtractKeywordsInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.MaxKeywords is not null) m["maxKeywords"] = input.MaxKeywords;
 		m["text"] = input.Text;
 		return m;
@@ -38,11 +39,17 @@ public static class ExtractKeywords
 
 	private static ExtractKeywordsTypes.ExtractKeywordsOutput MapToOutput(Dictionary<string, object?> m)
 	{
-		List<Dictionary<string, object?>> keywords;
+		List<ExtractKeywordsTypes.Keyword> keywords;
 		if (m.TryGetValue("keywords", out var _v0))
-			keywords = _v0 is List<Dictionary<string, object?>> _l0 ? _l0 : new List<Dictionary<string, object?>>();
+			keywords = (_v0 is System.Collections.IEnumerable _en0
+				? _en0.Cast<object?>().Select(_item0 =>
+				{
+					var _d0 = _item0 as Dictionary<string, object?> ?? new Dictionary<string, object?>();
+					return new ExtractKeywordsTypes.Keyword((_d0.TryGetValue("word", out var _nv0_0) ? _nv0_0 is string _s0 ? _s0 : (_nv0_0?.ToString() ?? "") : ""), (_d0.TryGetValue("relevance", out var _nv0_1) ? _nv0_1 is IConvertible _c1 ? Convert.ToDouble(_c1) : 0.0 : 0.0));
+				}).ToList()
+				: new List<ExtractKeywordsTypes.Keyword>());
 		else
-			keywords = new List<Dictionary<string, object?>>();
+			keywords = new List<ExtractKeywordsTypes.Keyword>();
 		return new ExtractKeywordsTypes.ExtractKeywordsOutput(keywords);
 	}
 }

@@ -2,31 +2,31 @@
   "lockVersion": 1,
   "packages": {
     "analyze-sentiment": {
-      "source": "gitee:aifunc-dev/aifunc-packages/analyze-sentiment",
+      "source": "github:aifunc-dev/aifunc-packages/analyze-sentiment",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-12T06:55:24Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T12:28:15Z"
     },
     "extract-json": {
-      "source": "gitee:aifunc-dev/aifunc-packages/extract-json",
+      "source": "github:aifunc-dev/aifunc-packages/extract-json",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-12T06:55:25Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T12:28:26Z"
     },
     "recognize-intent": {
-      "source": "gitee:aifunc-dev/aifunc-packages/recognize-intent",
+      "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-12T06:55:26Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T12:28:43Z"
     }
   },
   "engines": {
-    "v0.1.0": {
-      "source": "gitee:aifunc-dev/aifunc-packages",
+    "v0.2.0": {
+      "source": "github:aifunc-dev/aifunc-packages",
       "language": "java",
-      "path": "java/v0.1.0",
-      "resolvedFrom": "^0.1.0",
-      "resolvedAt": "2026-07-12T06:55:26Z",
+      "path": "java/v0_2_0",
+      "resolvedFrom": "^0.2.0",
+      "resolvedAt": "2026-07-17T12:28:43Z",
       "usedBy": [
         "analyze-sentiment",
         "extract-json",

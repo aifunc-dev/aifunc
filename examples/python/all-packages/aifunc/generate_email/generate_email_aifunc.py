@@ -62,8 +62,8 @@ artifact = {
     },
     "artifactVersion": "0.1.0",
     "metadata": {
-        "contentHash": "sha256:cde93eb8df15df168dc26ad673e60cbf8b4616c6b6b79c25a0ec0e0e762504f1",
-        "generatedAt": "2026-07-09T14:24:24Z",
+        "contentHash": "sha256:286eecfba834d48c50f83f04632919761f88f5763bbe28b702c0ffedbf3c739d",
+        "generatedAt": "2026-07-15T13:20:50Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -85,7 +85,7 @@ artifact = {
             "name": "GildenEye",
         },
         "description": "Generate a complete email from a brief description of intent and context.",
-        "engine": "^0.1.0",
+        "engine": "^0.2.0",
         "name": "generate-email",
         "type": "standalone",
         "version": "1.0.0",

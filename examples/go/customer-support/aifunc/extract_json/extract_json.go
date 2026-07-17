@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	engine "customer-support/aifunc/_engine/go/v0.1.0"
+	engine "customer-support/aifunc/_engine/go/v0.2.0"
 )
 
 // AIFuncConfig controls the runtime mode and model connection.
@@ -44,9 +44,21 @@ func ExtractJson(ctx context.Context, config *AIFuncConfig, input ExtractJsonInp
 
 func inputToMap(input ExtractJsonInput) map[string]any {
 	m := map[string]any{}
-	m["fields"] = input.Fields
+	{
+		ms := make([]map[string]any, len(input.Fields))
+		for i, v := range input.Fields { ms[i] = FieldToMap(v) }
+		m["fields"] = ms
+	}
 	m["text"] = input.Text
 	return m
+}
+
+func FieldToMap(v Field) map[string]any {
+	return map[string]any{
+		"description": v.Description,
+		"name": v.Name,
+		"type": v.Type,
+	}
 }
 
 func mapToOutput(m map[string]any) ExtractJsonOutput {

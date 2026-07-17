@@ -47,8 +47,8 @@ artifact = {
     },
     "artifactVersion": "0.1.0",
     "metadata": {
-        "contentHash": "sha256:48cfa8b2183761308b7c77d705f9a785122077790f7267c8275c5e0452b38f6f",
-        "generatedAt": "2026-07-09T14:39:57Z",
+        "contentHash": "sha256:2b1e7439696465851cc4e8259aaf744dcc058d61d69aba494a40e34c5df46f9c",
+        "generatedAt": "2026-07-15T13:29:15Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -70,7 +70,7 @@ artifact = {
             "name": "GildenEye",
         },
         "description": "Generate a concise summary of the input text.",
-        "engine": "^0.1.0",
+        "engine": "^0.2.0",
         "name": "summarize",
         "type": "standalone",
         "version": "1.0.0",

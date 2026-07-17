@@ -4,26 +4,26 @@
     "extract-keywords": {
       "source": "github:aifunc-dev/aifunc-packages/extract-keywords",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-12T14:37:00Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T10:36:57Z"
     },
     "generate-reply": {
       "source": "github:aifunc-dev/aifunc-packages/generate-reply",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-12T14:37:18Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T10:37:16Z"
     },
     "recognize-intent": {
       "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-12T14:36:50Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T10:36:54Z"
     },
     "summarize": {
       "source": "github:aifunc-dev/aifunc-packages/summarize",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-12T14:37:09Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T10:37:05Z"
     }
   },
   "engines": {
@@ -33,6 +33,19 @@
       "path": "csharp/v0_1_0",
       "resolvedFrom": "^0.1.0",
       "resolvedAt": "2026-07-12T14:37:19Z",
+      "usedBy": [
+        "recognize-intent",
+        "extract-keywords",
+        "summarize",
+        "generate-reply"
+      ]
+    },
+    "v0.2.0": {
+      "source": "github:aifunc-dev/aifunc-packages",
+      "language": "csharp",
+      "path": "csharp/v0_2_0",
+      "resolvedFrom": "^0.2.0",
+      "resolvedAt": "2026-07-17T10:37:16Z",
       "usedBy": [
         "recognize-intent",
         "extract-keywords",

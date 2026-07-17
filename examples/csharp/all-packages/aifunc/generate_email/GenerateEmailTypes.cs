@@ -35,15 +35,15 @@ public static class GenerateEmailTypes
 
 	public sealed class GenerateEmailOutput
 	{
-		/// <summary>Full email body including greeting and sign-off.</summary>
-		public string Body { get; }
 		/// <summary>Suggested email subject line.</summary>
 		public string Subject { get; }
+		/// <summary>Full email body including greeting and sign-off.</summary>
+		public string Body { get; }
 
-		public GenerateEmailOutput(string body, string subject)
+		public GenerateEmailOutput(string subject, string body)
 		{
-			Body = body;
 			Subject = subject;
+			Body = body;
 		}
 	}
 }

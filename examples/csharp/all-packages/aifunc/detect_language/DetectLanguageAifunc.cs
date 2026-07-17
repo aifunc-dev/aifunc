@@ -67,8 +67,8 @@ internal static class DetectLanguageAifunc
 			["artifactVersion"] = "0.1.0",
 			["metadata"] = new Dictionary<string, object?>
 			{
-				["contentHash"] = "sha256:a1de9b8449d941e016d225a854871a9a8a7f73b0ce9d45a37449559c37794c5f",
-				["generatedAt"] = "2026-07-12T14:20:07Z",
+				["contentHash"] = "sha256:0bc7feaed23b58934e19b091ec436607f16a8dd3867f083332f1764c1ef023ea",
+				["generatedAt"] = "2026-07-16T23:51:15Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>
@@ -97,7 +97,7 @@ internal static class DetectLanguageAifunc
 					["name"] = "GildenEye",
 				},
 				["description"] = "Detect the language of input text, returning a language code and confidence score.",
-				["engine"] = "^0.1.0",
+				["engine"] = "^0.2.0",
 				["name"] = "detect-language",
 				["type"] = "standalone",
 				["version"] = "1.0.0",

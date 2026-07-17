@@ -9,32 +9,32 @@ public static class TranslateTypes
 {
 	public sealed class TranslateInput
 	{
-		/// <summary>Target language (e.g. 'English', '日本語', 'zh-CN').</summary>
-		public string TargetLang { get; }
 		/// <summary>The text to be translated.</summary>
 		public string Text { get; }
+		/// <summary>Target language (e.g. 'English', '日本語', 'zh-CN').</summary>
+		public string TargetLang { get; }
 		/// <summary>Source language. If omitted, it will be auto-detected.</summary>
 		public string? SourceLang { get; set; }
 
-		public TranslateInput(string targetLang, string text, string? sourceLang = null)
+		public TranslateInput(string text, string targetLang, string? sourceLang = null)
 		{
-			TargetLang = targetLang;
 			Text = text;
+			TargetLang = targetLang;
 			SourceLang = sourceLang;
 		}
 	}
 
 	public sealed class TranslateOutput
 	{
-		/// <summary>The source language (auto-detected if sourceLang was not provided).</summary>
-		public string SourceLang { get; }
 		/// <summary>The translated text.</summary>
 		public string Translation { get; }
+		/// <summary>The source language (auto-detected if sourceLang was not provided).</summary>
+		public string SourceLang { get; }
 
-		public TranslateOutput(string sourceLang, string translation)
+		public TranslateOutput(string translation, string sourceLang)
 		{
-			SourceLang = sourceLang;
 			Translation = translation;
+			SourceLang = sourceLang;
 		}
 	}
 }

@@ -116,11 +116,7 @@ var kwResult = await ExtractKeywords.ExtractKeywordsAsync(config, new ExtractKey
     maxKeywords: 5));
 Console.WriteLine("Keywords from article:");
 foreach (var kw in kwResult.Keywords)
-{
-    var word = kw.TryGetValue("word", out var w) ? w?.ToString() ?? "" : "";
-    var relevance = kw.TryGetValue("relevance", out var rv) && rv is IConvertible c ? Convert.ToDouble(c) : 0.0;
-    Console.WriteLine($"  {word,-30} relevance: {relevance:F2}");
-}
+    Console.WriteLine($"  {kw.Word,-30} relevance: {kw.Relevance:F2}");
 
 Section("8. ANALYZE SENTIMENT");
 foreach (var text in new[]
@@ -152,10 +148,8 @@ foreach (var ticket in new[]
         text: ticket));
     if (r.Classifications.Count == 0) continue;
     var top = r.Classifications[0];
-    var cat = top.TryGetValue("category", out var cv) ? cv?.ToString() ?? "" : "";
-    var conf = top.TryGetValue("confidence", out var cfv) && cfv is IConvertible c ? Convert.ToDouble(c) : 0.0;
     var preview = ticket.Length > 55 ? ticket[..55] : ticket;
-    Console.WriteLine($"  [{cat,-16} {conf * 100:F0}%]  {preview}");
+    Console.WriteLine($"  [{top.Category,-16} {top.Confidence * 100:F0}%]  {preview}");
 }
 
 Section("10. RECOGNIZE INTENT");
@@ -188,11 +182,7 @@ var entResult = await ExtractEntities.ExtractEntitiesAsync(config, new ExtractEn
 Console.WriteLine($"Text: {entText}");
 Console.WriteLine("Entities:");
 foreach (var e in entResult.Entities)
-{
-    var etype = e.TryGetValue("type", out var tv) ? tv?.ToString() ?? "" : "";
-    var etext = e.TryGetValue("text", out var etv) ? etv?.ToString() ?? "" : "";
-    Console.WriteLine($"  [{etype,-12}] \"{etext}\"");
-}
+    Console.WriteLine($"  [{e.Type,-12}] \"{e.Text}\"");
 
 Section("12. EXTRACT JSON");
 var jobPost =
@@ -200,15 +190,15 @@ var jobPost =
     "Requirements: 5+ years of experience, proficiency in Go or Rust, " +
     "experience with Kubernetes. Salary range: €80,000–€110,000.";
 var ejResult = await ExtractJson.ExtractJsonAsync(config, new ExtractJsonTypes.ExtractJsonInput(
+    text: jobPost,
     fields:
     [
-        new() { ["name"] = "title",            ["description"] = "Job title",                          ["type"] = "string"  },
-        new() { ["name"] = "location",         ["description"] = "City or country",                    ["type"] = "string"  },
-        new() { ["name"] = "skills",           ["description"] = "Required technical skills",          ["type"] = "array"   },
-        new() { ["name"] = "experience_years", ["description"] = "Minimum years of experience",        ["type"] = "number"  },
-        new() { ["name"] = "salary_range",     ["description"] = "Salary range",                       ["type"] = "string"  },
-    ],
-    text: jobPost));
+        new("title", "Job title", "string"),
+        new("location", "City or country", "string"),
+        new("skills", "Required technical skills", "array"),
+        new("experience_years", "Minimum years of experience", "number"),
+        new("salary_range", "Salary range", "string"),
+    ]));
 Console.WriteLine($"Text     : {jobPost}");
 Console.WriteLine($"Extracted: {string.Join(", ", ejResult.Extracted.Select(kv => $"{kv.Key}={kv.Value}"))}");
 Console.WriteLine($"Missing  : [{string.Join(", ", ejResult.Missing)}]");

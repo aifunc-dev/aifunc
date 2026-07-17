@@ -1,0 +1,14 @@
+{
+  "configVersion": 1,
+  "language": "csharp",
+  "outputDir": "aifunc",
+  "packages": {
+    "answer-stream": "gitee:aifunc-dev/aifunc-packages/answer-stream",
+    "article-stream": "gitee:aifunc-dev/aifunc-packages/article-stream",
+    "chat-stream": "gitee:aifunc-dev/aifunc-packages/chat-stream",
+    "explain-stream": "gitee:aifunc-dev/aifunc-packages/explain-stream",
+    "review-stream": "gitee:aifunc-dev/aifunc-packages/review-stream",
+    "translate-stream": "gitee:aifunc-dev/aifunc-packages/translate-stream",
+    "write-stream": "gitee:aifunc-dev/aifunc-packages/write-stream"
+  }
+}

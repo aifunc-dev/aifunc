@@ -88,8 +88,8 @@ var artifactData = map[string]any{
 	},
 	"artifactVersion": "0.1.0",
 	"metadata": map[string]any{
-		"contentHash": "sha256:364e94e985dff03311bed0e8e0a72976a51d2f642b8b73d41e51f803e587ca78",
-		"generatedAt": "2026-07-11T02:28:22Z",
+		"contentHash": "sha256:97e9f6d0005065820b666b81cc4d51300845531b5404ca1c4533689f0d15233c",
+		"generatedAt": "2026-07-16T12:26:01Z",
 		"sourcePackageVersion": "1.0.0",
 	},
 	"modelParams": map[string]any{
@@ -111,7 +111,7 @@ var artifactData = map[string]any{
 			"name": "GildenEye",
 		},
 		"description": "Analyze the sentiment of input text with customizable labels (zero-shot classification).",
-		"engine": "^0.1.0",
+		"engine": "^0.2.0",
 		"name": "analyze-sentiment",
 		"type": "standalone",
 		"version": "1.0.0",

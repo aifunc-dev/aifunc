@@ -26,18 +26,32 @@ public static class AnalyzeSentimentTypes
 
 	public sealed class AnalyzeSentimentOutput
 	{
-		/// <summary>Confidence score of the top label, between 0 and 1.</summary>
-		public double Confidence { get; }
 		/// <summary>The highest-scoring sentiment label.</summary>
 		public string Label { get; }
+		/// <summary>Confidence score of the top label, between 0 and 1.</summary>
+		public double Confidence { get; }
 		/// <summary>All labels ranked by score (highest first), limited by topK.</summary>
-		public List<Dictionary<string, object?>> Rankings { get; }
+		public List<Ranking> Rankings { get; }
 
-		public AnalyzeSentimentOutput(double confidence, string label, List<Dictionary<string, object?>> rankings)
+		public AnalyzeSentimentOutput(string label, double confidence, List<Ranking> rankings)
 		{
-			Confidence = confidence;
 			Label = label;
+			Confidence = confidence;
 			Rankings = rankings;
+		}
+	}
+
+	public sealed class Ranking
+	{
+		/// <summary>Sentiment label.</summary>
+		public string Label { get; }
+		/// <summary>Score between 0 and 1.</summary>
+		public double Score { get; }
+
+		public Ranking(string label, double score)
+		{
+			Label = label;
+			Score = score;
 		}
 	}
 }

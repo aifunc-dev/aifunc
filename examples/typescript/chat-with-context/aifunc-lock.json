@@ -4,26 +4,26 @@
     "extract-keywords": {
       "source": "github:aifunc-dev/aifunc-packages/extract-keywords",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-09T15:07:40Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T11:49:08Z"
     },
     "generate-reply": {
       "source": "github:aifunc-dev/aifunc-packages/generate-reply",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-09T15:07:58Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T11:49:22Z"
     },
     "recognize-intent": {
       "source": "github:aifunc-dev/aifunc-packages/recognize-intent",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-09T15:07:33Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T11:48:57Z"
     },
     "summarize": {
       "source": "github:aifunc-dev/aifunc-packages/summarize",
       "version": "1.0.0",
-      "engineVersion": "0.1.0",
-      "resolvedAt": "2026-07-09T15:07:51Z"
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-16T11:49:13Z"
     }
   },
   "engines": {
@@ -38,6 +38,19 @@
         "generate-reply",
         "recognize-intent",
         "extract-keywords"
+      ]
+    },
+    "v0.2.0": {
+      "source": "github:aifunc-dev/aifunc-packages",
+      "language": "typescript",
+      "path": "typescript/v0.2.0",
+      "resolvedFrom": "^0.2.0",
+      "resolvedAt": "2026-07-16T11:49:22Z",
+      "usedBy": [
+        "recognize-intent",
+        "extract-keywords",
+        "summarize",
+        "generate-reply"
       ]
     }
   }

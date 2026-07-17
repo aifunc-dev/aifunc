@@ -24,11 +24,25 @@ public static class ExtractKeywordsTypes
 	public sealed class ExtractKeywordsOutput
 	{
 		/// <summary>Extracted keywords sorted by relevance (highest first).</summary>
-		public List<Dictionary<string, object?>> Keywords { get; }
+		public List<Keyword> Keywords { get; }
 
-		public ExtractKeywordsOutput(List<Dictionary<string, object?>> keywords)
+		public ExtractKeywordsOutput(List<Keyword> keywords)
 		{
 			Keywords = keywords;
+		}
+	}
+
+	public sealed class Keyword
+	{
+		/// <summary>The keyword or key phrase.</summary>
+		public string Word { get; }
+		/// <summary>Relevance score between 0 and 1.</summary>
+		public double Relevance { get; }
+
+		public Keyword(string word, double relevance)
+		{
+			Word = word;
+			Relevance = relevance;
 		}
 	}
 }

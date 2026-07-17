@@ -49,8 +49,8 @@ var artifactData = map[string]any{
 	},
 	"artifactVersion": "0.1.0",
 	"metadata": map[string]any{
-		"contentHash": "sha256:bd15142db6ed0425bb35a1ae82edfeb3700680180b576b8592b4f74ce5b459f1",
-		"generatedAt": "2026-07-11T02:28:22Z",
+		"contentHash": "sha256:c3745cc04d837fa82f505f627f03429a1f852fd9fee6a5a83bf09bfbe1bbbb39",
+		"generatedAt": "2026-07-16T12:26:01Z",
 		"sourcePackageVersion": "1.0.0",
 	},
 	"modelParams": map[string]any{
@@ -72,7 +72,7 @@ var artifactData = map[string]any{
 			"name": "GildenEye",
 		},
 		"description": "Generate a contextually appropriate reply to a message or comment.",
-		"engine": "^0.1.0",
+		"engine": "^0.2.0",
 		"name": "generate-reply",
 		"type": "standalone",
 		"version": "1.0.0",

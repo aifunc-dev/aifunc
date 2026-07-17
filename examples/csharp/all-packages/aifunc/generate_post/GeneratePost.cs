@@ -5,9 +5,10 @@ namespace Aifunc.GeneratePost;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Generate a social media post or short article from a topic or brief.</summary>
 public static class GeneratePost
@@ -28,9 +29,9 @@ public static class GeneratePost
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(GeneratePostTypes.GeneratePostInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(GeneratePostTypes.GeneratePostInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.IncludeHashtags is not null) m["includeHashtags"] = input.IncludeHashtags;
 		if (input.MaxLength is not null) m["maxLength"] = input.MaxLength;
 		if (input.Platform is not null) m["platform"] = input.Platform;
@@ -41,21 +42,21 @@ public static class GeneratePost
 
 	private static GeneratePostTypes.GeneratePostOutput MapToOutput(Dictionary<string, object?> m)
 	{
-		int charCount;
-		if (m.TryGetValue("charCount", out var _v0))
-			charCount = _v0 is IConvertible _c0 ? Convert.ToInt32(_c0) : 0;
+		string post;
+		if (m.TryGetValue("post", out var _v0))
+			post = _v0 is string _s0 ? _s0 : (_v0?.ToString() ?? "");
 		else
-			charCount = 0;
+			post = "";
 		List<string> hashtags;
 		if (m.TryGetValue("hashtags", out var _v1))
 			hashtags = _v1 is List<string> _l1 ? _l1 : new List<string>();
 		else
 			hashtags = new List<string>();
-		string post;
-		if (m.TryGetValue("post", out var _v2))
-			post = _v2 is string _s2 ? _s2 : (_v2?.ToString() ?? "");
+		int charCount;
+		if (m.TryGetValue("charCount", out var _v2))
+			charCount = _v2 is IConvertible _c2 ? Convert.ToInt32(_c2) : 0;
 		else
-			post = "";
-		return new GeneratePostTypes.GeneratePostOutput(charCount, hashtags, post);
+			charCount = 0;
+		return new GeneratePostTypes.GeneratePostOutput(post, hashtags, charCount);
 	}
 }

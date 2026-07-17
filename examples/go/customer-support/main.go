@@ -11,7 +11,7 @@ import (
 	"customer-support/aifunc/recognize_intent"
 )
 
-// config := &analyze_sentiment.AIFuncConfig{
+// config = &analyze_sentiment.AIFuncConfig{
 // 	BaseURL: "https://your-api-endpoint/v1",
 // 	Model:   "your-model-name",
 // 	APIKey:  "your-api-key",
@@ -117,9 +117,9 @@ func main() {
 	case "query_order":
 		info, err := extract_json.ExtractJson(ctx, config, extract_json.ExtractJsonInput{
 			Text: message,
-			Fields: []map[string]any{
-				{"name": "order_id", "description": "Order number", "type": "string"},
-				{"name": "issue", "description": "What the customer wants to know", "type": "string"},
+			Fields: []extract_json.Field{
+				{Name: "order_id", Description: "Order number", Type: "string"},
+				{Name: "issue", Description: "What the customer wants to know", Type: "string"},
 			},
 		})
 		if err != nil {
@@ -132,9 +132,9 @@ func main() {
 	case "request_refund":
 		info, err := extract_json.ExtractJson(ctx, config, extract_json.ExtractJsonInput{
 			Text: message,
-			Fields: []map[string]any{
-				{"name": "order_id", "description": "Order number", "type": "string"},
-				{"name": "reason", "description": "Reason for refund", "type": "string"},
+			Fields: []extract_json.Field{
+				{Name: "order_id", Description: "Order number", Type: "string"},
+				{Name: "reason", Description: "Reason for refund", Type: "string"},
 			},
 		})
 		if err != nil {
@@ -147,9 +147,9 @@ func main() {
 	case "technical_support":
 		info, err := extract_json.ExtractJson(ctx, config, extract_json.ExtractJsonInput{
 			Text: message,
-			Fields: []map[string]any{
-				{"name": "issue", "description": "Technical problem", "type": "string"},
-				{"name": "platform", "description": "Device or platform", "type": "string"},
+			Fields: []extract_json.Field{
+				{Name: "issue", Description: "Technical problem", Type: "string"},
+				{Name: "platform", Description: "Device or platform", Type: "string"},
 			},
 		})
 		if err != nil {
@@ -162,9 +162,9 @@ func main() {
 	case "billing_issue":
 		info, err := extract_json.ExtractJson(ctx, config, extract_json.ExtractJsonInput{
 			Text: message,
-			Fields: []map[string]any{
-				{"name": "transaction_id", "description": "Transaction ID", "type": "string"},
-				{"name": "problem", "description": "Billing problem", "type": "string"},
+			Fields: []extract_json.Field{
+				{Name: "transaction_id", Description: "Transaction ID", Type: "string"},
+				{Name: "problem", Description: "Billing problem", Type: "string"},
 			},
 		})
 		if err != nil {
@@ -177,8 +177,8 @@ func main() {
 	case "feature_request":
 		info, err := extract_json.ExtractJson(ctx, config, extract_json.ExtractJsonInput{
 			Text: message,
-			Fields: []map[string]any{
-				{"name": "feature", "description": "Requested feature", "type": "string"},
+			Fields: []extract_json.Field{
+				{Name: "feature", Description: "Requested feature", Type: "string"},
 			},
 		})
 		if err != nil {
@@ -190,8 +190,8 @@ func main() {
 	default:
 		info, err := extract_json.ExtractJson(ctx, config, extract_json.ExtractJsonInput{
 			Text: message,
-			Fields: []map[string]any{
-				{"name": "question", "description": "Customer's question", "type": "string"},
+			Fields: []extract_json.Field{
+				{Name: "question", Description: "Customer's question", Type: "string"},
 			},
 		})
 		if err != nil {

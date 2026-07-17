@@ -5,9 +5,10 @@ namespace Aifunc.RecognizeIntent;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Recognize user intent from conversational text with confidence scores.</summary>
 public static class RecognizeIntent
@@ -28,9 +29,9 @@ public static class RecognizeIntent
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(RecognizeIntentTypes.RecognizeIntentInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(RecognizeIntentTypes.RecognizeIntentInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.Context is not null) m["context"] = input.Context;
 		m["intents"] = input.Intents;
 		m["text"] = input.Text;
@@ -39,21 +40,27 @@ public static class RecognizeIntent
 
 	private static RecognizeIntentTypes.RecognizeIntentOutput MapToOutput(Dictionary<string, object?> m)
 	{
-		double confidence;
-		if (m.TryGetValue("confidence", out var _v0))
-			confidence = _v0 is IConvertible _c0 ? Convert.ToDouble(_c0) : 0.0;
-		else
-			confidence = 0.0;
 		string intent;
-		if (m.TryGetValue("intent", out var _v1))
-			intent = _v1 is string _s1 ? _s1 : (_v1?.ToString() ?? "");
+		if (m.TryGetValue("intent", out var _v0))
+			intent = _v0 is string _s0 ? _s0 : (_v0?.ToString() ?? "");
 		else
 			intent = "";
-		List<Dictionary<string, object?>> rankings;
-		if (m.TryGetValue("rankings", out var _v2))
-			rankings = _v2 is List<Dictionary<string, object?>> _l2 ? _l2 : new List<Dictionary<string, object?>>();
+		double confidence;
+		if (m.TryGetValue("confidence", out var _v1))
+			confidence = _v1 is IConvertible _c1 ? Convert.ToDouble(_c1) : 0.0;
 		else
-			rankings = new List<Dictionary<string, object?>>();
-		return new RecognizeIntentTypes.RecognizeIntentOutput(confidence, intent, rankings);
+			confidence = 0.0;
+		List<RecognizeIntentTypes.Ranking> rankings;
+		if (m.TryGetValue("rankings", out var _v2))
+			rankings = (_v2 is System.Collections.IEnumerable _en2
+				? _en2.Cast<object?>().Select(_item2 =>
+				{
+					var _d2 = _item2 as Dictionary<string, object?> ?? new Dictionary<string, object?>();
+					return new RecognizeIntentTypes.Ranking((_d2.TryGetValue("intent", out var _nv2_0) ? _nv2_0 is string _s200 ? _s200 : (_nv2_0?.ToString() ?? "") : ""), (_d2.TryGetValue("confidence", out var _nv2_1) ? _nv2_1 is IConvertible _c201 ? Convert.ToDouble(_c201) : 0.0 : 0.0));
+				}).ToList()
+				: new List<RecognizeIntentTypes.Ranking>());
+		else
+			rankings = new List<RecognizeIntentTypes.Ranking>();
+		return new RecognizeIntentTypes.RecognizeIntentOutput(intent, confidence, rankings);
 	}
 }

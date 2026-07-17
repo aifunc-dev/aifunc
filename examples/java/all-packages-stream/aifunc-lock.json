@@ -1,0 +1,65 @@
+{
+  "lockVersion": 1,
+  "packages": {
+    "answer-stream": {
+      "source": "github:aifunc-dev/aifunc-packages/answer-stream",
+      "version": "1.0.0",
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T10:45:36Z"
+    },
+    "article-stream": {
+      "source": "github:aifunc-dev/aifunc-packages/article-stream",
+      "version": "1.0.0",
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T10:45:39Z"
+    },
+    "chat-stream": {
+      "source": "github:aifunc-dev/aifunc-packages/chat-stream",
+      "version": "1.0.0",
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T10:45:09Z"
+    },
+    "explain-stream": {
+      "source": "github:aifunc-dev/aifunc-packages/explain-stream",
+      "version": "1.0.0",
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T10:45:14Z"
+    },
+    "review-stream": {
+      "source": "github:aifunc-dev/aifunc-packages/review-stream",
+      "version": "1.0.0",
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T10:45:20Z"
+    },
+    "translate-stream": {
+      "source": "github:aifunc-dev/aifunc-packages/translate-stream",
+      "version": "1.0.0",
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T10:45:24Z"
+    },
+    "write-stream": {
+      "source": "github:aifunc-dev/aifunc-packages/write-stream",
+      "version": "1.0.0",
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-17T10:45:28Z"
+    }
+  },
+  "engines": {
+    "v0.2.0": {
+      "source": "github:aifunc-dev/aifunc-packages",
+      "language": "java",
+      "path": "java/v0_2_0",
+      "resolvedFrom": "^0.2.0",
+      "resolvedAt": "2026-07-17T10:45:41Z",
+      "usedBy": [
+        "chat-stream",
+        "explain-stream",
+        "review-stream",
+        "translate-stream",
+        "write-stream",
+        "answer-stream",
+        "article-stream"
+      ]
+    }
+  }
+}

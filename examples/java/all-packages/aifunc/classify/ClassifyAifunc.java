@@ -82,8 +82,8 @@ final class ClassifyAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:de1695d4164aab5906d66496030b77676dfb754e96971dddebf1f82a9df19b69");
-				put("generatedAt", "2026-07-12T06:36:23Z");
+				put("contentHash", "sha256:c03ff1ed44ea276c17aecfc0c16cee640b30c1be1611bff945d356bdd3e04d3e");
+				put("generatedAt", "2026-07-17T00:03:10Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -105,7 +105,7 @@ final class ClassifyAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Classify text into user-defined categories with confidence scores (zero-shot).");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "classify");
 				put("type", "standalone");
 				put("version", "1.0.0");

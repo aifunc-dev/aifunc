@@ -5,9 +5,10 @@ namespace Aifunc.GenerateEmail;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Generate a complete email from a brief description of intent and context.</summary>
 public static class GenerateEmail
@@ -28,9 +29,9 @@ public static class GenerateEmail
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(GenerateEmailTypes.GenerateEmailInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(GenerateEmailTypes.GenerateEmailInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		m["intent"] = input.Intent;
 		if (input.KeyPoints is not null) m["keyPoints"] = input.KeyPoints;
 		if (input.Language is not null) m["language"] = input.Language;
@@ -42,16 +43,16 @@ public static class GenerateEmail
 
 	private static GenerateEmailTypes.GenerateEmailOutput MapToOutput(Dictionary<string, object?> m)
 	{
-		string body;
-		if (m.TryGetValue("body", out var _v0))
-			body = _v0 is string _s0 ? _s0 : (_v0?.ToString() ?? "");
-		else
-			body = "";
 		string subject;
-		if (m.TryGetValue("subject", out var _v1))
-			subject = _v1 is string _s1 ? _s1 : (_v1?.ToString() ?? "");
+		if (m.TryGetValue("subject", out var _v0))
+			subject = _v0 is string _s0 ? _s0 : (_v0?.ToString() ?? "");
 		else
 			subject = "";
-		return new GenerateEmailTypes.GenerateEmailOutput(body, subject);
+		string body;
+		if (m.TryGetValue("body", out var _v1))
+			body = _v1 is string _s1 ? _s1 : (_v1?.ToString() ?? "");
+		else
+			body = "";
+		return new GenerateEmailTypes.GenerateEmailOutput(subject, body);
 	}
 }

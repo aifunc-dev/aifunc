@@ -75,8 +75,8 @@ final class GenerateEmailAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:cde93eb8df15df168dc26ad673e60cbf8b4616c6b6b79c25a0ec0e0e762504f1");
-				put("generatedAt", "2026-07-12T06:36:23Z");
+				put("contentHash", "sha256:286eecfba834d48c50f83f04632919761f88f5763bbe28b702c0ffedbf3c739d");
+				put("generatedAt", "2026-07-17T00:03:10Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -98,7 +98,7 @@ final class GenerateEmailAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Generate a complete email from a brief description of intent and context.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "generate-email");
 				put("type", "standalone");
 				put("version", "1.0.0");

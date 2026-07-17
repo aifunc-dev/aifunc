@@ -116,8 +116,8 @@ var artifactData = map[string]any{
 	},
 	"artifactVersion": "0.1.0",
 	"metadata": map[string]any{
-		"contentHash": "sha256:762f256bb8916716b45cb2a91f6c3692630d1124fcb890e1dac2542ec25a0fdc",
-		"generatedAt": "2026-07-11T02:28:22Z",
+		"contentHash": "sha256:79d6f5a90194dede133d2c89da1e7e35c27718e490eea613107036895d42da73",
+		"generatedAt": "2026-07-16T12:26:01Z",
 		"sourcePackageVersion": "1.0.0",
 	},
 	"modelParams": map[string]any{
@@ -157,7 +157,7 @@ var artifactData = map[string]any{
 			"name": "GildenEye",
 		},
 		"description": "Evaluate text quality across multiple dimensions and return structured scores with improvement advice.",
-		"engine": "^0.1.0",
+		"engine": "^0.2.0",
 		"name": "score-quality",
 		"type": "standalone",
 		"version": "1.0.0",

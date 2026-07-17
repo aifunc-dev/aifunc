@@ -1,0 +1,15 @@
+{
+  "configVersion": 1,
+  "language": "typescript",
+  "outputDir": "src/aifunc",
+  "alias": "@aifunc",
+  "packages": {
+    "answer-stream": "github:aifunc-dev/aifunc-packages/answer-stream",
+    "article-stream": "github:aifunc-dev/aifunc-packages/article-stream",
+    "chat-stream": "github:aifunc-dev/aifunc-packages/chat-stream",
+    "explain-stream": "github:aifunc-dev/aifunc-packages/explain-stream",
+    "review-stream": "github:aifunc-dev/aifunc-packages/review-stream",
+    "translate-stream": "github:aifunc-dev/aifunc-packages/translate-stream",
+    "write-stream": "github:aifunc-dev/aifunc-packages/write-stream"
+  }
+}

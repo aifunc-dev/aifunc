@@ -126,8 +126,8 @@ final class ScoreQualityAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:762f256bb8916716b45cb2a91f6c3692630d1124fcb890e1dac2542ec25a0fdc");
-				put("generatedAt", "2026-07-12T06:36:23Z");
+				put("contentHash", "sha256:79d6f5a90194dede133d2c89da1e7e35c27718e490eea613107036895d42da73");
+				put("generatedAt", "2026-07-17T00:03:10Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -167,7 +167,7 @@ final class ScoreQualityAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Evaluate text quality across multiple dimensions and return structured scores with improvement advice.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "score-quality");
 				put("type", "standalone");
 				put("version", "1.0.0");

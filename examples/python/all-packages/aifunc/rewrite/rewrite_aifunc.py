@@ -44,8 +44,8 @@ artifact = {
     },
     "artifactVersion": "0.1.0",
     "metadata": {
-        "contentHash": "sha256:d730cdf6c2da955b293cb369f21c58c745d22e5f1676db19b025d70e152adcbc",
-        "generatedAt": "2026-07-09T14:24:24Z",
+        "contentHash": "sha256:92c35e91bb7faca14e3a8518734e69fef224bfdceca21326a4bd4798ff72bf11",
+        "generatedAt": "2026-07-15T13:20:50Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -67,7 +67,7 @@ artifact = {
             "name": "GildenEye",
         },
         "description": "Rewrite text in a specified style or tone, such as formal, casual, concise, or expanded.",
-        "engine": "^0.1.0",
+        "engine": "^0.2.0",
         "name": "rewrite",
         "type": "standalone",
         "version": "1.0.0",

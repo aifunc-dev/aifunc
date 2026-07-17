@@ -32,33 +32,33 @@ public static class ScoreQualityTypes
 
 	public sealed class ScoreQualityOutput
 	{
-		/// <summary>How actionable and useful the text is, from 0 to 100.</summary>
-		public int ActionabilityScore { get; }
-		/// <summary>Clarity score from 0 to 100.</summary>
-		public int ClarityScore { get; }
-		/// <summary>Overall quality level.</summary>
-		public string Level { get; }
 		/// <summary>Overall quality score from 0 to 100.</summary>
 		public int OverallScore { get; }
+		/// <summary>Clarity score from 0 to 100.</summary>
+		public int ClarityScore { get; }
 		/// <summary>Organization and logical structure score from 0 to 100.</summary>
 		public int StructureScore { get; }
-		/// <summary>Concise improvement suggestions, ordered by importance.</summary>
-		public List<string> Suggestions { get; }
-		/// <summary>One short sentence summarizing the evaluation.</summary>
-		public string Summary { get; }
 		/// <summary>Tone suitability score from 0 to 100.</summary>
 		public int ToneScore { get; }
+		/// <summary>How actionable and useful the text is, from 0 to 100.</summary>
+		public int ActionabilityScore { get; }
+		/// <summary>Overall quality level.</summary>
+		public string Level { get; }
+		/// <summary>One short sentence summarizing the evaluation.</summary>
+		public string Summary { get; }
+		/// <summary>Concise improvement suggestions, ordered by importance.</summary>
+		public List<string> Suggestions { get; }
 
-		public ScoreQualityOutput(int actionabilityScore, int clarityScore, string level, int overallScore, int structureScore, List<string> suggestions, string summary, int toneScore)
+		public ScoreQualityOutput(int overallScore, int clarityScore, int structureScore, int toneScore, int actionabilityScore, string level, string summary, List<string> suggestions)
 		{
-			ActionabilityScore = actionabilityScore;
-			ClarityScore = clarityScore;
-			Level = level;
 			OverallScore = overallScore;
+			ClarityScore = clarityScore;
 			StructureScore = structureScore;
-			Suggestions = suggestions;
-			Summary = summary;
 			ToneScore = toneScore;
+			ActionabilityScore = actionabilityScore;
+			Level = level;
+			Summary = summary;
+			Suggestions = suggestions;
 		}
 	}
 }

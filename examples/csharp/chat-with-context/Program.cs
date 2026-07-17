@@ -119,8 +119,8 @@ for (var i = 0; i < userMessages.Length; i++)
         new ExtractKeywordsTypes.ExtractKeywordsInput(text: userMsg, maxKeywords: 3));
     foreach (var kw in kwResult.Keywords)
     {
-        if (kw.TryGetValue("word", out var wordVal) && wordVal is string word && !topics.Contains(word))
-            topics.Add(word);
+        if (!string.IsNullOrEmpty(kw.Word) && !topics.Contains(kw.Word))
+            topics.Add(kw.Word);
     }
 
     // 3. Append user turn to history

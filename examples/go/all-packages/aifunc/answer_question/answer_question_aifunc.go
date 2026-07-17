@@ -63,8 +63,8 @@ var artifactData = map[string]any{
 	},
 	"artifactVersion": "0.1.0",
 	"metadata": map[string]any{
-		"contentHash": "sha256:73e679d31abadd6f21cc8705bf016c8611968ea3c928303cd074459654eb9343",
-		"generatedAt": "2026-07-11T02:28:22Z",
+		"contentHash": "sha256:35de1639dec8c92f5fb011d367ff6277069d3239fd02a3dee49a57fa7a0edc51",
+		"generatedAt": "2026-07-16T12:26:01Z",
 		"sourcePackageVersion": "1.0.0",
 	},
 	"modelParams": map[string]any{
@@ -86,7 +86,7 @@ var artifactData = map[string]any{
 			"name": "GildenEye",
 		},
 		"description": "Answer a question based on provided context or general knowledge.",
-		"engine": "^0.1.0",
+		"engine": "^0.2.0",
 		"name": "answer-question",
 		"type": "standalone",
 		"version": "1.0.0",

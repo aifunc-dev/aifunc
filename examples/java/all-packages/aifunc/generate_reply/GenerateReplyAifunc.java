@@ -59,8 +59,8 @@ final class GenerateReplyAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:bd15142db6ed0425bb35a1ae82edfeb3700680180b576b8592b4f74ce5b459f1");
-				put("generatedAt", "2026-07-12T06:36:23Z");
+				put("contentHash", "sha256:c3745cc04d837fa82f505f627f03429a1f852fd9fee6a5a83bf09bfbe1bbbb39");
+				put("generatedAt", "2026-07-17T00:03:11Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -82,7 +82,7 @@ final class GenerateReplyAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Generate a contextually appropriate reply to a message or comment.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "generate-reply");
 				put("type", "standalone");
 				put("version", "1.0.0");

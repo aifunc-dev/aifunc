@@ -55,8 +55,8 @@ artifact = {
     },
     "artifactVersion": "0.1.0",
     "metadata": {
-        "contentHash": "sha256:0e508a60148b537c7c3e7f427f3d787db1bf8857add3c48eaae483496bdb9228",
-        "generatedAt": "2026-07-09T14:24:24Z",
+        "contentHash": "sha256:3e67cff0dd0cab1548eba66e4e3e16b95315e349bf715d2602478069c8b3457e",
+        "generatedAt": "2026-07-15T13:20:50Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -78,7 +78,7 @@ artifact = {
             "name": "GildenEye",
         },
         "description": "Generate SEO-friendly URL slugs, meta descriptions, and tag suggestions from titles.",
-        "engine": "^0.1.0",
+        "engine": "^0.2.0",
         "name": "generate-slug",
         "type": "standalone",
         "version": "1.0.0",

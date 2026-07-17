@@ -72,8 +72,8 @@ var artifactData = map[string]any{
 	},
 	"artifactVersion": "0.1.0",
 	"metadata": map[string]any{
-		"contentHash": "sha256:de1695d4164aab5906d66496030b77676dfb754e96971dddebf1f82a9df19b69",
-		"generatedAt": "2026-07-11T02:28:22Z",
+		"contentHash": "sha256:c03ff1ed44ea276c17aecfc0c16cee640b30c1be1611bff945d356bdd3e04d3e",
+		"generatedAt": "2026-07-16T12:26:01Z",
 		"sourcePackageVersion": "1.0.0",
 	},
 	"modelParams": map[string]any{
@@ -95,7 +95,7 @@ var artifactData = map[string]any{
 			"name": "GildenEye",
 		},
 		"description": "Classify text into user-defined categories with confidence scores (zero-shot).",
-		"engine": "^0.1.0",
+		"engine": "^0.2.0",
 		"name": "classify",
 		"type": "standalone",
 		"version": "1.0.0",

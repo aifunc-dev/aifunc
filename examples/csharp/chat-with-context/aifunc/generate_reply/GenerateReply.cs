@@ -5,9 +5,10 @@ namespace Aifunc.GenerateReply;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Generate a contextually appropriate reply to a message or comment.</summary>
 public static class GenerateReply
@@ -28,9 +29,9 @@ public static class GenerateReply
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(GenerateReplyTypes.GenerateReplyInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(GenerateReplyTypes.GenerateReplyInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.Context is not null) m["context"] = input.Context;
 		if (input.Language is not null) m["language"] = input.Language;
 		m["message"] = input.Message;

@@ -109,8 +109,8 @@ internal static class ExtractJsonAifunc
 			["artifactVersion"] = "0.1.0",
 			["metadata"] = new Dictionary<string, object?>
 			{
-				["contentHash"] = "sha256:9da2d18f5fb3a155da515c417aeb72b33f7f487601ae13723fb1d733ccda158d",
-				["generatedAt"] = "2026-07-12T14:54:47Z",
+				["contentHash"] = "sha256:9cb1ca568286c47f5ecc0e4997cda50849cb5ed1414701ff7df772cc249a889e",
+				["generatedAt"] = "2026-07-17T10:38:15Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>
@@ -139,7 +139,7 @@ internal static class ExtractJsonAifunc
 					["name"] = "GildenEye",
 				},
 				["description"] = "Extract structured JSON data from natural language text based on a user-defined field schema.",
-				["engine"] = "^0.1.0",
+				["engine"] = "^0.2.0",
 				["name"] = "extract-json",
 				["type"] = "standalone",
 				["version"] = "1.0.0",

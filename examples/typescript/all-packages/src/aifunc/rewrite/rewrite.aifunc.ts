@@ -9,7 +9,7 @@ const artifact = {
     "author": {
       "name": "GildenEye"
     },
-    "engine": "^0.1.0"
+    "engine": "^0.2.0"
   },
   "api": {
     "name": "rewrite",
@@ -71,8 +71,8 @@ const artifact = {
   },
   "metadata": {
     "sourcePackageVersion": "1.0.0",
-    "generatedAt": "2026-07-09T15:12:49Z",
-    "contentHash": "sha256:d730cdf6c2da955b293cb369f21c58c745d22e5f1676db19b025d70e152adcbc"
+    "generatedAt": "2026-07-16T00:03:04Z",
+    "contentHash": "sha256:92c35e91bb7faca14e3a8518734e69fef224bfdceca21326a4bd4798ff72bf11"
   }
 };
 

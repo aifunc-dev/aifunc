@@ -73,8 +73,8 @@ final class AnswerQuestionAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:73e679d31abadd6f21cc8705bf016c8611968ea3c928303cd074459654eb9343");
-				put("generatedAt", "2026-07-12T06:36:23Z");
+				put("contentHash", "sha256:35de1639dec8c92f5fb011d367ff6277069d3239fd02a3dee49a57fa7a0edc51");
+				put("generatedAt", "2026-07-17T00:03:11Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -96,7 +96,7 @@ final class AnswerQuestionAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Answer a question based on provided context or general knowledge.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "answer-question");
 				put("type", "standalone");
 				put("version", "1.0.0");

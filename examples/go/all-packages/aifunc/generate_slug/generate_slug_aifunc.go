@@ -58,8 +58,8 @@ var artifactData = map[string]any{
 	},
 	"artifactVersion": "0.1.0",
 	"metadata": map[string]any{
-		"contentHash": "sha256:0e508a60148b537c7c3e7f427f3d787db1bf8857add3c48eaae483496bdb9228",
-		"generatedAt": "2026-07-11T02:28:22Z",
+		"contentHash": "sha256:3e67cff0dd0cab1548eba66e4e3e16b95315e349bf715d2602478069c8b3457e",
+		"generatedAt": "2026-07-16T12:26:01Z",
 		"sourcePackageVersion": "1.0.0",
 	},
 	"modelParams": map[string]any{
@@ -81,7 +81,7 @@ var artifactData = map[string]any{
 			"name": "GildenEye",
 		},
 		"description": "Generate SEO-friendly URL slugs, meta descriptions, and tag suggestions from titles.",
-		"engine": "^0.1.0",
+		"engine": "^0.2.0",
 		"name": "generate-slug",
 		"type": "standalone",
 		"version": "1.0.0",

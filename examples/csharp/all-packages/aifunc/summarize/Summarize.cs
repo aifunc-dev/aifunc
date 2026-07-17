@@ -5,9 +5,10 @@ namespace Aifunc.Summarize;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Generate a concise summary of the input text.</summary>
 public static class Summarize
@@ -28,9 +29,9 @@ public static class Summarize
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(SummarizeTypes.SummarizeInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(SummarizeTypes.SummarizeInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.MaxLength is not null) m["maxLength"] = input.MaxLength;
 		m["text"] = input.Text;
 		return m;

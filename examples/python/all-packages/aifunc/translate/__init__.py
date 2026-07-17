@@ -4,7 +4,7 @@
 from typing import Any, Optional, Union
 from dataclasses import asdict, replace
 
-from .._engine.python.v0_1_0 import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults
+from .._engine.python.v0_2_0 import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults
 from .translate_aifunc import artifact
 from .translate_mock import mock_data
 from .translate_types import TranslateInput, TranslateOutput

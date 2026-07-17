@@ -93,8 +93,8 @@ final class ExtractJsonAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:9da2d18f5fb3a155da515c417aeb72b33f7f487601ae13723fb1d733ccda158d");
-				put("generatedAt", "2026-07-12T06:36:23Z");
+				put("contentHash", "sha256:9cb1ca568286c47f5ecc0e4997cda50849cb5ed1414701ff7df772cc249a889e");
+				put("generatedAt", "2026-07-17T00:03:10Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -116,7 +116,7 @@ final class ExtractJsonAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Extract structured JSON data from natural language text based on a user-defined field schema.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "extract-json");
 				put("type", "standalone");
 				put("version", "1.0.0");

@@ -20,18 +20,18 @@ public static class DetectLanguageTypes
 
 	public sealed class DetectLanguageOutput
 	{
-		/// <summary>Confidence score between 0 and 1.</summary>
-		public double Confidence { get; }
 		/// <summary>Detected language code (e.g. 'en', 'zh-CN', 'ja', 'fr').</summary>
 		public string Language { get; }
 		/// <summary>Human-readable name of the detected language (e.g. 'English', '中文', '日本語').</summary>
 		public string LanguageName { get; }
+		/// <summary>Confidence score between 0 and 1.</summary>
+		public double Confidence { get; }
 
-		public DetectLanguageOutput(double confidence, string language, string languageName)
+		public DetectLanguageOutput(string language, string languageName, double confidence)
 		{
-			Confidence = confidence;
 			Language = language;
 			LanguageName = languageName;
+			Confidence = confidence;
 		}
 	}
 }

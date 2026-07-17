@@ -98,8 +98,8 @@ final class AnalyzeSentimentAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:364e94e985dff03311bed0e8e0a72976a51d2f642b8b73d41e51f803e587ca78");
-				put("generatedAt", "2026-07-12T06:55:26Z");
+				put("contentHash", "sha256:97e9f6d0005065820b666b81cc4d51300845531b5404ca1c4533689f0d15233c");
+				put("generatedAt", "2026-07-17T12:28:43Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -121,7 +121,7 @@ final class AnalyzeSentimentAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Analyze the sentiment of input text with customizable labels (zero-shot classification).");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "analyze-sentiment");
 				put("type", "standalone");
 				put("version", "1.0.0");

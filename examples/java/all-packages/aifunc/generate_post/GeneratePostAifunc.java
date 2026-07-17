@@ -78,8 +78,8 @@ final class GeneratePostAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:19bc07226587b2060125840142f8d58cca5bc2a6c8788b284cff285e1dccf76a");
-				put("generatedAt", "2026-07-12T06:36:24Z");
+				put("contentHash", "sha256:8b8750e4662d91a0df018f5c75860566c09e45dcf72de0bb64e5a9827a81d6b3");
+				put("generatedAt", "2026-07-17T00:03:10Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -101,7 +101,7 @@ final class GeneratePostAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Generate a social media post or short article from a topic or brief.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "generate-post");
 				put("type", "standalone");
 				put("version", "1.0.0");

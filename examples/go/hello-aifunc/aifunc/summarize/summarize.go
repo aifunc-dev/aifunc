@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	engine "hello-aifunc/aifunc/_engine/go/v0.1.0"
+	engine "hello-aifunc/aifunc/_engine/go/v0.2.0"
 )
 
 // AIFuncConfig controls the runtime mode and model connection.

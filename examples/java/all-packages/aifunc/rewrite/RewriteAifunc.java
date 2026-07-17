@@ -57,8 +57,8 @@ final class RewriteAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:d730cdf6c2da955b293cb369f21c58c745d22e5f1676db19b025d70e152adcbc");
-				put("generatedAt", "2026-07-12T06:36:24Z");
+				put("contentHash", "sha256:92c35e91bb7faca14e3a8518734e69fef224bfdceca21326a4bd4798ff72bf11");
+				put("generatedAt", "2026-07-17T00:03:10Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -80,7 +80,7 @@ final class RewriteAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Rewrite text in a specified style or tone, such as formal, casual, concise, or expanded.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "rewrite");
 				put("type", "standalone");
 				put("version", "1.0.0");

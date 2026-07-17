@@ -60,8 +60,8 @@ artifact = {
     },
     "artifactVersion": "0.1.0",
     "metadata": {
-        "contentHash": "sha256:73e679d31abadd6f21cc8705bf016c8611968ea3c928303cd074459654eb9343",
-        "generatedAt": "2026-07-09T14:24:23Z",
+        "contentHash": "sha256:35de1639dec8c92f5fb011d367ff6277069d3239fd02a3dee49a57fa7a0edc51",
+        "generatedAt": "2026-07-15T13:20:50Z",
         "sourcePackageVersion": "1.0.0",
     },
     "modelParams": {
@@ -83,7 +83,7 @@ artifact = {
             "name": "GildenEye",
         },
         "description": "Answer a question based on provided context or general knowledge.",
-        "engine": "^0.1.0",
+        "engine": "^0.2.0",
         "name": "answer-question",
         "type": "standalone",
         "version": "1.0.0",

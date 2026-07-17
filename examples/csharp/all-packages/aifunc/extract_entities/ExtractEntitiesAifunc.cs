@@ -100,8 +100,8 @@ internal static class ExtractEntitiesAifunc
 			["artifactVersion"] = "0.1.0",
 			["metadata"] = new Dictionary<string, object?>
 			{
-				["contentHash"] = "sha256:c4e635a44440fd8fb1ac9be0c9a102a163dc81b1df07d150c46e2e196beef37b",
-				["generatedAt"] = "2026-07-12T14:20:06Z",
+				["contentHash"] = "sha256:f302a2b25694fb3cc2cbd56901803b9e9e35e12e2339c9a64aee6e7376a9ddb5",
+				["generatedAt"] = "2026-07-16T23:51:14Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>
@@ -130,7 +130,7 @@ internal static class ExtractEntitiesAifunc
 					["name"] = "GildenEye",
 				},
 				["description"] = "Extract named entities (people, places, organizations, dates, etc.) from text.",
-				["engine"] = "^0.1.0",
+				["engine"] = "^0.2.0",
 				["name"] = "extract-entities",
 				["type"] = "standalone",
 				["version"] = "1.0.0",

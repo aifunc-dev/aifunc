@@ -5,9 +5,10 @@ namespace Aifunc.ExtractJson;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Extract structured JSON from natural language text according to a user-defined field schema.</summary>
 public static class ExtractJson
@@ -28,10 +29,10 @@ public static class ExtractJson
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(ExtractJsonTypes.ExtractJsonInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(ExtractJsonTypes.ExtractJsonInput input)
 	{
-		var m = new Dictionary<string, object?>();
-		m["fields"] = input.Fields;
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
+		m["fields"] = input.Fields.Select(x => new System.Collections.Generic.Dictionary<string, object?> { ["description"] = x.Description, ["name"] = x.Name, ["type"] = x.Type }).ToList<object?>();
 		m["text"] = input.Text;
 		return m;
 	}

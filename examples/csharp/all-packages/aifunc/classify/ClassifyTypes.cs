@@ -9,17 +9,17 @@ public static class ClassifyTypes
 {
 	public sealed class ClassifyInput
 	{
-		/// <summary>List of candidate categories to classify into.</summary>
-		public List<string> Categories { get; }
 		/// <summary>The text to classify.</summary>
 		public string Text { get; }
+		/// <summary>List of candidate categories to classify into.</summary>
+		public List<string> Categories { get; }
 		/// <summary>If true, the text can be assigned to multiple categories. Defaults to false.</summary>
 		public bool? AllowMultiple { get; set; }
 
-		public ClassifyInput(List<string> categories, string text, bool? allowMultiple = null)
+		public ClassifyInput(string text, List<string> categories, bool? allowMultiple = null)
 		{
-			Categories = categories;
 			Text = text;
+			Categories = categories;
 			AllowMultiple = allowMultiple;
 		}
 	}
@@ -27,11 +27,25 @@ public static class ClassifyTypes
 	public sealed class ClassifyOutput
 	{
 		/// <summary>Classification results sorted by confidence (highest first).</summary>
-		public List<Dictionary<string, object?>> Classifications { get; }
+		public List<Classification> Classifications { get; }
 
-		public ClassifyOutput(List<Dictionary<string, object?>> classifications)
+		public ClassifyOutput(List<Classification> classifications)
 		{
 			Classifications = classifications;
+		}
+	}
+
+	public sealed class Classification
+	{
+		/// <summary>The category label.</summary>
+		public string Category { get; }
+		/// <summary>Confidence score between 0 and 1.</summary>
+		public double Confidence { get; }
+
+		public Classification(string category, double confidence)
+		{
+			Category = category;
+			Confidence = confidence;
 		}
 	}
 }

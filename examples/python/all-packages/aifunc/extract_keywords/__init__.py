@@ -4,7 +4,7 @@
 from typing import Any, Optional, Union
 from dataclasses import asdict, replace
 
-from .._engine.python.v0_1_0 import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults
+from .._engine.python.v0_2_0 import execute, AIFuncConfig, AIFuncArtifact, ProjectDefaults
 from .extract_keywords_aifunc import artifact
 from .extract_keywords_mock import mock_data
 from .extract_keywords_types import ExtractKeywordsInput, ExtractKeywordsOutput

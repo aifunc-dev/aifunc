@@ -9,7 +9,7 @@ const artifact = {
     "author": {
       "name": "GildenEye"
     },
-    "engine": "^0.1.0"
+    "engine": "^0.2.0"
   },
   "api": {
     "name": "analyze-sentiment",
@@ -112,8 +112,8 @@ const artifact = {
   },
   "metadata": {
     "sourcePackageVersion": "1.0.0",
-    "generatedAt": "2026-07-09T15:10:28Z",
-    "contentHash": "sha256:364e94e985dff03311bed0e8e0a72976a51d2f642b8b73d41e51f803e587ca78"
+    "generatedAt": "2026-07-16T12:07:42Z",
+    "contentHash": "sha256:97e9f6d0005065820b666b81cc4d51300845531b5404ca1c4533689f0d15233c"
   }
 };
 

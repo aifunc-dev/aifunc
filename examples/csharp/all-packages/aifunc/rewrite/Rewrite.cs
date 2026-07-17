@@ -5,9 +5,10 @@ namespace Aifunc.Rewrite;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Aifunc;
-using Aifunc.Engine.Csharp.V0_1_0;
+using Aifunc.Engine.Csharp.V0_2_0;
 
 /// <summary>Rewrite text according to a specified style or instruction while preserving the original meaning.</summary>
 public static class Rewrite
@@ -28,9 +29,9 @@ public static class Rewrite
 		return MapToOutput(result);
 	}
 
-	private static Dictionary<string, object?> InputToMap(RewriteTypes.RewriteInput input)
+	private static System.Collections.Generic.Dictionary<string, object?> InputToMap(RewriteTypes.RewriteInput input)
 	{
-		var m = new Dictionary<string, object?>();
+		var m = new System.Collections.Generic.Dictionary<string, object?>();
 		if (input.Instructions is not null) m["instructions"] = input.Instructions;
 		m["style"] = input.Style;
 		m["text"] = input.Text;

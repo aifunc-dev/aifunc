@@ -60,8 +60,8 @@ final class SummarizeAifunc {
 			}});
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
-				put("contentHash", "sha256:48cfa8b2183761308b7c77d705f9a785122077790f7267c8275c5e0452b38f6f");
-				put("generatedAt", "2026-07-12T06:47:38Z");
+				put("contentHash", "sha256:2b1e7439696465851cc4e8259aaf744dcc058d61d69aba494a40e34c5df46f9c");
+				put("generatedAt", "2026-07-17T10:48:49Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{
@@ -83,7 +83,7 @@ final class SummarizeAifunc {
 					put("name", "GildenEye");
 				}});
 				put("description", "Generate a concise summary of the input text.");
-				put("engine", "^0.1.0");
+				put("engine", "^0.2.0");
 				put("name", "summarize");
 				put("type", "standalone");
 				put("version", "1.0.0");
