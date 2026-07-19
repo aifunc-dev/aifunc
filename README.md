@@ -202,9 +202,6 @@ AIFunc's design philosophy is **"reduce AI to ordinary functions"**, which gives
 - **Highly open-ended autonomous Agents**: Tasks that require AI to independently plan and loop through tool chains.
   AIFunc advocates using code to orchestrate control flow, rather than letting AI act freely.
 
-> 💡 **About streaming output**
-> The current version focuses on "structured data extraction" (waiting for the complete result to return). **Streaming output support will be added in a future release.**
-
 ---
 
 ## Orchestrate AI Like Writing Business Code
@@ -251,6 +248,8 @@ Full examples: [TypeScript](./examples/typescript/customer-support) / [Python](.
 
 Multi-turn conversation with memory examples: [TypeScript](./examples/typescript/chat-with-context) / [Python](./examples/python/chat-with-context) / [Go](./examples/go/chat-with-context) / [Java](./examples/java/chat-with-context) / [C#](./examples/csharp/chat-with-context)
 
+Streaming examples: [TypeScript](./examples/typescript/chat-stream) / [Python](./examples/python/chat-stream) / [Go](./examples/go/chat-stream) / [Java](./examples/java/chat-stream) / [C#](./examples/csharp/chat-stream) — also [all-packages-stream](./examples/typescript/all-packages-stream)
+
 ---
 
 ## Features
@@ -264,6 +263,8 @@ Multi-turn conversation with memory examples: [TypeScript](./examples/typescript
 **Zero Dependencies** — The runtime engine is pure source code generated into your project. Each language uses only native libraries with no third-party dependencies.
 
 **Model Agnostic** — Supports any endpoint compatible with the OpenAI protocol. Switch models by changing config only — zero code changes.
+
+**Streaming** — Packages can stream plain-text tokens via `"x-delivery-mode": "stream"`, consumed with native async iterators / channels.
 
 **Git Native** — Compiled artifacts are committed to Git. Team members clone and import directly — no CLI installation needed. Version management, code review, and access control all reuse your Git workflow.
 
@@ -310,25 +311,33 @@ aifn create my-analyzer
 
 The official package repository provides ready-to-use common AI functions:
 
-| Package             | Purpose                                        |
-| ------------------- | ---------------------------------------------- |
-| `summarize`         | Text summarization                             |
-| `analyze-sentiment` | Sentiment analysis                             |
-| `recognize-intent`  | Intent recognition                             |
-| `classify`          | General text classification                    |
-| `extract-json`      | Extract structured fields from text            |
-| `extract-entities`  | Entity extraction (names, locations, orgs, etc.) |
-| `extract-keywords`  | Keyword extraction                             |
-| `detect-language`   | Language detection                             |
-| `translate`         | Translation                                    |
-| `rewrite`           | Text rewriting                                 |
-| `generate-reply`    | Generate replies                               |
-| `generate-title`    | Generate titles                                |
-| `generate-slug`     | Generate URL slugs                             |
-| `generate-email`    | Generate emails                                |
-| `generate-post`     | Generate articles                              |
-| `answer-question`   | Question answering                             |
-| `score-quality`     | Content quality scoring                        |
+| Package | Purpose |
+| --- | --- |
+| `summarize` | Text summarization |
+| `analyze-sentiment` | Sentiment analysis |
+| `recognize-intent` | Intent recognition |
+| `classify` | General text classification |
+| `extract-json` | Extract structured fields from text |
+| `extract-entities` | Entity extraction (names, locations, orgs, etc.) |
+| `extract-keywords` | Keyword extraction |
+| `detect-language` | Language detection |
+| `translate` | Translation |
+| `rewrite` | Text rewriting |
+| `chat` | Single-turn reply with optional context |
+| `generate-reply` | Generate replies |
+| `generate-title` | Generate titles |
+| `generate-slug` | Generate URL slugs |
+| `generate-email` | Generate emails |
+| `generate-post` | Generate articles |
+| `answer-question` | Question answering |
+| `score-quality` | Content quality scoring |
+| `chat-stream` | Stream a reply with optional context |
+| `answer-stream` | Detailed question answering |
+| `explain-stream` | Explain a concept, code, or term |
+| `article-stream` | Full article from a title and outline |
+| `write-stream` | Long-form writing: articles, reports, docs |
+| `translate-stream` | Long document translation |
+| `review-stream` | Code and document review with findings |
 
 Install any package:
 

@@ -47,6 +47,20 @@ public static Task<<Output>> <ClassName>.<MethodName>Async(AIFuncConfig config, 
 - Java 方法为同步调用；`AIFuncConfig` 使用 Builder 模式提供流式配置
 - C# 方法为异步（`Task`）；`AIFuncConfig` 使用对象初始化器
 
+### 流式包
+
+当 `api.json` 在 string 类型的 output 上设置 `"x-delivery-mode": "stream"` 时，生成的函数按 token 增量返回，而不是结构化对象：
+
+| 语言 | 返回类型 | 典型消费方式 |
+|------|----------|--------------|
+| TypeScript | `AsyncIterable<string>` | `for await (const token of chatStream(...))` |
+| Python | 异步生成器（`AsyncGenerator[str, None]`） | `async for token in await chat_stream(...):` |
+| Go | `(<-chan string, <-chan error)` | range token channel，再读 error channel |
+| Java | `TokenStream`（迭代器 + `AutoCloseable`） | `try (var tokens = ChatStream.chatStream(...))` |
+| C# | `IAsyncEnumerable<string>` | `await foreach (var token in ChatStream.ChatStreamAsync(...))` |
+
+详见 [协议规范 — 流式输出](./06-spec.md) 以及 `examples/*/chat-stream`。
+
 ---
 
 ## AIFuncConfig

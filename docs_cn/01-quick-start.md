@@ -345,6 +345,182 @@ dotnet run
 ## 常见问题
 
 <details>
+<summary><b>怎么拿到流式输出？</b></summary>
+
+使用官方名称后缀为 `-stream` 的包（如 `chat-stream`、`answer-stream`）。流式由包定义声明——见协议中的 [`x-delivery-mode`](./06-spec.md#output-扩展字段)。
+
+先安装 `chat-stream`：
+
+```bash
+aifn install github:aifunc-dev/aifunc-packages/chat-stream
+```
+
+各语言调用示例：
+
+<details open>
+<summary>Python</summary>
+
+```python
+import asyncio, sys
+from aifunc.chat_stream import chat_stream, AIFuncConfig, ChatStreamInput
+
+config = AIFuncConfig(
+    base_url="https://your-api-endpoint/v1",
+    model="your-model-name",
+    api_key="your-api-key",
+)
+
+input = ChatStreamInput(
+    message="进程和线程的区别是什么？用三句话回答。",
+    # context="对话历史或背景（可选）",
+)
+
+async def main():
+    async for token in await chat_stream(config, input):
+        sys.stdout.write(token)
+        sys.stdout.flush()
+    sys.stdout.write("\n")
+
+asyncio.run(main())
+```
+
+</details>
+
+<details>
+<summary>TypeScript</summary>
+
+```typescript
+import { chatStream, AIFuncConfig, ChatStreamInput } from './aifunc/chat-stream';
+
+const config: AIFuncConfig = {
+  baseURL: 'https://your-api-endpoint/v1',
+  model: 'your-model-name',
+  apiKey: 'your-api-key',
+};
+
+const input: ChatStreamInput = {
+  message: '进程和线程的区别是什么？用三句话回答。',
+  // context: '对话历史或背景（可选）',
+};
+
+async function main() {
+  for await (const token of chatStream(config, input)) {
+    process.stdout.write(token);
+  }
+  process.stdout.write('\n');
+}
+
+main().catch(console.error);
+```
+
+</details>
+
+<details>
+<summary>Go</summary>
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+
+    "your-module/aifunc/chat_stream"
+)
+
+func main() {
+    config := &chat_stream.AIFuncConfig{
+        BaseURL: "https://your-api-endpoint/v1",
+        Model:   "your-model-name",
+        APIKey:  "your-api-key",
+    }
+
+    input := chat_stream.ChatStreamInput{
+        Message: "进程和线程的区别是什么？用三句话回答。",
+        // Context: strPtr("对话历史或背景（可选）"),
+    }
+
+    tokens, errc := chat_stream.ChatStream(context.Background(), config, input)
+    for token := range tokens {
+        fmt.Print(token)
+    }
+    if err := <-errc; err != nil {
+        fmt.Fprintln(os.Stderr, "error:", err)
+        os.Exit(1)
+    }
+    fmt.Println()
+}
+```
+
+</details>
+
+<details>
+<summary>Java</summary>
+
+```java
+import aifunc.AIFuncConfig;
+import aifunc.chat_stream.ChatStream;
+import aifunc.chat_stream.ChatStreamTypes.ChatStreamInput;
+
+AIFuncConfig config = AIFuncConfig.builder()
+        .baseUrl("https://your-api-endpoint/v1")
+        .model("your-model-name")
+        .apiKey("your-api-key")
+        .build();
+
+ChatStreamInput input = new ChatStreamInput(
+        "进程和线程的区别是什么？用三句话回答。",
+        null  // context 可选
+);
+
+try (var tokens = ChatStream.chatStream(config, input)) {
+    while (tokens.hasNext()) {
+        System.out.print(tokens.next());
+    }
+}
+System.out.println();
+```
+
+</details>
+
+<details>
+<summary>C#</summary>
+
+```csharp
+using Aifunc;
+using Aifunc.ChatStream;
+
+var config = new AIFuncConfig
+{
+    BaseUrl = "https://your-api-endpoint/v1",
+    Model   = "your-model-name",
+    ApiKey  = "your-api-key",
+};
+
+var input = new ChatStreamTypes.ChatStreamInput(
+    message: "进程和线程的区别是什么？用三句话回答。"
+    // context: "对话历史或背景（可选）"
+);
+
+await foreach (var token in ChatStream.ChatStreamAsync(config, input))
+{
+    Console.Write(token);
+}
+Console.WriteLine();
+```
+
+</details>
+
+可运行完整例程：
+
+- chat-stream：[Python](../examples/python/chat-stream) / [TypeScript](../examples/typescript/chat-stream) / [Go](../examples/go/chat-stream) / [Java](../examples/java/chat-stream) / [C#](../examples/csharp/chat-stream)
+- all-packages-stream：[Python](../examples/python/all-packages-stream) / [TypeScript](../examples/typescript/all-packages-stream) / [Go](../examples/go/all-packages-stream) / [Java](../examples/java/all-packages-stream) / [C#](../examples/csharp/all-packages-stream)
+
+
+</details>
+
+<details>
 <summary><b>用其他服务端点？</b></summary>
 
 在 config 中指定对应的 `baseURL`：

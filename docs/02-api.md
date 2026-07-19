@@ -47,6 +47,20 @@ public static Task<<Output>> <ClassName>.<MethodName>Async(AIFuncConfig config, 
 - Java methods are synchronous; the `AIFuncConfig` builder pattern provides fluent configuration
 - C# methods are async (`Task`); `AIFuncConfig` uses object initializers
 
+### Streaming packages
+
+When `api.json` sets `"x-delivery-mode": "stream"` on a string output, the generated function returns tokens incrementally instead of a structured object:
+
+| Language | Return type | Typical consumption |
+|----------|-------------|---------------------|
+| TypeScript | `AsyncIterable<string>` | `for await (const token of chatStream(...))` |
+| Python | async generator (`AsyncGenerator[str, None]`) | `async for token in await chat_stream(...):` |
+| Go | `(<-chan string, <-chan error)` | range the token channel, then read the error channel |
+| Java | `TokenStream` (iterator + `AutoCloseable`) | `try (var tokens = ChatStream.chatStream(...))` |
+| C# | `IAsyncEnumerable<string>` | `await foreach (var token in ChatStream.ChatStreamAsync(...))` |
+
+See [Protocol Spec — streaming output](./06-spec.md) and examples under `examples/*/chat-stream`.
+
 ---
 
 ## AIFuncConfig

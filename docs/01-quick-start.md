@@ -1,4 +1,4 @@
-﻿# Quick Start
+# Quick Start
 
 > **Target audience**: All developers who want to use AIFunc
 > **Content**: Complete workflow from installing the CLI to calling an AI function and getting results in 5 minutes
@@ -342,6 +342,181 @@ No environment variables needed — fully controlled by code.
 ---
 
 ## FAQ
+
+<details>
+<summary><b>How do I get streaming output?</b></summary>
+
+Use an official package whose name ends with `-stream` (for example `chat-stream`, `answer-stream`). Streaming is declared in the package definition — see [`x-delivery-mode`](./06-spec.md#output-extension-fields).
+
+Install `chat-stream` first:
+
+```bash
+aifn install github:aifunc-dev/aifunc-packages/chat-stream
+```
+
+Examples by language:
+
+<details open>
+<summary>Python</summary>
+
+```python
+import asyncio, sys
+from aifunc.chat_stream import chat_stream, AIFuncConfig, ChatStreamInput
+
+config = AIFuncConfig(
+    base_url="https://your-api-endpoint/v1",
+    model="your-model-name",
+    api_key="your-api-key",
+)
+
+input = ChatStreamInput(
+    message="What is the difference between a process and a thread? Answer in 3 sentences.",
+    # context="Conversation history or background (optional)",
+)
+
+async def main():
+    async for token in await chat_stream(config, input):
+        sys.stdout.write(token)
+        sys.stdout.flush()
+    sys.stdout.write("\n")
+
+asyncio.run(main())
+```
+
+</details>
+
+<details>
+<summary>TypeScript</summary>
+
+```typescript
+import { chatStream, AIFuncConfig, ChatStreamInput } from './aifunc/chat-stream';
+
+const config: AIFuncConfig = {
+  baseURL: 'https://your-api-endpoint/v1',
+  model: 'your-model-name',
+  apiKey: 'your-api-key',
+};
+
+const input: ChatStreamInput = {
+  message: 'What is the difference between a process and a thread? Answer in 3 sentences.',
+  // context: 'Conversation history or background (optional)',
+};
+
+async function main() {
+  for await (const token of chatStream(config, input)) {
+    process.stdout.write(token);
+  }
+  process.stdout.write('\n');
+}
+
+main().catch(console.error);
+```
+
+</details>
+
+<details>
+<summary>Go</summary>
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+
+    "your-module/aifunc/chat_stream"
+)
+
+func main() {
+    config := &chat_stream.AIFuncConfig{
+        BaseURL: "https://your-api-endpoint/v1",
+        Model:   "your-model-name",
+        APIKey:  "your-api-key",
+    }
+
+    input := chat_stream.ChatStreamInput{
+        Message: "What is the difference between a process and a thread? Answer in 3 sentences.",
+        // Context: strPtr("Conversation history or background (optional)"),
+    }
+
+    tokens, errc := chat_stream.ChatStream(context.Background(), config, input)
+    for token := range tokens {
+        fmt.Print(token)
+    }
+    if err := <-errc; err != nil {
+        fmt.Fprintln(os.Stderr, "error:", err)
+        os.Exit(1)
+    }
+    fmt.Println()
+}
+```
+
+</details>
+
+<details>
+<summary>Java</summary>
+
+```java
+import aifunc.AIFuncConfig;
+import aifunc.chat_stream.ChatStream;
+import aifunc.chat_stream.ChatStreamTypes.ChatStreamInput;
+
+AIFuncConfig config = AIFuncConfig.builder()
+        .baseUrl("https://your-api-endpoint/v1")
+        .model("your-model-name")
+        .apiKey("your-api-key")
+        .build();
+
+ChatStreamInput input = new ChatStreamInput(
+        "What is the difference between a process and a thread? Answer in 3 sentences.",
+        null  // context is optional
+);
+
+try (var tokens = ChatStream.chatStream(config, input)) {
+    while (tokens.hasNext()) {
+        System.out.print(tokens.next());
+    }
+}
+System.out.println();
+```
+
+</details>
+
+<details>
+<summary>C#</summary>
+
+```csharp
+using Aifunc;
+using Aifunc.ChatStream;
+
+var config = new AIFuncConfig
+{
+    BaseUrl = "https://your-api-endpoint/v1",
+    Model   = "your-model-name",
+    ApiKey  = "your-api-key",
+};
+
+var input = new ChatStreamTypes.ChatStreamInput(
+    message: "What is the difference between a process and a thread? Answer in 3 sentences."
+    // context: "Conversation history or background (optional)"
+);
+
+await foreach (var token in ChatStream.ChatStreamAsync(config, input))
+{
+    Console.Write(token);
+}
+Console.WriteLine();
+```
+
+</details>
+
+Runnable complete examples:
+
+- [Python](../examples/python/chat-stream) / [TypeScript](../examples/typescript/chat-stream) / [Go](../examples/go/chat-stream) / [Java](../examples/java/chat-stream) / [C#](../examples/csharp/chat-stream)
+- [all-packages-stream (TypeScript)](../examples/typescript/all-packages-stream)
+
+</details>
 
 <details>
 <summary><b>Using a different service endpoint?</b></summary>

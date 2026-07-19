@@ -96,6 +96,21 @@
 
 `input` 和 `output` 使用标准 JSON Schema 类型：`string`、`number`、`integer`、`boolean`、`object`、`array`。
 
+### output 扩展字段
+
+`output` 支持以下扩展字段：
+
+| 扩展字段 | 类型 | 说明 |
+|:---|:---|:---|
+| `x-delivery-mode` | string | 输出传输模式。设为 `"stream"` 时启用流式输出 |
+
+**流式输出（`"x-delivery-mode": "stream"`）**：
+
+启用后，Engine 以流的方式逐步返回模型输出，而非等待完整结果后一次性返回。此模式有以下约束：
+
+- `output` 的 `type` 必须为 `"string"`，不支持 `object`、`array` 等复合类型
+- CLI 生成的函数签名返回类型为异步迭代器（如 `AsyncIterable<string>`）
+
 **示例**：
 
 ```json
@@ -117,6 +132,28 @@
       "wordCount": { "type": "integer", "description": "摘要的大致词数" }
     },
     "required": ["summary", "wordCount"]
+  }
+}
+```
+
+流式输出示例：
+
+```json
+{
+  "name": "chat_stream",
+  "description": "发送一条消息并流式返回纯文本回复。",
+  "input": {
+    "type": "object",
+    "properties": {
+      "message": { "type": "string", "description": "用户消息。", "minLength": 1 },
+      "context": { "type": "string", "description": "可选的对话历史或其他背景文本。" }
+    },
+    "required": ["message"]
+  },
+  "output": {
+    "type": "string",
+    "description": "助手回复的纯文本。",
+    "x-delivery-mode": "stream"
   }
 }
 ```
