@@ -1,0 +1,23 @@
+{
+  "lockVersion": 1,
+  "packages": {
+    "chat-stream": {
+      "source": "github:aifunc-dev/aifunc-packages/chat-stream",
+      "version": "1.0.0",
+      "engineVersion": "0.2.0",
+      "resolvedAt": "2026-07-19T12:16:48Z"
+    }
+  },
+  "engines": {
+    "v0.2.0": {
+      "source": "github:aifunc-dev/aifunc-packages",
+      "language": "java",
+      "path": "java/v0_2_0",
+      "resolvedFrom": "^0.2.0",
+      "resolvedAt": "2026-07-19T12:16:48Z",
+      "usedBy": [
+        "chat-stream"
+      ]
+    }
+  }
+}

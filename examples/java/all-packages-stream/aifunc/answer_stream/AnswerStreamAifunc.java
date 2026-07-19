@@ -63,7 +63,7 @@ final class AnswerStreamAifunc {
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
 				put("contentHash", "sha256:cc859b61013ba12f0b9533bd3cd3207eacafb98754fcf7dfbe18c03957554633");
-				put("generatedAt", "2026-07-17T10:45:42Z");
+				put("generatedAt", "2026-07-19T12:17:24Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{

@@ -72,7 +72,7 @@ internal static class ExplainStreamAifunc
 			["metadata"] = new Dictionary<string, object?>
 			{
 				["contentHash"] = "sha256:ed6ff39e99f5f11ffd5cc18e0011297ef0eb6fc147182c90cd6c4792a2ca7852",
-				["generatedAt"] = "2026-07-16T23:54:34Z",
+				["generatedAt"] = "2026-07-19T12:27:48Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>

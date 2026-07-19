@@ -64,7 +64,7 @@ final class ExplainStreamAifunc {
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
 				put("contentHash", "sha256:ed6ff39e99f5f11ffd5cc18e0011297ef0eb6fc147182c90cd6c4792a2ca7852");
-				put("generatedAt", "2026-07-17T10:45:42Z");
+				put("generatedAt", "2026-07-19T12:17:23Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{

@@ -5,43 +5,43 @@
       "source": "gitee:aifunc-dev/aifunc-packages/answer-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-16T23:54:28Z"
+      "resolvedAt": "2026-07-19T12:27:43Z"
     },
     "article-stream": {
       "source": "gitee:aifunc-dev/aifunc-packages/article-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-16T23:54:30Z"
+      "resolvedAt": "2026-07-19T12:27:45Z"
     },
     "chat-stream": {
       "source": "gitee:aifunc-dev/aifunc-packages/chat-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-16T23:54:31Z"
+      "resolvedAt": "2026-07-19T12:27:46Z"
     },
     "explain-stream": {
       "source": "gitee:aifunc-dev/aifunc-packages/explain-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-16T23:54:32Z"
+      "resolvedAt": "2026-07-19T12:27:47Z"
     },
     "review-stream": {
       "source": "gitee:aifunc-dev/aifunc-packages/review-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-16T23:54:34Z"
+      "resolvedAt": "2026-07-19T12:27:48Z"
     },
     "translate-stream": {
       "source": "gitee:aifunc-dev/aifunc-packages/translate-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-16T23:54:25Z"
+      "resolvedAt": "2026-07-19T12:27:41Z"
     },
     "write-stream": {
       "source": "gitee:aifunc-dev/aifunc-packages/write-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-16T23:54:26Z"
+      "resolvedAt": "2026-07-19T12:27:42Z"
     }
   },
   "engines": {
@@ -50,15 +50,15 @@
       "language": "csharp",
       "path": "csharp/v0_2_0",
       "resolvedFrom": "^0.2.0",
-      "resolvedAt": "2026-07-16T23:54:34Z",
+      "resolvedAt": "2026-07-19T12:27:48Z",
       "usedBy": [
-        "explain-stream",
-        "review-stream",
         "translate-stream",
         "write-stream",
         "answer-stream",
         "article-stream",
-        "chat-stream"
+        "chat-stream",
+        "explain-stream",
+        "review-stream"
       ]
     }
   }

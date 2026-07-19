@@ -13,7 +13,7 @@ import (
 // AIFuncConfig controls the runtime mode and model connection.
 type AIFuncConfig = engine.AIFuncConfig
 
-// ChatStream Stream a conversational AI reply from a message history. Returns plain text.
+// ChatStream Send a message and stream a plain-text reply. Optionally include context such as prior turns.
 // ctx controls cancellation -- cancel it to stop the stream at any time.
 // Returns (tokensCh, errCh): range over tokensCh, then read errCh once.
 func ChatStream(ctx context.Context, config *AIFuncConfig, input ChatStreamInput) (<-chan string, <-chan error) {
@@ -36,20 +36,8 @@ func ChatStream(ctx context.Context, config *AIFuncConfig, input ChatStreamInput
 
 func inputToMap(input ChatStreamInput) map[string]any {
 	m := map[string]any{}
-	if input.Language != nil { m["language"] = *input.Language }
-	{
-		ms := make([]map[string]any, len(input.Messages))
-		for i, v := range input.Messages { ms[i] = MessageToMap(v) }
-		m["messages"] = ms
-	}
-	if input.SystemPrompt != nil { m["systemPrompt"] = *input.SystemPrompt }
+	if input.Context != nil { m["context"] = *input.Context }
+	m["message"] = input.Message
 	return m
-}
-
-func MessageToMap(v Message) map[string]any {
-	return map[string]any{
-		"content": v.Content,
-		"role": v.Role,
-	}
 }
 

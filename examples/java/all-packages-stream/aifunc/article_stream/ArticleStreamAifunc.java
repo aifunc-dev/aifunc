@@ -66,7 +66,7 @@ final class ArticleStreamAifunc {
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
 				put("contentHash", "sha256:9a83ec7607ab16702eb54a265fb7d0a9a7f27b8db590992c798e3c381c5fa3f2");
-				put("generatedAt", "2026-07-17T10:45:42Z");
+				put("generatedAt", "2026-07-19T12:17:24Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{

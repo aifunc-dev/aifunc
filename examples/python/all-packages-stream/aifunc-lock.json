@@ -5,43 +5,43 @@
       "source": "github:aifunc-dev/aifunc-packages/answer-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-15T13:24:23Z"
+      "resolvedAt": "2026-07-19T11:46:18Z"
     },
     "article-stream": {
       "source": "github:aifunc-dev/aifunc-packages/article-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-15T13:24:28Z"
+      "resolvedAt": "2026-07-19T11:46:20Z"
     },
     "chat-stream": {
       "source": "github:aifunc-dev/aifunc-packages/chat-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-15T13:24:37Z"
+      "resolvedAt": "2026-07-19T11:46:30Z"
     },
     "explain-stream": {
       "source": "github:aifunc-dev/aifunc-packages/explain-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-15T13:24:46Z"
+      "resolvedAt": "2026-07-19T11:46:00Z"
     },
     "review-stream": {
       "source": "github:aifunc-dev/aifunc-packages/review-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-15T13:24:57Z"
+      "resolvedAt": "2026-07-19T11:46:03Z"
     },
     "translate-stream": {
       "source": "github:aifunc-dev/aifunc-packages/translate-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-15T13:23:56Z"
+      "resolvedAt": "2026-07-19T11:46:06Z"
     },
     "write-stream": {
       "source": "github:aifunc-dev/aifunc-packages/write-stream",
       "version": "1.0.0",
       "engineVersion": "0.2.0",
-      "resolvedAt": "2026-07-15T13:24:12Z"
+      "resolvedAt": "2026-07-19T11:46:09Z"
     }
   },
   "engines": {
@@ -50,7 +50,7 @@
       "language": "python",
       "path": "python/v0_2_0",
       "resolvedFrom": "^0.2.0",
-      "resolvedAt": "2026-07-15T13:24:57Z",
+      "resolvedAt": "2026-07-19T11:46:30Z",
       "usedBy": [
         "translate-stream",
         "write-stream",

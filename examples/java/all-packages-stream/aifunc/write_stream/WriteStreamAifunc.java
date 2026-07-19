@@ -78,7 +78,7 @@ final class WriteStreamAifunc {
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
 				put("contentHash", "sha256:476d3ea71cfc031bd7beb05d349fea03c14f10d8519430ec7df44ed1dce5d9ec");
-				put("generatedAt", "2026-07-17T10:45:42Z");
+				put("generatedAt", "2026-07-19T12:17:24Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{

@@ -70,9 +70,7 @@ func main() {
 	fmt.Println()
 	fmt.Print("Assistant: ")
 	if err := streamPrint(chat_stream.ChatStream(ctx, config, chat_stream.ChatStreamInput{
-		Messages: []chat_stream.Message{
-			{Role: "user", Content: "Explain goroutines and channels in Go in 3 sentences."},
-		},
+		Message: "Explain goroutines and channels in Go in 3 sentences.",
 	})); err != nil {
 		fmt.Fprintln(os.Stderr, "chat-stream:", err)
 		os.Exit(1)

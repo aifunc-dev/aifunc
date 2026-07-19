@@ -90,7 +90,7 @@ internal static class ReviewStreamAifunc
 			["metadata"] = new Dictionary<string, object?>
 			{
 				["contentHash"] = "sha256:91ad80317086e2640a83045874c158a4419b3469ea911a1406e661d7caf5cd0f",
-				["generatedAt"] = "2026-07-16T23:54:34Z",
+				["generatedAt"] = "2026-07-19T12:27:48Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>

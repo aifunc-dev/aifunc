@@ -73,7 +73,7 @@ internal static class TranslateStreamAifunc
 			["metadata"] = new Dictionary<string, object?>
 			{
 				["contentHash"] = "sha256:a267da318ceb7823ce27f36b267848bc42c2320a0b3dcb98c15acc8a07a6a657",
-				["generatedAt"] = "2026-07-16T23:54:34Z",
+				["generatedAt"] = "2026-07-19T12:27:49Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>

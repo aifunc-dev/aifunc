@@ -1,0 +1,8 @@
+{
+  "configVersion": 1,
+  "language": "python",
+  "outputDir": "aifunc",
+  "packages": {
+    "chat-stream": "github:aifunc-dev/aifunc-packages/chat-stream"
+  }
+}

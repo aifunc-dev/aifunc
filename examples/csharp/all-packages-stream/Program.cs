@@ -61,10 +61,7 @@ Console.WriteLine("User: Explain async/await and IAsyncEnumerable in C# in 3 sen
 Console.WriteLine();
 Console.Write("Assistant: ");
 await StreamPrintAsync(ChatStream.ChatStreamAsync(config, new ChatStreamTypes.ChatStreamInput(
-    messages:
-    [
-        new("user", "Explain async/await and IAsyncEnumerable in C# in 3 sentences."),
-    ])));
+    message: "Explain async/await and IAsyncEnumerable in C# in 3 sentences.")));
 
 Section("2. ANSWER STREAM (with context / RAG)");
 var context =

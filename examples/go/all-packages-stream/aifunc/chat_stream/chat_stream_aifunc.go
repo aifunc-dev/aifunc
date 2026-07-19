@@ -5,50 +5,23 @@ package chat_stream
 
 var artifactData = map[string]any{
 	"api": map[string]any{
-		"description": "Stream a conversational AI reply from a message history. Returns plain text.",
+		"description": "Send a message and stream a plain-text reply. Optionally include context such as prior turns.",
 		"injectOutputSchema": false,
 		"input": map[string]any{
 			"additionalProperties": false,
 			"properties": map[string]any{
-				"language": map[string]any{
-					"description": "Reply language. If omitted, matches the language of the last user message.",
+				"context": map[string]any{
+					"description": "Optional conversation history or other background text the reply should take into account.",
 					"type": "string",
 				},
-				"messages": map[string]any{
-					"description": "Conversation history. Each item has a 'role' ('user' or 'assistant') and 'content' (string).",
-					"items": map[string]any{
-						"additionalProperties": false,
-						"properties": map[string]any{
-							"content": map[string]any{
-								"description": "Message text.",
-								"minLength": 1,
-								"type": "string",
-							},
-							"role": map[string]any{
-								"description": "Message sender role.",
-								"enum": []any{
-									"user",
-									"assistant",
-								},
-								"type": "string",
-							},
-						},
-						"required": []any{
-							"role",
-							"content",
-						},
-						"type": "object",
-					},
-					"minItems": 1,
-					"type": "array",
-				},
-				"systemPrompt": map[string]any{
-					"description": "Optional system-level instruction that sets the assistant's persona, role, or constraints.",
+				"message": map[string]any{
+					"description": "The user message.",
+					"minLength": 1,
 					"type": "string",
 				},
 			},
 			"required": []any{
-				"messages",
+				"message",
 			},
 			"type": "object",
 		},
@@ -61,8 +34,8 @@ var artifactData = map[string]any{
 	},
 	"artifactVersion": "0.1.0",
 	"metadata": map[string]any{
-		"contentHash": "sha256:2698bc3b0adfb9dc78a26736d907dbb9ca8e9231825b10aed10b7f2d486d8849",
-		"generatedAt": "2026-07-16T13:36:20Z",
+		"contentHash": "sha256:4cb6df8aabe5134abf74c79adc839f36b323d9ec4c05dc8f0c1e4b4bb4235b3c",
+		"generatedAt": "2026-07-19T12:01:19Z",
 		"sourcePackageVersion": "1.0.0",
 	},
 	"modelParams": map[string]any{
@@ -83,7 +56,7 @@ var artifactData = map[string]any{
 		"author": map[string]any{
 			"name": "GildenEye",
 		},
-		"description": "Stream a conversational AI reply from a message history. Returns plain text.",
+		"description": "Send a message and stream a plain-text reply. Optionally include context such as prior turns.",
 		"engine": "^0.2.0",
 		"engineOptions": map[string]any{
 			"injectOutputSchema": false,
@@ -93,7 +66,7 @@ var artifactData = map[string]any{
 		"version": "1.0.0",
 	},
 	"prompts": map[string]any{
-		"general": "# System\n\n{{input.systemPrompt}}\n\nYou are a helpful, concise, and friendly conversational assistant.\n\n## Requirements\n\n- Reply naturally to the most recent user message, taking the full conversation history into account.\n- Be direct and helpful. Match the tone and register of the conversation.\n- Do not summarize, repeat, or acknowledge the conversation history explicitly — just reply.\n- Output plain text only — no Markdown formatting, no JSON, no labels.\n- If a language is specified, reply in that language. Otherwise, match the language of the last user message.\n\n## Conversation History\n\n{{input_json}}\n\nLanguage: {{input.language}}\n",
+		"general": "# System\n\nYou are a helpful, concise, and friendly conversational assistant.\n\n## Requirements\n\n- Reply directly and helpfully to the user message.\n- If context is provided, use it to tailor the reply.\n- Match the tone and language of the message.\n- Output plain text only — no Markdown formatting, no JSON, no labels.\n- Be direct. Do not add preambles like \"Sure!\" or \"Of course!\".\n\n## User Message\n\n{{message}}\n\n## Context\n\n{{context}}\n",
 	},
 	"schemaVersion": "0.1.0",
 }

@@ -74,7 +74,7 @@ internal static class ArticleStreamAifunc
 			["metadata"] = new Dictionary<string, object?>
 			{
 				["contentHash"] = "sha256:9a83ec7607ab16702eb54a265fb7d0a9a7f27b8db590992c798e3c381c5fa3f2",
-				["generatedAt"] = "2026-07-16T23:54:34Z",
+				["generatedAt"] = "2026-07-19T12:27:49Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>

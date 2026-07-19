@@ -65,7 +65,7 @@ final class TranslateStreamAifunc {
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
 				put("contentHash", "sha256:a267da318ceb7823ce27f36b267848bc42c2320a0b3dcb98c15acc8a07a6a657");
-				put("generatedAt", "2026-07-17T10:45:41Z");
+				put("generatedAt", "2026-07-19T12:17:24Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{

@@ -79,7 +79,7 @@ final class ReviewStreamAifunc {
 			put("artifactVersion", "0.1.0");
 			put("metadata", new java.util.LinkedHashMap<String, Object>() {{
 				put("contentHash", "sha256:91ad80317086e2640a83045874c158a4419b3469ea911a1406e661d7caf5cd0f");
-				put("generatedAt", "2026-07-17T10:45:41Z");
+				put("generatedAt", "2026-07-19T12:17:24Z");
 				put("sourcePackageVersion", "1.0.0");
 			}});
 			put("modelParams", new java.util.LinkedHashMap<String, Object>() {{

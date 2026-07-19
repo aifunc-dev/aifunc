@@ -64,9 +64,7 @@ async def main():
     print("User: Explain async/await in Python in 3 sentences.\n")
     print("Assistant: ", end="", flush=True)
     await stream_print(await chat_stream(config, ChatStreamInput(
-        messages=[
-            {"role": "user", "content": "Explain async/await in Python in 3 sentences."},
-        ],
+        message="Explain async/await in Python in 3 sentences.",
     )))
 
     section("2. ANSWER STREAM (with context / RAG)")

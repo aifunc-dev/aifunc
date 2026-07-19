@@ -56,9 +56,7 @@ async function main() {
   console.log('User: Explain async/await in TypeScript in 3 sentences.\n');
   process.stdout.write('Assistant: ');
   await streamPrint(chatStream(config, {
-    messages: [
-      { role: 'user', content: 'Explain async/await in TypeScript in 3 sentences.' },
-    ],
+    message: 'Explain async/await in TypeScript in 3 sentences.',
   } as ChatStreamInput));
 
   section('2. ANSWER STREAM (with context / RAG)');

@@ -88,7 +88,7 @@ internal static class WriteStreamAifunc
 			["metadata"] = new Dictionary<string, object?>
 			{
 				["contentHash"] = "sha256:476d3ea71cfc031bd7beb05d349fea03c14f10d8519430ec7df44ed1dce5d9ec",
-				["generatedAt"] = "2026-07-16T23:54:34Z",
+				["generatedAt"] = "2026-07-19T12:27:49Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>

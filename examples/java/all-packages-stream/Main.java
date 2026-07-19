@@ -15,8 +15,6 @@ import aifunc.write_stream.WriteStream;
 import aifunc.write_stream.WriteStreamTypes.WriteStreamInput;
 
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 public class Main {
 
@@ -81,9 +79,8 @@ public class Main {
         System.out.println();
         System.out.print("Assistant: ");
         streamPrint(ChatStream.chatStream(config, new ChatStreamInput(
-                List.of(Map.of("role", "user",
-                        "content", "Explain streams and try-with-resources in Java in 3 sentences.")),
-                null, null
+                "Explain streams and try-with-resources in Java in 3 sentences.",
+                null
         )));
 
         section("2. ANSWER STREAM (with context / RAG)");

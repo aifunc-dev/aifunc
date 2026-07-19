@@ -12,62 +12,28 @@ internal static class ChatStreamAifunc
 		{
 			["api"] = new Dictionary<string, object?>
 			{
-				["description"] = "Stream a conversational AI reply from a message history. Returns plain text.",
+				["description"] = "Send a message and stream a plain-text reply. Optionally include context such as prior turns.",
 				["injectOutputSchema"] = false,
 				["input"] = new Dictionary<string, object?>
 				{
 					["additionalProperties"] = false,
 					["properties"] = new Dictionary<string, object?>
 					{
-						["language"] = new Dictionary<string, object?>
+						["context"] = new Dictionary<string, object?>
 						{
-							["description"] = "Reply language. If omitted, matches the language of the last user message.",
+							["description"] = "Optional conversation history or other background text the reply should take into account.",
 							["type"] = "string",
 						},
-						["messages"] = new Dictionary<string, object?>
+						["message"] = new Dictionary<string, object?>
 						{
-							["description"] = "Conversation history. Each item has a 'role' ('user' or 'assistant') and 'content' (string).",
-							["items"] = new Dictionary<string, object?>
-							{
-								["additionalProperties"] = false,
-								["properties"] = new Dictionary<string, object?>
-								{
-									["content"] = new Dictionary<string, object?>
-									{
-										["description"] = "Message text.",
-										["minLength"] = (double)1,
-										["type"] = "string",
-									},
-									["role"] = new Dictionary<string, object?>
-									{
-										["description"] = "Message sender role.",
-										["enum"] = new List<object?>
-										{
-											"user",
-											"assistant",
-										},
-										["type"] = "string",
-									},
-								},
-								["required"] = new List<object?>
-								{
-									"role",
-									"content",
-								},
-								["type"] = "object",
-							},
-							["minItems"] = (double)1,
-							["type"] = "array",
-						},
-						["systemPrompt"] = new Dictionary<string, object?>
-						{
-							["description"] = "Optional system-level instruction that sets the assistant's persona, role, or constraints.",
+							["description"] = "The user message.",
+							["minLength"] = (double)1,
 							["type"] = "string",
 						},
 					},
 					["required"] = new List<object?>
 					{
-						"messages",
+						"message",
 					},
 					["type"] = "object",
 				},
@@ -82,8 +48,8 @@ internal static class ChatStreamAifunc
 			["artifactVersion"] = "0.1.0",
 			["metadata"] = new Dictionary<string, object?>
 			{
-				["contentHash"] = "sha256:2698bc3b0adfb9dc78a26736d907dbb9ca8e9231825b10aed10b7f2d486d8849",
-				["generatedAt"] = "2026-07-16T23:54:34Z",
+				["contentHash"] = "sha256:4cb6df8aabe5134abf74c79adc839f36b323d9ec4c05dc8f0c1e4b4bb4235b3c",
+				["generatedAt"] = "2026-07-19T12:27:49Z",
 				["sourcePackageVersion"] = "1.0.0",
 			},
 			["modelParams"] = new Dictionary<string, object?>
@@ -111,7 +77,7 @@ internal static class ChatStreamAifunc
 				{
 					["name"] = "GildenEye",
 				},
-				["description"] = "Stream a conversational AI reply from a message history. Returns plain text.",
+				["description"] = "Send a message and stream a plain-text reply. Optionally include context such as prior turns.",
 				["engine"] = "^0.2.0",
 				["engineOptions"] = new Dictionary<string, object?>
 				{
@@ -123,7 +89,7 @@ internal static class ChatStreamAifunc
 			},
 			["prompts"] = new Dictionary<string, object?>
 			{
-				["general"] = "# System\n\n{{input.systemPrompt}}\n\nYou are a helpful, concise, and friendly conversational assistant.\n\n## Requirements\n\n- Reply naturally to the most recent user message, taking the full conversation history into account.\n- Be direct and helpful. Match the tone and register of the conversation.\n- Do not summarize, repeat, or acknowledge the conversation history explicitly — just reply.\n- Output plain text only — no Markdown formatting, no JSON, no labels.\n- If a language is specified, reply in that language. Otherwise, match the language of the last user message.\n\n## Conversation History\n\n{{input_json}}\n\nLanguage: {{input.language}}\n",
+				["general"] = "# System\n\nYou are a helpful, concise, and friendly conversational assistant.\n\n## Requirements\n\n- Reply directly and helpfully to the user message.\n- If context is provided, use it to tailor the reply.\n- Match the tone and language of the message.\n- Output plain text only — no Markdown formatting, no JSON, no labels.\n- Be direct. Do not add preambles like \"Sure!\" or \"Of course!\".\n\n## User Message\n\n{{message}}\n\n## Context\n\n{{context}}\n",
 			},
 			["schemaVersion"] = "0.1.0",
 		};
