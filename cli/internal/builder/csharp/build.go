@@ -225,12 +225,22 @@ func arrayItemNestedClass(fieldKey string, prop map[string]any) (string, map[str
 	if len(itemProps) == 0 {
 		return "", nil, false
 	}
-	// Derive class name: singularise the field name (strip trailing 's') then PascalCase.
-	singular := strings.TrimSuffix(fieldKey, "s")
-	if singular == fieldKey {
-		singular = fieldKey + "Item"
+	return toPascalCase(singularizeFieldKey(fieldKey)), items, true
+}
+
+// singularizeFieldKey turns a plural JSON field key into a singular type-name base
+// (entities→entity, keywords→keyword, fields→field).
+func singularizeFieldKey(fieldKey string) string {
+	switch {
+	case strings.HasSuffix(fieldKey, "ies") && len(fieldKey) > 3:
+		return fieldKey[:len(fieldKey)-3] + "y"
+	case strings.HasSuffix(fieldKey, "ses") && len(fieldKey) > 3:
+		return fieldKey[:len(fieldKey)-2] // classes → class
+	case strings.HasSuffix(fieldKey, "s") && !strings.HasSuffix(fieldKey, "ss") && len(fieldKey) > 1:
+		return fieldKey[:len(fieldKey)-1]
+	default:
+		return fieldKey + "Item"
 	}
-	return toPascalCase(singular), items, true
 }
 
 func writeCSharpPojo(b *strings.Builder, className string, schema map[string]any) {
@@ -434,34 +444,51 @@ func generateStandardEntry(artifact *types.CompiledArtifact, ns, baseName string
 	fmt.Fprintf(&b, "%s}\n\n", csharpIndent)
 
 	writeInputToMap(&b, artifact, typeClass, inputName)
+	writeMapToOutput(&b, artifact, typeClass, outputName)
 
+	return b.String(), nil
+}
+
+// writeMapToOutput emits MapToOutput. Constructor arg order must match
+// writeCSharpPojo (requiredKeysOrdered then optional sorted keys).
+func writeMapToOutput(b *strings.Builder, artifact *types.CompiledArtifact, typeClass, outputName string) {
 	outputProps, _ := artifact.API.Output["properties"].(map[string]any)
 	outputRequired := requiredSet(artifact.API.Output)
-	var reqOutKeys, optOutKeys []string
+	reqOutKeys := requiredKeysOrdered(artifact.API.Output)
+	var optOutKeys []string
 	for _, k := range sortedKeys(outputProps) {
-		if outputRequired[k] {
-			reqOutKeys = append(reqOutKeys, k)
-		} else {
+		if !outputRequired[k] {
 			optOutKeys = append(optOutKeys, k)
 		}
 	}
 	allOutKeys := append(reqOutKeys, optOutKeys...)
 
-	fmt.Fprintf(&b, "%sprivate static %s.%s MapToOutput(Dictionary<string, object?> m)\n%s{\n", csharpIndent, typeClass, outputName, csharpIndent)
+	fmt.Fprintf(b, "%sprivate static %s.%s MapToOutput(Dictionary<string, object?> m)\n%s{\n", csharpIndent, typeClass, outputName, csharpIndent)
 	for i, key := range allOutKeys {
 		prop, ok := outputProps[key].(map[string]any)
 		if !ok {
 			continue
 		}
-		csType := jsonSchemaToCSharpType(prop, outputRequired[key])
 		field := toCamelCase(key)
 		tmp := fmt.Sprintf("_v%d", i)
-		coerce := csharpCoerceExpr(csType, tmp, i)
-		fmt.Fprintf(&b, "%s%s%s %s;\n", csharpIndent, csharpIndent, csType, field)
-		fmt.Fprintf(&b, "%s%sif (m.TryGetValue(%q, out var %s))\n", csharpIndent, csharpIndent, key, tmp)
-		fmt.Fprintf(&b, "%s%s%s%s = %s;\n", csharpIndent, csharpIndent, csharpIndent, field, coerce)
-		fmt.Fprintf(&b, "%s%selse\n", csharpIndent, csharpIndent)
-		fmt.Fprintf(&b, "%s%s%s%s = %s;\n", csharpIndent, csharpIndent, csharpIndent, field, csharpDefaultExpr(csType))
+		ncName, ncSchema, isNested := arrayItemNestedClass(key, prop)
+		var csType, coerce string
+		if isNested {
+			if outputRequired[key] {
+				csType = "List<" + typeClass + "." + ncName + ">"
+			} else {
+				csType = "List<" + typeClass + "." + ncName + ">?"
+			}
+			coerce = csharpNestedListCoerce(typeClass, ncName, ncSchema, tmp, i)
+		} else {
+			csType = jsonSchemaToCSharpType(prop, outputRequired[key])
+			coerce = csharpCoerceExpr(csType, tmp, i)
+		}
+		fmt.Fprintf(b, "%s%s%s %s;\n", csharpIndent, csharpIndent, csType, field)
+		fmt.Fprintf(b, "%s%sif (m.TryGetValue(%q, out var %s))\n", csharpIndent, csharpIndent, key, tmp)
+		fmt.Fprintf(b, "%s%s%s%s = %s;\n", csharpIndent, csharpIndent, csharpIndent, field, coerce)
+		fmt.Fprintf(b, "%s%selse\n", csharpIndent, csharpIndent)
+		fmt.Fprintf(b, "%s%s%s%s = %s;\n", csharpIndent, csharpIndent, csharpIndent, field, csharpDefaultExpr(csType))
 	}
 	var ctorArgs []string
 	for _, key := range allOutKeys {
@@ -469,9 +496,49 @@ func generateStandardEntry(artifact *types.CompiledArtifact, ns, baseName string
 			ctorArgs = append(ctorArgs, toCamelCase(key))
 		}
 	}
-	fmt.Fprintf(&b, "%s%sreturn new %s.%s(%s);\n%s}\n}\n", csharpIndent, csharpIndent, typeClass, outputName, strings.Join(ctorArgs, ", "), csharpIndent)
+	fmt.Fprintf(b, "%s%sreturn new %s.%s(%s);\n%s}\n}\n", csharpIndent, csharpIndent, typeClass, outputName, strings.Join(ctorArgs, ", "), csharpIndent)
+}
 
-	return b.String(), nil
+// csharpNestedListCoerce maps engine list-of-dicts into List<NestedClass>.
+func csharpNestedListCoerce(typeClass, ncName string, itemSchema map[string]any, tmpVar string, idx int) string {
+	itemProps, _ := itemSchema["properties"].(map[string]any)
+	itemRequired := requiredSet(itemSchema)
+	reqKeys := requiredKeysOrdered(itemSchema)
+	var optKeys []string
+	for _, k := range sortedKeys(itemProps) {
+		if !itemRequired[k] {
+			optKeys = append(optKeys, k)
+		}
+	}
+	allKeys := append(reqKeys, optKeys...)
+
+	var ctorArgs []string
+	for j, nk := range allKeys {
+		prop, ok := itemProps[nk].(map[string]any)
+		if !ok {
+			continue
+		}
+		csType := jsonSchemaToCSharpType(prop, itemRequired[nk])
+		dictTmp := fmt.Sprintf("_d%d", idx)
+		valTmp := fmt.Sprintf("_nv%d_%d", idx, j)
+		// Per-field: dict.TryGetValue ? coerce : default — as a single expression.
+		ctorArgs = append(ctorArgs, fmt.Sprintf(
+			"(%s.TryGetValue(%q, out var %s) ? %s : %s)",
+			dictTmp, nk, valTmp, csharpCoerceExpr(csType, valTmp, idx*100+j), csharpDefaultExpr(csType),
+		))
+	}
+
+	fullType := typeClass + "." + ncName
+	return fmt.Sprintf(
+		`(%s is System.Collections.IEnumerable _en%d
+				? _en%d.Cast<object?>().Select(_item%d =>
+				{
+					var _d%d = _item%d as Dictionary<string, object?> ?? new Dictionary<string, object?>();
+					return new %s(%s);
+				}).ToList()
+				: new List<%s>())`,
+		tmpVar, idx, idx, idx, idx, idx, fullType, strings.Join(ctorArgs, ", "), fullType,
+	)
 }
 
 // generateStreamEntry produces the streaming entry file (IAsyncEnumerable<string> + CancellationToken).
